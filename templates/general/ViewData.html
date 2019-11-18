@@ -1,47 +1,157 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <style>
+
+
     <meta charset="utf-8">
 
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link ref="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>ALT Account Settings</title>
-  </head>
-  <body>
-    <div class="w3-grey w3-top w3-bottom w3-left w3-right">
-      <div class="w3-top w3-left w3-right">
-        <div class="w3-teal">
-          <a href="#"><img src="#" alt="LOGO"></a>
-          <h5 class="w3-center">Account Settings</h5>
-        </div>
-        <div class="w3-container w3-light-grey">
-          <div class="w3-container">
-            <div class="w3-third">
-              <div class=" w3-border w3-border-black">
-                <h3 class="w3-center">Settings</h3>
-                <hr class="w3-black">
-                <button class="w3-btn w3-white w3-block w3-border w3-border-green w3-round-xlarge" onclick="">Account</button>
-                <button class="w3-btn w3-white w3-block w3-border w3-border-green w3-round-xlarge">Privacy</button>
-                <button class="w3-btn w3-white w3-block w3-border w3-border-green w3-round-xlarge">Data</button>
-                <button class="w3-btn w3-white w3-block w3-border w3-border-green w3-round-xlarge">~~~~~</button>
-                <button class="w3-btn w3-white w3-block w3-border w3-border-green w3-round-xlarge">~~~~~</button>
-                <button class="w3-btn w3-white w3-block w3-border w3-border-green w3-round-xlarge">Sign out</button>
-                <button class="w3-btn w3-white w3-block w3-border w3-border-green w3-round-xlarge">Terms and Conditions</button>
-              </div>
-            </div>
-            <div class="w3-twothird w3-border w3-border-black">
-              <p>lots of stuff and some toggle buttons or maybe sliders or
-                check boxes or something else who knows but this is
-                where the settings for any give category will be located,
-                some day this will be better but that day is not today.
-                <br><br><br><br><br><br><br><br><br><br><br><br>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>
+
+
+    <title>ALT AView Data</title>
+
+
+
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .h1{
+    font-size: 70px;
+  }
+
+
+
+  .taskbar {
+    overflow: hidden;
+    background-color: #70392D;
+  }
+
+  .taskbar a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 10px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+
+  .taskbar a:hover {
+    background-color: #000000;
+    color: white;
+  }
+
+  .taskbar a.active {
+    background-color: #8C8C8C;
+    color: white;
+  }
+  </style>
+
+</head>
+
+
+
+
+
+<body>
+<div class="w3-container" >
+  <div class = "taskbar">
+        <a href="#home">Home</a>
+
+        <a style="float:right;" href="#signout">Sign out</a>
+  </div>  <!--close acount taskbar-->
+
+
+  <div class="taskbar">
+    <a class = "active" >View Data</a>
+    <a href="#recordaudio">Record Audio</a>
+    <a href="#uploadaudio">Upload Audio</a>
+    <a href="#managecontacts">Manage Contacts</a>
+    <a href="#about">About</a>
+    <a style="float:right;" href="#settings">Settings</a>
+
+  </div>  <!--close nav taskbar-->
+</div> <!--close nav container-->
+
+
+
+    <div class="w3-col" style="width:150px">
+      <label>Search</label>
+      <input class="w3-input w3-border w3-animate-input" type="text" >
+    </div> <!--close search area-->
+    <div class="w3-rest" style="text-align: center;">
+      <h2>View Data</h2>
+    </div>  <!--close heading-->
+
+    <div class="w3-responsive">
+  <div class = "w3-threequarter">
+
+      <table class="w3-table-all">
+            <thead>
+              <tr>
+                <th class='text-center'>User</th>
+                <th class='text-center'>Word (Orig)</th>
+                <th class='text-center'>Word (Eng)</th>
+                <th class='text-center'>Score</th>
+                <th class='text-center'>Date</th>
+                <th class='text-center'>Review</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Jill Smith</td>
+                <td>犬</td>
+                <td>dog</td>
+                <td>50</td>
+                <td>Jill Smith</td>
+                <td>7/20/20</td>
+                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
+              </tr>
+              <tr>
+                <td>Jill Smith</td>
+                <td>上回る</td>
+                <td>outweigh</td>
+                <td>50</td>
+                <td>Jill Smith</td>
+                <td>7/20/20</td>
+                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
+              </tr>
+              <tr>
+                <td>Jill Smith</td>
+                <td>犬</td>
+                <td>dog</td>
+                <td>50</td>
+                <td>Jill Smith</td>
+                <td>7/20/20</td>
+                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
+              </tr>
+              <tr>
+                <td>Jill Smith</td>
+                <td>上回る</td>
+                <td>outweigh</td>
+                <td>50</td>
+                <td>Jill Smith</td>
+                <td>7/20/20</td>
+                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
+              </tr>
+            </tbody>
+
+      </table>
+
+  </div><!--close table three quarter-->
+  <div class="w3-quarter style="padding: 13 px">
+    <div class="w3-container >style="text-align: center">
+      <div style="display: inline-block">
+        <h3 style="text-align: center">Feedback</h3>
+        <textarea rows="10" cols="20" style="border: solid 1px grey; border-radius: 25px; padding: 13px" >
+        Great job!
+        </textarea>
+      </div><!--close inline block div-->
+    </div><!--close w3-container-center-->
+  </div><!--close w3-quarter-->
+      <div><!--close w3-responsive-->
+</body>
 </html>
