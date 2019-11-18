@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <style>
+
+
+    <meta charset="utf-8">
+
+
+
+    <title>ALT</title>
+
+
+
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .h1{
+    font-size: 70px;
+  }
+
+
+
+  .taskbar {
+    overflow: hidden;
+    background-color: #70392D;
+  }
+
+  .taskbar a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 10px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+
+  .taskbar a:hover {
+    background-color: #000000;
+    color: white;
+  }
+
+  .taskbar a.active {
+    background-color: #8C8C8C;
+    color: white;
+  }
+  </style>
+
+</head>
+
+
+
+
+
+<body>
+<div class="w3-container" >
+  <div class = "taskbar">
+        <a class="active">Home</a>
+
+        <a style="float:right;" href="#signout">Sign out</a>
+  </div>  <!--close acount taskbar-->
+
+
+  <div class="taskbar">
+    <a href="#viewdata" >View Data</a>
+    <a href="#recordaudio">Record Audio</a>
+    <a href="#uploadaudio">Upload Audio</a>
+    <a href="#managecontacts">Rate Data</a>
+    <a href="#about">About</a>
+    <a style="float:right;" href="#settings">Settings</a>
+
+  </div>  <!--close nav taskbar-->
+</div> <!--close nav container-->
+
+<div class="w3-container" > <!-- container to enclose the rest of the body, to add margins -->
+  <div style="text-align: center;">
+    <h2>Evaluator Dashboard</h2>
+  </div>  <!--close heading-->
+
+  <div class="w3-responsive">
+
+      <table class="w3-table-all">
+        <thead>
+          <tr>
+            <th class='text-center'>User</th>
+            <th class='text-center'>Word (Orig.)</th>
+            <th class='text-center'>Word (Eng.)</th>
+            <th class='text-center'>Speaker</th>
+            <th class='text-center'>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Jill Smith</td>
+            <td>犬</td>
+            <td>dog</td>
+            <td>Jill Smith</td>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>Jill Smith</td>
+            <td>犬</td>
+            <td>dog</td>
+            <td>Jill Smith</td>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>Jill Smith</td>
+            <td>犬</td>
+            <td>dog</td>
+            <td>Jill Smith</td>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>Jill Smith</td>
+            <td>犬</td>
+            <td>dog</td>
+            <td>Jill Smith</td>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>Jill Smith</td>
+            <td>犬</td>
+            <td>dog</td>
+            <td>Jill Smith</td>
+            <td>50</td>
+          </tr>
+          <tr>
+
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            </tr>
+
+        </tbody>
+
+      </table>
+<td> Logged In: </td>
+        <div class="w3-row">
+            
+            <td> <button class="w3-button w3-med w3-white w3-border w3-round">N. Chomsky</button></td>
+            <td> <button class="w3-button w3-med w3-white w3-border w3-round">F. de Saussure</button></td>
+            <td> <button class="w3-button w3-med w3-white w3-border w3-round">S. Pinker</button></td>
+            <td> </td>
+            <td> </td>
+        </div>
+
+  </div><!--close w3-responsive-->
+</div> <!-- close main body container -->
+</body>
+</html>
