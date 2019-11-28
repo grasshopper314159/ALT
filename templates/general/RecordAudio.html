@@ -2,39 +2,22 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <style>
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
+  background-color: gray;
 }
 
 .h1{
   font-size: 70px;
 }
 
-.taskbar {
-  overflow: hidden;
-  background-color: #5e001d;
-}
 
-.taskbar a {
-  float: left;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 10px 16px;
-  text-decoration: none;
-  font-size: 17px;
-}
-
-.taskbar a:hover {
-  background-color: #000000;
-  color: white;
-}
-
-.taskbar a.active {
-  background-color: #8C8C8C;
-  color: white;
-}
 </style>
 
 </head>
@@ -45,56 +28,76 @@ body {
 
 <body>
 
-  <div class = "taskbar">
-        <a href="HomePage.html">Home</a>
+  <div class="w3-top " style="background-color: Grey">
+    <div class="w3-bar w3-card" style=" background-color: #5e001d">
+      <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+      <a href="../general/Dashboard.html" class="w3-bar-item w3-button w3-padding-large">Dashboard</a>
+      <a href="../general/ViewData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">View Data</a>
+      <a href="../general/RecordAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Record Audio</a>
+      <a href="../general/UploadAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Upload Audio</a>
+      <a href="../researcher/UsersManagement.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Manage Contacts</a>
+      <a href="../general/AboutUs.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">About</a>
 
-        <a style="float:right;" href="HomePage.html">Sign out</a>
+      <div class="w3-dropdown-hover w3-hide-small w3-right">
+        <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+          <a href="../general/AccountSettings.html" class="w3-bar-item w3-button">Settings</a>
+          <a href="../general/HomePage.html" class="w3-bar-item w3-button">HomePage</a>
+          <a href="../general/HomePage.html" class="w3-bar-item w3-button">Log Out</a>
+        </div>
+      </div>
+
+      <div class="w3-dropdown-hover w3-hide-small w3-right">
+        <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+          <a href="#" class="w3-bar-item w3-button">Researcher</a>
+          <a href="#" class="w3-bar-item w3-button">Rater</a>
+          <a href="#" class="w3-bar-item w3-button">Instructor</a>
+        </div>
       </div>
 
 
-  <div class="taskbar">
-    <a href="../general/Dashboard.html">Dashboard</a>
-    <a href="../general/ViewData.html">View Data</a>
-    <a class = "active" >Record Audio</a>
-    <a href="../general/UploadAudio.html">Upload Audio</a>
-    <a href="../researcher/UsersManagement.html">Manage Contacts</a>
-    <a href="../general/AboutUs.html">About</a>
-    <a style="float:right;" href="../general/AccountSettings.html">Settings</a>
 
+    </div>
+
+    <div style = "text-align: center;">
+    <h1>Record Audio</h1>
+    </div>
+
+
+    <div style = "margin-left: 1%;" class = "input">
+
+
+      <img style = "margin-left: 1%;" src="Images/seekbar.gif" width = "500px" height = "100px">
+      <div class="w3-bar" >
+
+      <div class= "w3-left">
+      <input style = "margin-left: 150px;"  type = "image" src = "Images/play.jpg" alt = "submit" width="70" height="70">
+      <input style = "margin-left: 15px;"  type = "image" src = "Images/record.jpg" alt = "submit" width="70" height="70">
+
+      </div>
+
+    </div>
+          <label style="text-align: center;">Speaker</label>
+      <br>
+      <textarea style = "vertical-align: middle;"rows="1" cols="30"></textarea>
+      <br><br>
+
+      <label>Text (origional)</label><br>
+      <textarea style = "vertical-align: middle;"rows="3" cols="100"></textarea>
+    <br><br>
+      <label>Text (English)</label><br>
+      <textarea style = "vertical-align: middle;"rows="3" cols="100"></textarea>
+      <br><br>
+      <label>Language</label><br>
+      <textarea style = "vertical-align: middle;"rows="1" cols="30"></textarea>
+      <br>
+      <br>
+      <button style = "vertical-align: bottom; float: left;    font-size: 20px;   padding: 13px 30px;"  >Upload</button>
+      <br>
+    </div>
 
   </div>
-
-
-
-<div style = "text-align: center;">
-<h1>Record Audio</h1>
-
-</div>
-
-
-<div class = "input">
-  <label>Speaker</label>
-  <button style = "vertical-align: bottom; float: right; margin: 40px;   font-size: 20px;   padding: 13px 30px;"  >Upload</button>
-
-  <input  style = "float: right; margin: 35px" type = "image" src = "Images/play.jpg" alt = "submit" width="48" height="48">
-  <input  style = "float: right; margin: 35px" type = "image" src = "Images/record.jpg" alt = "submit" width="48" height="48">
-
-
-  <br>
-  <textarea style = "vertical-align: middle;"rows="1" cols="30"></textarea>
-  <br><br>
-
-  <label>Text (origional)</label><br>
-  <textarea style = "vertical-align: middle;"rows="3" cols="100"></textarea>
-<br><br>
-  <label>Text (English)</label><br>
-  <textarea style = "vertical-align: middle;"rows="3" cols="100"></textarea>
-  <br><br>
-  <label>Language</label><br>
-  <textarea style = "vertical-align: middle;"rows="1" cols="30"></textarea>
-
-
-</div>
 
 </body>
 </html>
