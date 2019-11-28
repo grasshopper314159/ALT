@@ -1,43 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-}
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-.h1{
-  font-size: 70px;
-}
-
-
-
-.taskbar {
-  overflow: hidden;
-  background-color: #5e001d;
-}
-
-.taskbar a {
-  float: left;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 10px 16px;
-  text-decoration: none;
-  font-size: 17px;
-}
-
-.taskbar a:hover {
-  background-color: #000000;
-  color: white;
-}
-
-.taskbar a.active {
-  background-color: #8C8C8C;
-  color: white;
-}
-</style>
+  <style>
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: gray;
+  }
+  </style>
 
 </head>
 
@@ -47,23 +22,42 @@ body {
 
 <body>
 
-  <div class = "taskbar">
-        <a href="HomePage.html">Home</a>
 
-        <a style="float:right;" href="HomePage.html">Sign out</a>
+      <div class="w3-top " style="background-color: ">
+        <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
+          <a href="../general/HomePage.html"><img src="../general/Images/alr example logo.jpg" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
+          <br>
+
+          <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+          <a href="../general/Dashboard.html" class="w3-bar-item w3-button w3-padding-large">Dashboard</a>
+          <a href="../general/ViewData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">View Data</a>
+          <a href="../general/RecordAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Record Audio</a>
+          <a href="../general/UploadAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Upload Audio</a>
+          <a href="../researcher/UsersManagement.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Manage Contacts</a>
+          <a href="../general/AboutUs.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">About</a>
+
+          <div class="w3-dropdown-hover w3-hide-small w3-right">
+            <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+              <a href="../general/AccountSettings.html" class="w3-bar-item w3-button">Settings</a>
+              <a href="../general/HomePage.html" class="w3-bar-item w3-button">Home Page</a>
+              <a href="../general/HomePage.html" class="w3-bar-item w3-button">Log Out</a>
+            </div>
+          </div>
+
+          <div class="w3-dropdown-hover w3-hide-small w3-right">
+            <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+              <a href="#" class="w3-bar-item w3-button">Researcher</a>
+              <a href="#" class="w3-bar-item w3-button">Rater</a>
+              <a href="#" class="w3-bar-item w3-button">Instructor</a>
+            </div>
+          </div>
+
+
+
+        </div>
       </div>
-
-
-  <div class="taskbar">
-    <a href = "../general/Dashboard.html" >Dashboard</a>
-    <a href="../general/ViewData.html">View Data</a>
-    <a href="../general/RecordAudio.html" >Record Audio</a>
-    <a class ="active">Upload Audio</a>
-    <a href="../researcher/UsersManagement.html">Manage Contacts</a>
-    <a href="../general/AboutUs.html">About</a>
-    <a style="float:right;" href="../general/AccountSettings.html">Settings</a>
-
-  </div>
 
 </body>
 </html?
