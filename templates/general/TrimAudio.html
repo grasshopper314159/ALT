@@ -3,6 +3,9 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+            <!-- On the font awesome page , it had this- Note: to improve web accessibility, we recommend using aria-hidden="true" to hide icons used purely for decoration. -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         body {
             margin: 0;
@@ -36,13 +39,37 @@
             background-color: #8C8C8C;
             color: white;
         }
+
+        .center {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          width: 80%;
+        }
+        .spaced-container {
+          display: flex;
+          flex-wrap: wrap;
+          line-height: 2px;
+          justify-content: space-between;
+          padding-left: 10%;
+          padding-right: 10%;
+        }
+        .sc-item {
+            flex: 1 auto;  
+        }
+        .time-box {
+            background-color: #fff;
+            border-radius: 3px;
+            padding: 5px;
+            font-size: 14px;
+        }
     </style>
 </head>
 
 <body>
     <div class="taskbar">
         <a href="HomePage.html">Home</a>
-        <a style="float:right;" href="HomePage.html">Sign out</a>
+        <a style="float:right;" href="HomePage.html">Sign out</a>   
     </div>
     <div class="taskbar">
         <a href="../general/Dashboard.html">Dashboard</a>
@@ -53,49 +80,58 @@
         <a href="../general/AboutUs.html">About</a>
         <a style="float:right;" href="../general/AccountSettings.html">Settings</a>
     </div>
-    <div style="text-align: center;">
-        <h1>Trim Audio</h1>
+    <br>
+        <h1 style="text-align: center;" >Trim Audio</h1>
+     <!-- Fix me.  class center is local, is that bad? Previously, I put it in a w3-display-container, but then
+        it covered up the heading.  -->
+        <img src="Images/waveform.jpg" class="center" alt="audio waveform" style="max-height: 100%">    
+    <br>
+    <div class="spaced-container">
+    
+        <div class="w3-btn w3-white">
+            <i class="fa fa-play-circle-o fa-3x" aria-hidden="true"></i>
+            <h4>Play</h4>
+        </div>
+        <div class="w3-btn w3-white">
+            <i class="fa fa-pause-circle-o fa-3x" aria-hidden="true"></i>
+            <h4>Pause</h4>
+        </div>
+        <div class="w3-btn w3-white">
+            <i class="fa fa-stop-circle-o fa-3x" aria-hidden="true"></i>
+            <h4>Stop</h4>
+        </div>
+        <button style="vertical-align: bottom; float: right; margin: 40px;   font-size: 20px;   padding: 13px 30px;">Auto-select</button>
+        <button style="vertical-align: bottom; float: right; margin: 40px;   font-size: 20px;   padding: 13px 30px;">Set Start</button>
+        <div class="time-box w3-panel w3-border w3-round-xlarge sc-item">
+           <h4 style="text-align: center; padding-top: 4px;"> 00:02:34</h4>
+        </div>
+        <button style="vertical-align: bottom; float: right; margin: 40px;   font-size: 20px;   padding: 13px 30px;">Set stop</button>
+        <div class="time-box w3-panel w3-border w3-round-xlarge sc-item">
+           <h4 style="text-align: center; padding-top: 4px;"> 00:03:66</h4>
+        </div>
+
+        <button style="vertical-align: bottom; float: right; margin: 40px;   font-size: 20px;   padding: 13px 30px;">Clear</button>
+
+
     </div>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <div class="input">
-        <input style="float: left; margin: 35px" type="image" src="Images/play.jpg" alt="submit" width="48" height="48">
-        <input style="float: left; margin: 35px" type="image" src="Images/record.jpg" alt="submit" width="48" height="48">
-        <input style="float: left; margin: 35px" type="image" src="Images/record.jpg" alt="submit" width="48" height="48">
-        <label></label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="20"></textarea>
-        <label></label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="20"></textarea>
-        20px; padding: 13px 30px;" >Upload</button>
-        <button style="vertical-align: bottom; float: right; margin: 40px;   font-size: 20px;   padding: 13px 30px;">Finish Editing</button>
-    </div>
-    <div class="input">
-        <label>Title</label>
+
+
+
+    <div class="input" style="padding: 13px;">
+        <label style="padding: 13px;">Title</label>
         <button style="vertical-align: bottom; float: right; margin: 40px;   font-size: 20px;   padding: 13px 30px;">Upload</button>
         <button style="vertical-align: bottom; float: right; margin: 40px;   font-size: 20px;   padding: 13px 30px;">Finish Editing</button>
-        <input style="float: right; margin: 35px" type="image" src="Images/play.jpg" alt="submit" width="48" height="48">
-        <input style="float: right; margin: 35px" type="image" src="Images/record.jpg" alt="submit" width="48" height="48">
         <label></label><br>
         <textarea style="vertical-align: middle;" rows="3" cols="20"></textarea>
         <br><br>
-        <label></label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="20"></textarea>
-        <br><br><br>
-        <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>
-        <br><br>
-        <label>Text (origional)</label><br>
+
+        <label style="padding: 13px;">Text (original)</label><br>
         <textarea style="vertical-align: middle;" rows="3" cols="100"></textarea>
         <br><br>
-        <label>Text (English)</label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="100"></textarea>
+        <label style="padding: 13px;">Text (English)</label><br>
+        <textarea style="vertical-align: middle;  padding-left: 10px;" rows="3" cols="100"></textarea>
         <br><br>
-        <label>Language</label><br>
+        <label style="padding: 13px;">Language</label><br>
         <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>
     </div>
 </body>
