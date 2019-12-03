@@ -8,7 +8,7 @@
   color: #fff;
   display: inline;
   font-family: sans-serif;
-  text-shadow: -1px 0 red, 0 1px red, 1px 0 red, 0 -1px red; 
+  text-shadow: -1px 0 red, 0 1px red, 1px 0 red, 0 -1px red;
 }
 
 .home-bar {
@@ -24,4 +24,3 @@
 ul {
   list-style-type: none;
 }
-
