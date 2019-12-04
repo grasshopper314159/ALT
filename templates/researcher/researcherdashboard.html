@@ -70,9 +70,12 @@
           <div style="text-align: center;">
             <h2>Researcher Dashboard</h2>
           </div>  <!--close heading-->
-
-          <div class="w3-responsive">
-
+          <!-- Add style="overflow-y:scroll;height:100%; to div below? -->
+          <div class="w3-responsive" style="overflow-x: hidden;">
+            <div class="w3-threequarter">
+              <div style="text-align: left;">
+                <h3>Recently Rated</h3>
+              </div>
               <table class="w3-table-all">
                 <thead>
                   <tr>
@@ -119,18 +122,35 @@
                     <td>Jill Smith</td>
                     <td>50</td>
                   </tr>
-                  <tr>
-
+                  <tr class="w3-black">
+                    <td > Logged In: </td>
                     <td> </td>
                     <td> </td>
                     <td> </td>
                     <td> </td>
-                    </tr>
+                  </tr>
 
                 </tbody>
 
               </table>
-        <td> Logged In: </td>
+            </div> <!-- close 3/4 div -->
+            <!-- side box for calendar -->
+            <div class="w3-quarter" style=" padding: 0px">
+                <div class="w3-container" style="text-align: center; width: 100%;">
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <div style="display: inline-block; width: 100%;">
+                     <img src="../general/Images/fake_calendar.png" class="center" alt="calendar widget" style="max-height: 100%">
+                  </div>
+                    <!--close inline block div-->
+                </div>
+                <!--close w3-container-center-->
+            </div>
+            <!--close w3-quarter-->
+
+        <td>  </td>
                 <div class="w3-row">
 
                     <td> <button class="w3-button w3-med w3-white w3-border w3-round">N. Chomsky</button></td>
