@@ -1,129 +1,132 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="../../static/PAGENAME/CSS/PAGENAME.css">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <style>
-            body {
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../static/PAGENAME/CSS/PAGENAME.css">
+
+  <style>
+    body {
                 margin: 0;
                 font-family: Arial, Helvetica, sans-serif;
             }
         </style>
-        <title>User Management</title>
-    </head>
-    <!-- Need to add scrolling -->
-    <body>
-        <div class="w3-top w3-grey" style="overflow-y:scroll; height:100%;">
-            <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
-                <a href="../general/HomePage.html"><img src="../general/Images/alr example logo.jpg" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
-                <h4 class="home-header">Applied Language Resources</h4>
-                <br>
-                <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-                <a href="../general/Dashboard.html" class="w3-bar-item w3-button w3-padding-large">Dashboard</a>
-                <a href="../general/ViewData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">View Data</a>
-                <a href="../general/RecordAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Record Audio</a>
-                <a href="../general/UploadAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Upload Audio</a>
-                <a href="../researcher/UsersManagement.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Manage Contacts</a>
-                <a href="../general/AboutUs.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">About</a>
+  <title>User Management</title>
+</head>
+<!-- Need to add scrolling -->
 
-                <div class="w3-dropdown-hover w3-hide-small w3-right">
-                    <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
-                    <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                        <a href="../general/AccountSettings.html" class="w3-bar-item w3-button">Settings</a><a href="../general/HomePage.html" class="w3-bar-item w3-button">Home Page</a>
-                        <a href="../general/HomePage.html" class="w3-bar-item w3-button">Log Out</a>
-                    </div>
-                </div>
+<body>
+  <div class="w3-top w3-grey" style="overflow-y:scroll; height:100%;">
+    <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
+      <a href="../general/HomePage.html"><img src="../general/Images/alr example logo.jpg" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
+      <h4 class="home-header w3-xlarge">Applied Language Resources</h4>
+      <br>
+      <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+      <a href="../researcher/researcherdashboard.html" class="w3-bar-item w3-button w3-padding-large w3-xlarge">Dashboard</a>
+      <a href="../general/ViewData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
+      <a href="../general/UploadAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
+      <a href="../researcher/UserManagement.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Manage Contacts</a>
+      <a href="../general/AboutUs.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About</a>
 
-                <div class="w3-dropdown-hover w3-hide-small w3-right">
-                    <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
-                    <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                        <a href="#" class="w3-bar-item w3-button">Researcher</a>
-                        <a href="#" class="w3-bar-item w3-button">Rater</a>
-                        <a href="#" class="w3-bar-item w3-button">Instructor</a>
-                    </div>
-                </div>
-            </div>
-            <div class="" style="max-height:100%;">
-                <div class="w3-container">
-                    <h3>Manage Colleagues</h3>
-                    <hr>
-                    <div class="w3-border w3-border-black w3-white ">
-                        <h3>Add Colleague</h3>
-                        <hr>
-                        <label for="idSearch">Search</label>
-                        <!-- the next line is a bunch of tabs -->
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                        <label for="Name">Name</label>
-                        <br>
-                        <input type="text" name="idSearch" value="id">
-                        <input type="text" name="Name" value="Name">
-                        <a href="#" class="w3-btn w3-light-green">Add</a>
-                    </div>
-                    <div class="">
-                        <h3>Your Colleagues</h3>
-                        <input type="text" name="Search" value="Search">
-                        <br><br>
-                        <table class="w3-table-all">
-                            <thead>
-                                <tr>
-                                    <th class='text-center'>User</th>
-                                    <th class='text-center'>User Type</th>
-                                    <th class='text-center'>Date Added</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Jill Smith</td>
-                                    <td>Researcher</td>
-                                    <td>08/25/2018</td>
-                                </tr>
-                                <tr>
-                                    <td>Kevin B.</td>
-                                    <td>Student</td>
-                                    <td>08/25/2018</td>
-                                </tr>
-                                <tr>
-                                    <td>Jill Smith</td>
-                                    <td>Researcher</td>
-                                    <td>08/25/2018</td>
-                                </tr>
-                                <tr>
-                                    <td>Jill Smith</td>
-                                    <td>Researcher</td>
-                                    <td>08/25/2018</td>
-                                </tr>
-                                <tr>
-                                    <td>Jill Smith</td>
-                                    <td>Researcher</td>
-                                    <td>08/25/2018</td>
-                                </tr>
-                                <tr>
-                                    <td>Jill Smith</td>
-                                    <td>Researcher</td>
-                                    <td>08/25/2018</td>
-                                </tr>
-                                <tr>
-                                    <td>Jill Smith</td>
-                                    <td>Researcher</td>
-                                    <td>08/25/2018</td>
-                                </tr>
-                                <tr>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+      <div class="w3-dropdown-hover w3-hide-small w3-right w3-xlarge">
+        <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+          <a href="../general/AccountSettings.html" class="w3-bar-item w3-button">Settings</a><a href="../general/HomePage.html" class="w3-bar-item w3-button">Home Page</a>
+          <a href="../general/HomePage.html" class="w3-bar-item w3-button">Log Out</a>
         </div>
-    </body>
+      </div>
+
+      <div class="w3-dropdown-hover w3-hide-small w3-right w3-xlarge">
+        <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+          <a href="../researcher/researcherdashboard.html" class="w3-bar-item w3-button">Researcher</a>
+          <a href="../rater/evaluatordashboard.html" class="w3-bar-item w3-button">Rater</a>
+          <a href="#" class="w3-bar-item w3-button">Instructor</a>
+          <a href="#" class="w3-bar-item w3-button">Student</a>
+        </div>
+      </div>
+    </div>
+    <div class="" style="max-height:100%;">
+      <div class="w3-container">
+        <h3>Manage Colleagues</h3>
+        <hr>
+        <div class="w3-border w3-border-black w3-white ">
+          <h3>Add Colleague</h3>
+          <hr>
+          <label for="idSearch">Search</label>
+          <!-- the next line is a bunch of tabs -->
+          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+          <label for="Name">Name</label>
+          <br>
+          <input type="text" name="idSearch" value="id">
+          <input type="text" name="Name" value="Name">
+          <a href="#" class="w3-btn w3-light-green">Add</a>
+        </div>
+        <div class="">
+          <h3>Your Colleagues</h3>
+          <input type="text" name="Search" value="Search">
+          <br><br>
+          <table class="w3-table-all">
+            <thead>
+              <tr>
+                <th class='text-center'>User</th>
+                <th class='text-center'>User Type</th>
+                <th class='text-center'>Date Added</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Jill Smith</td>
+                <td>Researcher</td>
+                <td>08/25/2018</td>
+              </tr>
+              <tr>
+                <td>Kevin B.</td>
+                <td>Student</td>
+                <td>08/25/2018</td>
+              </tr>
+              <tr>
+                <td>Jill Smith</td>
+                <td>Researcher</td>
+                <td>08/25/2018</td>
+              </tr>
+              <tr>
+                <td>Jill Smith</td>
+                <td>Researcher</td>
+                <td>08/25/2018</td>
+              </tr>
+              <tr>
+                <td>Jill Smith</td>
+                <td>Researcher</td>
+                <td>08/25/2018</td>
+              </tr>
+              <tr>
+                <td>Jill Smith</td>
+                <td>Researcher</td>
+                <td>08/25/2018</td>
+              </tr>
+              <tr>
+                <td>Jill Smith</td>
+                <td>Researcher</td>
+                <td>08/25/2018</td>
+              </tr>
+              <tr>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
 </html>

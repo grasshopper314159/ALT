@@ -1,219 +1,230 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="../../static/PAGENAME/CSS/PAGENAME.css">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Rate Data</title>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../static/PAGENAME/CSS/PAGENAME.css">
 
-        <style>
-            body {
-                margin: 0;
-                font-family: Arial, Helvetica, sans-serif;
-            }
+  <title>Rate Data</title>
 
-            .h1 {
-                font-size: 70px;
-            }
+  <style>
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+    }
 
-            .checkboxgroup {
-                display: inline-block;
-                text-align: center;
-            }
+    .h1 {
+        font-size: 70px;
+    }
 
-            .checkboxgroup label {
-                display: block;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="">
-            <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
-                <a href="../general/HomePage.html"><img src="../general/Images/alr example logo.jpg" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
-                <h4 class="home-header">Applied Language Resources</h4>
-                <br>
-                <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-                <a href="../general/Dashboard.html" class="w3-bar-item w3-button w3-padding-large">Dashboard</a>
-                <a href="../general/ViewData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">View Data</a>
-                <a href="../general/UploadAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Upload Audio</a>
-                <a href="../rater/RateData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Rate Data</a>
-                <a href="../general/AboutUs.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">About</a>
-                <div class="w3-dropdown-hover w3-hide-small w3-right">
-                    <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
-                    <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                        <a href="../general/AccountSettings.html" class="w3-bar-item w3-button">Settings</a>
-                        <a href="../general/HomePage.html" class="w3-bar-item w3-button">Home Page</a>
-                        <a href="../general/HomePage.html" class="w3-bar-item w3-button">Log Out</a>
-                    </div>
+    .checkboxgroup {
+        display: inline-block;
+        text-align: center;
+    }
+
+    .checkboxgroup label {
+        display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="w3-top w3-grey" style="overflow-y:scroll;height:100%;">
+    <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
+      <a href="../general/HomePage.html"><img src="../general/Images/alr example logo.jpg" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
+      <h4 class="home-header w3-xlarge">Applied Language Resources</h4>
+      <br>
+      <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+      <a href="../rater/evaluatordashboard.html" class="w3-bar-item w3-button w3-padding-large w3-xlarge">Dashboard</a>
+      <a href="../general/ViewData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
+      <a href="../general/UploadAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
+      <a href="../rater/RateData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Rate Data</a>
+      <a href="../general/AboutUs.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About</a>
+      <div class="w3-dropdown-hover w3-hide-small w3-right w3-xlarge">
+        <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+          <a href="../general/AccountSettings.html" class="w3-bar-item w3-button">Settings</a>
+          <a href="../general/HomePage.html" class="w3-bar-item w3-button">Home Page</a>
+          <a href="../general/HomePage.html" class="w3-bar-item w3-button">Log Out</a>
+        </div>
+      </div>
+      <div class="w3-dropdown-hover w3-hide-small w3-right w3-xlarge">
+        <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+          <a href="../researcher/researcherdashboard.html" class="w3-bar-item w3-button">Researcher</a>
+          <a href="../rater/evaluatordashboard.html" class="w3-bar-item w3-button">Rater</a>
+          <a href="#" class="w3-bar-item w3-button">Instructor</a>
+          <a href="#" class="w3-bar-item w3-button">Student</a>
+        </div>
+      </div>
+    </div>
+    <div class="w3-container">
+      <!-- container to enclose the rest of the body, to add margins -->
+      <br>
+      <div class="w3-col" style="width:150px">
+        <label style="padding:5px">Search</label>
+        <input class="w3-input w3-border w3-animate-input" type="text">
+      </div>
+      <!--close search area-->
+      <div class="w3-rest w3-center">
+        <h2>Rate Data</h2>
+      </div>
+      <!--close heading-->
+
+      <div class="w3-responsive" style="padding: 5px">
+        <div class="w3-threequarter">
+          <table class="w3-table-all">
+            <thead>
+              <tr>
+                <th class='text-center'>Owner</th>
+                <th class='text-center'>Researcher</th>
+                <th class='text-center'>Text</th>
+                <th class='text-center'>Date</th>
+                <th class='text-center'></th>
+                <th class='text-center'><input class="w3-check" type="checkbox"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Jill Smith</td>
+                <td>M.Miyashita</td>
+                <td>犬</td>
+                <td>7/20/20</td>
+                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
+                <td><input class="w3-check" type="checkbox"></td>
+              </tr>
+              <tr>
+                <td>Jill Smith</td>
+                <td>M.Miyashita</td>
+                <td>犬</td>
+                <td>7/20/20</td>
+                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
+                <td><input class="w3-check" type="checkbox"></td>
+              </tr>
+              <tr>
+                <td>Jill Smith</td>
+                <td>M.Miyashita</td>
+                <td>犬</td>
+                <td>7/20/20</td>
+                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
+                <td><input class="w3-check" type="checkbox"></td>
+              </tr>
+              <tr>
+                <td>Jill Smith</td>
+                <td>M.Miyashita</td>
+                <td>犬</td>
+                <td>7/20/20</td>
+                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
+                <td><input class="w3-check" type="checkbox"></td>
+              </tr>
+              <tr>
+                <td>Jill Smith</td>
+                <td>M.Miyashita</td>
+                <td>犬</td>
+                <td>7/20/20</td>
+                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
+                <td><input class="w3-check" type="checkbox"></td>
+              </tr>
+              <tr>
+                <td>Jill Smith</td>
+                <td>M.Miyashita</td>
+                <td>犬</td>
+                <td>7/20/20</td>
+                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
+                <td><input class="w3-check" type="checkbox"></td>
+              </tr>
+              <tr>
+                <td>Jill Smith</td>
+                <td>M.Miyashita</td>
+                <td>犬</td>
+                <td>7/20/20</td>
+                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
+                <td><input class="w3-check" type="checkbox"></td>
+              </tr>
+              <tr>
+                <td>Jill Smith</td>
+                <td>M.Miyashita</td>
+                <td>犬</td>
+                <td>7/20/20</td>
+                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
+                <td><input class="w3-check" type="checkbox"></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                  <button class="w3-button w3-med w3-white w3-border w3-round">Submit</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <!--close table three quarter-->
+        <div class="w3-quarter w3-white">
+          <div class="w3-container" style=" border-radius: 25px; padding: 0px; border: solid 1px grey; text-align: center">
+            <div style="display: inline-block; padding: 0px; width: 100%; ">
+              <h6 style="text-align: center">Owner | Researcher</h3>
+                <h3 style="text-align: center">J. Smith | M. Miyashita</h3>
+                <div style="border: solid 1px grey; border-radius: 5px; padding: 2px">
+                  <input style="" type="image" src="Images/play.jpg" alt="submit" width="32" height="32"></input>
                 </div>
-                <div class="w3-dropdown-hover w3-hide-small w3-right">
-                    <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
-                    <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                        <a href="#" class="w3-bar-item w3-button">Researcher</a>
-                        <a href="#" class="w3-bar-item w3-button">Rater</a>
-                        <a href="#" class="w3-bar-item w3-button">Instructor</a>
+                <!--close input (play button) div-->
+                <div style="border: solid 1px grey; border-radius: 5px; padding: 2px">
+                  <div class="w3-bar">
+                    <div class="checkboxgroup">
+                      <input class="w3-radio" type="radio" name="radiorating" value="1">
+                      <label for="my_radio_button_id2">1</label>
                     </div>
+                    <div class="checkboxgroup">
+                      <input class="w3-radio" type="radio" name="radiorating" value="2">
+                      <label for="my_radio_button_id2">2</label>
+                    </div>
+                    <div class="checkboxgroup">
+                      <input class="w3-radio" type="radio" name="radiorating" value="3">
+                      <label for="my_radio_button_id2">3</label>
+                    </div>
+                    <div class="checkboxgroup">
+                      <input class="w3-radio" type="radio" name="radiorating" value="4">
+                      <label for="my_radio_button_id2">4</label>
+                    </div>
+                    <div class="checkboxgroup">
+                      <input class="w3-radio" type="radio" name="radiorating" value="5">
+                      <label for="my_radio_button_id2">5</label>
+                    </div>
+                    <div class="checkboxgroup">
+                      <input class="w3-radio" type="radio" name="radiorating" value="6">
+                      <label for="my_radio_button_id2">6</label>
+                    </div>
+                    <div class="checkboxgroup">
+                      <input class="w3-radio" type="radio" name="radiorating" value="7">
+                      <label for="my_radio_button_id2">7</label>
+                    </div>
+                  </div><!-- close radio button bar -->
+                </div>
+                <!--close mystery 000000s div-->
+                <div>
+                  <h3>Comments</h3>
+                  <textarea rows="10" cols="30" style="border: solid 1px grey; padding: 3px; width: 90%;">Great job!</textarea>
                 </div>
             </div>
-            <div class="w3-container">
-                <!-- container to enclose the rest of the body, to add margins -->
-                <div class="w3-col" style="width:150px">
-                    <label style="padding: 5 px">Search</label>
-                    <input class="w3-input w3-border w3-animate-input" type="text">
-                </div>
-                <!--close search area-->
-                <div class="w3-rest w3-center">
-                    <h2>Rate Data</h2>
-                </div>
-                <!--close heading-->
-
-                <div class="w3-responsive" style="padding: 5px">
-                    <div class="w3-threequarter">
-                        <table class="w3-table-all">
-                            <thead>
-                                <tr>
-                                    <th class='text-center'>Owner</th>
-                                    <th class='text-center'>Researcher</th>
-                                    <th class='text-center'>Text</th>
-                                    <th class='text-center'>Date</th>
-                                    <th class='text-center'></th>
-                                    <th class='text-center'><input class="w3-check" type="checkbox"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Jill Smith</td>
-                                    <td>M.Miyashita</td>
-                                    <td>犬</td>
-                                    <td>7/20/20</td>
-                                    <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                                    <td><input class="w3-check" type="checkbox"></td>
-                                </tr>
-                                <tr>
-                                    <td>Jill Smith</td>
-                                    <td>M.Miyashita</td>
-                                    <td>犬</td>
-                                    <td>7/20/20</td>
-                                    <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                                    <td><input class="w3-check" type="checkbox"></td>
-                                </tr>
-                                <tr>
-                                    <td>Jill Smith</td>
-                                    <td>M.Miyashita</td>
-                                    <td>犬</td>
-                                    <td>7/20/20</td>
-                                    <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                                    <td><input class="w3-check" type="checkbox"></td>
-                                </tr>
-                                <tr>
-                                    <td>Jill Smith</td>
-                                    <td>M.Miyashita</td>
-                                    <td>犬</td>
-                                    <td>7/20/20</td>
-                                    <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                                    <td><input class="w3-check" type="checkbox"></td>
-                                </tr>
-                                <tr>
-                                    <td>Jill Smith</td>
-                                    <td>M.Miyashita</td>
-                                    <td>犬</td>
-                                    <td>7/20/20</td>
-                                    <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                                    <td><input class="w3-check" type="checkbox"></td>
-                                </tr>
-                                <tr>
-                                    <td>Jill Smith</td>
-                                    <td>M.Miyashita</td>
-                                    <td>犬</td>
-                                    <td>7/20/20</td>
-                                    <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                                    <td><input class="w3-check" type="checkbox"></td>
-                                </tr>
-                                <tr>
-                                    <td>Jill Smith</td>
-                                    <td>M.Miyashita</td>
-                                    <td>犬</td>
-                                    <td>7/20/20</td>
-                                    <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                                    <td><input class="w3-check" type="checkbox"></td>
-                                </tr>
-                                <tr>
-                                    <td>Jill Smith</td>
-                                    <td>M.Miyashita</td>
-                                    <td>犬</td>
-                                    <td>7/20/20</td>
-                                    <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                                    <td><input class="w3-check" type="checkbox"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <button class="w3-button w3-med w3-white w3-border w3-round">Submit</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-                    <!--close table three quarter-->
-                    <div class="w3-quarter" style=" padding: 0 px">
-                        <div class="w3-container" style=" border-radius: 25px; padding: 0px; border: solid 1px grey; text-align: center">
-                            <div style="display: inline-block; padding: 0px; width: 100%; ">
-                                <h6 style="text-align: center">User | Researcher</h3>
-                                    <h3 style="text-align: center">J. Smith | M. Miyashita</h3>
-                                    <div style="border: solid 1px grey; border-radius: 5px; padding: 2px">
-                                        <input style="" type="image" src="Images/play.jpg" alt="submit" width="32" height="32"></input>
-                                    </div><!--close input (play button) div-->
-                                    <div style="border: solid 1px grey; border-radius: 5px; padding: 2px">
-                                        <div class="w3-bar">
-                                            <div class="checkboxgroup">
-                                                <input class="w3-radio" type="radio" name="radiorating" value="1">
-                                                <label for="my_radio_button_id2">1</label>
-                                            </div>
-                                            <div class="checkboxgroup">
-                                                <input class="w3-radio" type="radio" name="radiorating" value="2">
-                                                <label for="my_radio_button_id2">2</label>
-                                            </div>
-                                            <div class="checkboxgroup">
-                                                <input class="w3-radio" type="radio" name="radiorating" value="3">
-                                                <label for="my_radio_button_id2">3</label>
-                                            </div>
-                                            <div class="checkboxgroup">
-                                                <input class="w3-radio" type="radio" name="radiorating" value="4">
-                                                <label for="my_radio_button_id2">4</label>
-                                            </div>
-                                            <div class="checkboxgroup">
-                                                <input class="w3-radio" type="radio" name="radiorating" value="5">
-                                                <label for="my_radio_button_id2">5</label>
-                                            </div>
-                                            <div class="checkboxgroup">
-                                                <input class="w3-radio" type="radio" name="radiorating" value="6">
-                                                <label for="my_radio_button_id2">6</label>
-                                            </div>
-                                            <div class="checkboxgroup">
-                                                <input class="w3-radio" type="radio" name="radiorating" value="7">
-                                                <label for="my_radio_button_id2">7</label>
-                                            </div>
-                                        </div><!-- close radio button bar -->
-                                    </div><!--close mystery 000000s div-->
-                                    <div>
-                                        <h3>Comments</h3>
-                                        <textarea rows="10" cols="30" style="border: solid 1px grey; padding: 3px; width: 90%;">Great job!</textarea>
-                                    </div>
-                            </div><!--close inline block div-->
-                        </div><!--close w3-container-center-->
-                    </div><!--close w3-quarter-->
-                </div><!--close w3-responsive-->
-            </div><!-- close main body container -->
+            <!--close inline block div-->
+          </div>
+          <!--close w3-container-center-->
         </div>
-    </body>
+        <!--close w3-quarter-->
+      </div>
+      <!--close w3-responsive-->
+    </div><!-- close main body container -->
+  </div>
+</body>
+
 </html>
