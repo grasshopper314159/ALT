@@ -7,105 +7,154 @@
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="../../static/PAGENAME/CSS/PAGENAME.css">
-        <style>
-            body {
-                margin: 0;
-                font-family: Arial, Helvetica, sans-serif;
-            }
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+      <link rel="stylesheet" href="../../static/PAGENAME/CSS/PAGENAME.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
-            .h1 {
-                font-size: 70px;
-            }
         </style>
-        <title>Trim Audio</title>
-    </head>
-    <body>
-        <div class="w3-top " style="overflow-y:scroll;height:100%;">
-            <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
-                <a href="../general/HomePage.html"><img src="../general/Images/alr example logo.jpg" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
-                <h4 class="home-header">Applied Language Resources</h4>
-                <br>
-                <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-                <a href="../general/Dashboard.html" class="w3-bar-item w3-button w3-padding-large">Dashboard</a>
-                <a href="../general/ViewData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">View Data</a>
-                <a href="../general/RecordAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Record Audio</a>
-                <a href="../general/UploadAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Upload Audio</a>
-                <a href="../researcher/UsersManagement.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Manage Contacts</a>
-                <a href="../general/AboutUs.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">About</a>
-                <div class="w3-dropdown-hover w3-hide-small w3-right">
-                    <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
-                    <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                        <a href="../general/AccountSettings.html" class="w3-bar-item w3-button">Settings</a>
-                        <a href="../general/HomePage.html" class="w3-bar-item w3-button">Home Page</a>
-                        <a href="../general/HomePage.html" class="w3-bar-item w3-button">Log Out</a>
-                    </div>
-                </div>
-                <div class="w3-dropdown-hover w3-hide-small w3-right">
-                    <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
-                    <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                        <a href="#" class="w3-bar-item w3-button">Researcher</a>
-                        <a href="#" class="w3-bar-item w3-button">Rater</a>
-                        <a href="#" class="w3-bar-item w3-button">Instructor</a>
-                    </div>
-                </div>
-            </div>
-            <div class="w3-center">
-                <br>
-                <h1>Trim Audio</h1>
-                <img src="../general/Images/waveform.jpg" class="center" alt="audio waveform" style="max-height: 100%">
-                <br>
-            </div>
-            <div class="w3-container w3-center">
-                <div class="">
-                    <div class="w3-btn w3-white">
-                        <i class="fa fa-play-circle-o fa-3x" aria-hidden="true"></i>
-                        <h4>Play</h4>
-                    </div>
-                    <div class="w3-btn w3-white">
-                        <i class="fa fa-pause-circle-o fa-3x" aria-hidden="true"></i>
-                        <h4>Pause</h4>
-                    </div>
-                    <div class="w3-btn w3-white">
-                        <i class="fa fa-stop-circle-o fa-3x" aria-hidden="true"></i>
-                        <h4>Stop</h4>
-                    </div>
-                    <div class="">
-                        <button class="">Auto-select</button>
-                        <button class="">Set Start</button>
-                        <input class="w3-rest w3-panel w3-border w3-round-xlarge" style="max-width:110px" type="text" name="StartTime" value="00:02:43">
-                        <button >Set stop</button>
-                        <input class="w3-rest w3-panel w3-border w3-round-xlarge" style="max-width:110px" type="text" name="StopTime" value="00:03:20">
-                        <button>Clear</button>
-                    </div>
-                </div>
-            </div>
-            <div class="w3-container w3-grey">
-                <div class="w3-half">
-                    <br>
-                    <label>Title</label>
-                    <br>
-                    <textarea style="vertical-align: middle;"></textarea>
-                    <br><br>
-                    <label style="padding: 13px;">Text (original)</label><br>
-                    <textarea style="vertical-align: middle;" rows="3" cols="75"></textarea>
-                    <br><br>
-                    <label style="padding: 13px;">Text (English)</label><br>
-                    <textarea style="vertical-align: middle;" rows="3" cols="75"></textarea>
-                    <br><br>
-                    <label style="padding: 13px;">Language</label><br>
-                    <textarea style="vertical-align: middle;"></textarea>
-                </div>
-                <div class="w3-half w3-center">
-                    <br><br><br><br><br><br><br><br>
-                    <button class="w3-xlarge">Upload</button>
-                    <br><br>
-                    <button class="w3-xlarge">Finish Editing</button>
-                </div>
-            </div>
-            <div class="w3-container w3-grey" style="height:20px">
-                <!-- filler div -->
-            </div>
+        .h1 {
+            font-size: 70px;
+        }
+
+        .taskbar {
+            overflow: hidden;
+            background-color: #5e001d;
+        }
+
+        .taskbar a {
+            float: left;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 10px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .taskbar a:hover {
+            background-color: #000000;
+            color: white;
+        }
+
+        .taskbar a.active {
+            background-color: #8C8C8C;
+            color: white;
+        }
+
+        .center {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          width: 80%;
+        }
+        .spaced-container {
+          display: flex;
+          flex-wrap: wrap;
+          line-height: 2px;
+          justify-content: space-between;
+          padding-left: 10%;
+          padding-right: 10%;
+        }
+        .sc-item {
+            flex: 1 auto;
+        }
+        .time-box {
+            background-color: #fff;
+            border-radius: 3px;
+            padding: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+  <div class="w3-top " style="background-color: grey; height: 100%; overflow-y: scroll;">
+      <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
+          <a href="../general/HomePage.html"><img src="../general/Images/alr example logo.jpg" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
+          <h4 class="home-header">Applied Language Resources</h4>
+          <br>
+          <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+          <a href="../general/Dashboard.html" class="w3-bar-item w3-button w3-padding-large">Dashboard</a>
+          <a href="../general/ViewData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">View Data</a>
+          <a href="../general/RecordAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Upload Audio</a>
+          <a href="../researcher/UsersManagement.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Manage Contacts</a>
+          <a href="../general/AboutUs.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">About</a>
+          <div class="w3-dropdown-hover w3-hide-small w3-right">
+              <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
+              <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                  <a href="../general/AccountSettings.html" class="w3-bar-item w3-button">Settings</a>
+                  <a href="../general/HomePage.html" class="w3-bar-item w3-button">Home Page</a>
+                  <a href="../general/HomePage.html" class="w3-bar-item w3-button">Log Out</a>
+              </div>
+          </div>
+          <div class="w3-dropdown-hover w3-hide-small w3-right">
+              <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
+              <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                  <a href="#" class="w3-bar-item w3-button">Researcher</a>
+                    <a href="../rater/RateData.html" class="w3-bar-item w3-button">Rater</a>
+                  <a href="#" class="w3-bar-item w3-button">Instructor</a>
+              </div>
+          </div>
+      </div>
+        <h1 style="text-align: center;" >Trim Audio</h1>
+     <!-- Fix me.  class center is local, is that bad? Previously, I put it in a w3-display-container, but then
+        it covered up the heading.  -->
+        <img src="Images/waveform.jpg" class="center" alt="audio waveform" style="max-height: 100%">
+    <br>
+    <div class="spaced-container">
+
+        <div class="w3-btn w3-white">
+            <i class="fa fa-play-circle-o fa-3x" aria-hidden="true"></i>
+            <h4>Play</h4>
         </div>
-    </body>
+        <div class="w3-btn w3-white">
+            <i class="fa fa-pause-circle-o fa-3x" aria-hidden="true"></i>
+            <h4>Pause</h4>
+        </div>
+        <div class="w3-btn w3-white">
+            <i class="fa fa-stop-circle-o fa-3x" aria-hidden="true"></i>
+            <h4>Stop</h4>
+        </div>
+        <button style="vertical-align: bottom; float: right; margin: 40px;   font-size: 20px;   padding: 13px 30px;">Auto-select</button>
+        <button style="vertical-align: bottom; float: right; margin: 40px;   font-size: 20px;   padding: 13px 30px;">Set Start</button>
+        <div class="time-box w3-panel w3-border w3-round-xlarge sc-item">
+           <h4 style="text-align: center; padding-top: 4px;"> 00:02:34</h4>
+        </div>
+        <button style="vertical-align: bottom; float: right; margin: 40px;   font-size: 20px;   padding: 13px 30px;">Set stop</button>
+        <div class="time-box w3-panel w3-border w3-round-xlarge sc-item">
+           <h4 style="text-align: center; padding-top: 4px;"> 00:03:66</h4>
+        </div>
+
+        <button style="vertical-align: bottom; float: right; margin: 40px;   font-size: 20px;   padding: 13px 30px;">Clear</button>
+
+
+    </div>
+
+
+
+    <div class="input" style="padding: 13px;">
+        <label style="padding: 13px;">Title</label>
+
+        <label></label><br>
+        <textarea style="vertical-align: middle;" rows="3" cols="20"></textarea>
+        <br><br>
+
+        <label style="padding: 13px;">Text (original)</label><br>
+        <textarea style="vertical-align: middle;" rows="3" cols="100"></textarea>
+        <br><br>
+        <label style="padding: 13px;">Text (English)</label><br>
+        <textarea style="vertical-align: middle;  padding-left: 10px;" rows="3" cols="100"></textarea>
+        <br><br>
+        <label style="padding: 13px;">Language</label><br>
+        <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>
+
+        <a style="background-color: white; vertical-align: bottom; float: right; margin: 40px;   font-size: 20px;   padding: 13px 30px;" href="../general/Dashboard.html" class="w3-bar-item w3-button">Finish Editing</a>
+        <a style="background-color: white; vertical-align: bottom; float: right; margin: 40px;   font-size: 20px;   padding: 13px 30px;" href="" class="w3-bar-item w3-button">Upload</a>
+    </div>
+</body>
+
 </html>

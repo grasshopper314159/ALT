@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../static/PAGENAME/CSS/PAGENAME.css">
+  <link rel="stylesheet" href="../../static/PAGENAME/CSS/PAGENAME.css">
     <style>
         body {
             margin: 0;
@@ -19,11 +19,10 @@
             font-size: 70px;
         }
     </style>
-    <title>Upload Audio</title>
 </head>
 
 <body>
-    <div class="w3-top w3-grey" style="height: 100%; overflow-y: scroll;">
+    <div class="w3-top " style="background-color: grey; height: 100%; overflow-y: scroll;">
         <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
             <a href="../general/HomePage.html"><img src="../general/Images/alr example logo.jpg" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
             <h4 class="home-header">Applied Language Resources</h4>
@@ -31,8 +30,8 @@
             <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
             <a href="../general/Dashboard.html" class="w3-bar-item w3-button w3-padding-large">Dashboard</a>
             <a href="../general/ViewData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">View Data</a>
-            <a href="../general/RecordAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Upload Audio</a>
-            <a href="../researcher/UsersManagement.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Manage Contacts</a>
+            <a href="../general/UploadAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Upload Audio</a>
+            <a href="../researcher/UserManagement.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Manage Contacts</a>
             <a href="../general/AboutUs.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">About</a>
             <div class="w3-dropdown-hover w3-hide-small w3-right">
                 <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
@@ -45,14 +44,15 @@
             <div class="w3-dropdown-hover w3-hide-small w3-right">
                 <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
                 <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                    <a href="#" class="w3-bar-item w3-button">Researcher</a>
-                    <a href="#" class="w3-bar-item w3-button">Rater</a>
                     <a href="#" class="w3-bar-item w3-button">Instructor</a>
+                    <a href="../rater/RateData.html" class="w3-bar-item w3-button">Rater</a>
+                    <a href="#" class="w3-bar-item w3-button">Researcher</a>
+
                 </div>
             </div>
         </div>
         <div style="clear: both">
-            <h1 class="w3-left" style="margin-left: 150px">Record Audio</h1> 
+            <h1 class="w3-left" style="margin-left: 150px">Record Audio</h1>
             <h1 class="w3-center" style="margin-right: 375px; line-height: 75px">Upload Audio</h1>
         </div>
         <hr>
@@ -78,7 +78,6 @@
                     <h4>Record</h4>
                 </div>
             </div>
-
             <label style="text-align: center;">Speaker</label>
             <br>
             <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>
