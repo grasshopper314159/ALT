@@ -1,227 +1,226 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: gray;
-        }
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <style>
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+                background-color: gray;
+            }
 
-        .h1 {
-            font-size: 70px;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="w3-top " style="background-color: ">
-        <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
-            <a href="../general/HomePage.html"><img src="../general/Images/alr example logo.jpg" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
-            <br>
-            <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-            <a href="../general/Dashboard.html" class="w3-bar-item w3-button w3-padding-large">Dashboard</a>
-            <a href="../general/ViewData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">View Data</a>
-            <a href="../general/RecordAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Record Audio</a>
-            <a href="../general/UploadAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Upload Audio</a>
-            <a href="../researcher/UsersManagement.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Manage Contacts</a>
-            <a href="../general/AboutUs.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">About</a>
-            <div class="w3-dropdown-hover w3-hide-small w3-right">
-                <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
-                <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                    <a href="../general/AccountSettings.html" class="w3-bar-item w3-button">Settings</a>
-                    <a href="../general/HomePage.html" class="w3-bar-item w3-button">Home Page</a>
-                    <a href="../general/HomePage.html" class="w3-bar-item w3-button">Log Out</a>
-                </div>
-            </div>
-            <div class="w3-dropdown-hover w3-hide-small w3-right">
-                <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
-                <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                    <a href="#" class="w3-bar-item w3-button">Researcher</a>
-                    <a href="#" class="w3-bar-item w3-button">Rater</a>
-                    <a href="#" class="w3-bar-item w3-button">Instructor</a>
-                </div>
-            </div>
-        </div>
-        <div class="w3-container">
-            <!-- container to enclose the rest of the body, to add margins -->
-            <div class="w3-col" style="width:150px">
-                <label style="padding: 5 px">Search</label>
-                <input class="w3-input w3-border w3-animate-input" type="text">
-            </div>
-            <!--close search area-->
-            <div class="w3-rest" style="text-align: center;">
-                <h2>View Data</h2>
-            </div>
-            <!--close heading-->
-            <div class="w3-responsive">
-                <div class="w3-threequarter">
-                    <table class="w3-table-all">
-                        <thead>
-                            <tr class="w3-light-grey">
-                                <th class='text-center'> </th>
-                                <th class='text-center'>Owner</th>
-                                <th class='text-center'>Project</th>
-                                <th class='text-center'>Word (Orig)</th>
-                                <th class='text-center'>Word (Eng)</th>
-                                <th class='text-center'>Speaker</th>
-                                <th class='text-center'>Score</th>
-                                <th class='text-center'>Date</th>
-                                <th class='text-center'>Review</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="w3-bar">
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                                    </div>
-                                </td>
-                                <td>M. Miyashita</td>
-                                <td>JPNS101</td>
-                                <td>猫</td>
-                                <td>cat</td>
-                                <td>Mike Mansfield</td>
-                                <td>4</td>
-                                <td>7/20/20</td>
-                                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="w3-bar">
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                                    </div>
-                                </td>
-                                <td>M. Miyashita</td>
-                                <td>Website Development</td>
-                                <td>犬</td>
-                                <td>dog</td>
-                                <td>Mike Mansfield</td>
-                                <td>4</td>
-                                <td>7/20/20</td>
-                                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="w3-bar">
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                                    </div>
-                                </td>
-                                <td>M. Miyashita</td>
-                                <td>JPNS101</td>
-                                <td>犬</td>
-                                <td>dog</td>
-                                <td>Mike Mansfield</td>
-                                <td>4</td>
-                                <td>7/20/20</td>
-                                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="w3-bar">
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                                    </div>
-                                </td>
-                                <td>M. Miyashita</td>
-                                <td>Website Development</td>
-                                <td>犬</td>
-                                <td>dog</td>
-                                <td>Jill Smith</td>
-                                <td>4</td>
-                                <td>7/20/20</td>
-                                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-                            <tr>
-                                <td>
-                                    <div class="w3-bar">
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                                    </div>
-                                </td>
-                                <td>M. Miyashita</td>
-                                <td>Website Development</td>
-                                <td>犬</td>
-                                <td>dog</td>
-                                <td>Jill Smith</td>
-                                <td>4</td>
-                                <td>7/20/20</td>
-                                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="w3-bar">
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                                    </div>
-                                </td>
-                                <td>M. Miyashita</td>
-                                <td>JPNS101</td>
-                                <td>義理</td>
-                                <td>duty</td>
-                                <td>Mike Mansfield</td>
-                                <td>4</td>
-                                <td>7/20/20</td>
-                                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="w3-bar">
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                                    </div>
-                                </td>
-                                <td>M. Miyashita</td>
-                                <td>Website Development</td>
-                                <td>犬</td>
-                                <td>dog</td>
-                                <td>Jill Smith</td>
-                                <td>4</td>
-                                <td>7/20/20</td>
-                                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="w3-bar">
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                                        <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                                    </div>
-                                </td>
-                                <td>M. Miyashita</td>
-                                <td>Website Development</td>
-                                <td>犬</td>
-                                <td>dog</td>
-                                <td>Jill Smith</td>
-                                <td>4</td>
-                                <td>7/20/20</td>
-                                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-                            </tr>                        
-                        </tbody>
-                    </table>
-                </div>
-                <!--close table three quarter-->
-                <div class="w3-quarter" style=" padding: 0px">
-                    <div class="w3-container" style="text-align: center; width: 100%;">
-                        <div style="display: inline-block; width: 100%;">
-                            <h3 style="text-align: center">Feedback</h3>
-                            <textarea rows="10" cols="20" style="border: solid 1px grey; border-radius: 25px; padding: 13px">Great job!</textarea>
-                        </div>
-                        <!--close inline block div-->
+            .h1 {
+                font-size: 70px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="w3-top " style="overflow-y:scroll;height:100%;">
+            <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
+                <a href="../general/HomePage.html"><img src="../general/Images/alr example logo.jpg" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
+                <br>
+                <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+                <a href="../general/Dashboard.html" class="w3-bar-item w3-button w3-padding-large">Dashboard</a>
+                <a href="../general/ViewData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">View Data</a>
+                <a href="../general/RecordAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Record Audio</a>
+                <a href="../general/UploadAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Upload Audio</a>
+                <a href="../researcher/UsersManagement.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Manage Contacts</a>
+                <a href="../general/AboutUs.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">About</a>
+                <div class="w3-dropdown-hover w3-hide-small w3-right">
+                    <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
+                    <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                        <a href="../general/AccountSettings.html" class="w3-bar-item w3-button">Settings</a>
+                        <a href="../general/HomePage.html" class="w3-bar-item w3-button">Home Page</a>
+                        <a href="../general/HomePage.html" class="w3-bar-item w3-button">Log Out</a>
                     </div>
-                    <!--close w3-container-center-->
                 </div>
-                <!--close w3-quarter-->
+                <div class="w3-dropdown-hover w3-hide-small w3-right">
+                    <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
+                    <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                        <a href="#" class="w3-bar-item w3-button">Researcher</a>
+                        <a href="#" class="w3-bar-item w3-button">Rater</a>
+                        <a href="#" class="w3-bar-item w3-button">Instructor</a>
+                    </div>
+                </div>
             </div>
-            <!--close w3-responsive-->
-        </div> <!-- close main body container -->
-    </div>
-</body>
-
+            <div class="w3-container">
+                <!-- container to enclose the rest of the body, to add margins -->
+                <div class="w3-col" style="width:150px">
+                    <label style="padding: 5 px">Search</label>
+                    <input class="w3-input w3-border w3-animate-input" type="text">
+                </div>
+                <!--close search area-->
+                <div class="w3-rest" style="text-align: center;">
+                    <h2>View Data</h2>
+                </div>
+                <!--close heading-->
+                <div class="w3-responsive">
+                    <div class="w3-threequarter">
+                        <table class="w3-table-all">
+                            <thead>
+                                <tr class="w3-light-grey">
+                                    <th class='text-center'> </th>
+                                    <th class='text-center'>Owner</th>
+                                    <th class='text-center'>Speaker</th>
+                                    <th class='text-center'>Project</th>
+                                    <th class='text-center'>Word (Orig)</th>
+                                    <th class='text-center'>Word (Eng)</th>
+                                    <th class='text-center'>Score</th>
+                                    <th class='text-center'>Date</th>
+                                    <th class='text-center'>Review</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="w3-bar">
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
+                                        </div>
+                                    </td>
+                                    <td>M. Miyashita</td>
+                                    <td>Mike Mansfield</td>
+                                    <td>JPNS101</td>
+                                    <td>猫</td>
+                                    <td>cat</td>
+                                    <td>4</td>
+                                    <td>7/20/20</td>
+                                    <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="w3-bar">
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
+                                        </div>
+                                    </td>
+                                    <td>M. Miyashita</td>
+                                    <td>Mike Mansfield</td>
+                                    <td>Website Development</td>
+                                    <td>犬</td>
+                                    <td>dog</td>
+                                    <td>4</td>
+                                    <td>7/20/20</td>
+                                    <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="w3-bar">
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
+                                        </div>
+                                    </td>
+                                    <td>M. Miyashita</td>
+                                    <td>Mike Mansfield</td>
+                                    <td>JPNS101</td>
+                                    <td>犬</td>
+                                    <td>dog</td>
+                                    <td>4</td>
+                                    <td>7/20/20</td>
+                                    <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="w3-bar">
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
+                                        </div>
+                                    </td>
+                                    <td>M. Miyashita</td>
+                                    <td>Jill Smith</td>
+                                    <td>Website Development</td>
+                                    <td>犬</td>
+                                    <td>dog</td>
+                                    <td>4</td>
+                                    <td>7/20/20</td>
+                                    <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
+                                <tr>
+                                    <td>
+                                        <div class="w3-bar">
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
+                                        </div>
+                                    </td>
+                                    <td>M. Miyashita</td>
+                                    <td>Jill Smith</td>
+                                    <td>Website Development</td>
+                                    <td>犬</td>
+                                    <td>dog</td>
+                                    <td>4</td>
+                                    <td>7/20/20</td>
+                                    <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="w3-bar">
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
+                                        </div>
+                                    </td>
+                                    <td>M. Miyashita</td>
+                                    <td>Mike Mansfield</td>
+                                    <td>JPNS101</td>
+                                    <td>義理</td>
+                                    <td>duty</td>
+                                    <td>4</td>
+                                    <td>7/20/20</td>
+                                    <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="w3-bar">
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
+                                        </div>
+                                    </td>
+                                    <td>M. Miyashita</td>
+                                    <td>Jill Smith</td>
+                                    <td>Website Development</td>
+                                    <td>犬</td>
+                                    <td>dog</td>
+                                    <td>4</td>
+                                    <td>7/20/20</td>
+                                    <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="w3-bar">
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
+                                            <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
+                                        </div>
+                                    </td>
+                                    <td>M. Miyashita</td>
+                                    <td>Jill Smith</td>
+                                    <td>Website Development</td>
+                                    <td>犬</td>
+                                    <td>dog</td>
+                                    <td>4</td>
+                                    <td>7/20/20</td>
+                                    <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--close table three quarter-->
+                    <div class="w3-quarter" style=" padding: 0px">
+                        <div class="w3-container" style="text-align: center; width: 100%;">
+                            <div style="display: inline-block; width: 100%;">
+                                <h3 style="text-align: center">Feedback</h3>
+                                <textarea rows="10" cols="20" style="border: solid 1px grey; border-radius: 25px; padding: 13px">Great job!</textarea>
+                            </div>
+                            <!--close inline block div-->
+                        </div>
+                        <!--close w3-container-center-->
+                    </div>
+                    <!--close w3-quarter-->
+                </div>
+                <!--close w3-responsive-->
+            </div> <!-- close main body container -->
+        </div>
+    </body>
 </html>

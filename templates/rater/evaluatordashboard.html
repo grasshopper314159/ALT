@@ -1,161 +1,124 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: gray;
+        }
 
-
-
-
-
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background-color: gray;
-    }
-
-  .h1{
-    font-size: 70px;
-  }
-
-
-
-  </style>
-
+        .h1 {
+            font-size: 70px;
+        }
+    </style>
 </head>
 
-
-
-
-
 <body>
-
-
-      <div class="w3-top " style="background-color: ">
+    <div class="w3-top " style="background-color: ">
         <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
-          <a href="../general/HomePage.html"><img src="../general/Images/alr example logo.jpg" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
-          <br>
+            <a href="../general/HomePage.html"><img src="../general/Images/alr example logo.jpg" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
+            <br>
+            <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+            <a href="../general/Dashboard.html" class="w3-bar-item w3-button w3-padding-large">Dashboard</a>
+            <a href="../general/ViewData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">View Data</a>
+            <a href="../general/RecordAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Record Audio</a>
+            <a href="../general/UploadAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Upload Audio</a>
+            <a href="../researcher/UsersManagement.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Manage Contacts</a>
+            <a href="../general/AboutUs.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">About</a>
 
-          <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-          <a href="../general/Dashboard.html" class="w3-bar-item w3-button w3-padding-large">Dashboard</a>
-          <a href="../general/ViewData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">View Data</a>
-          <a href="../general/RecordAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Record Audio</a>
-          <a href="../general/UploadAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Upload Audio</a>
-          <a href="../researcher/UsersManagement.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Manage Contacts</a>
-          <a href="../general/AboutUs.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">About</a>
-
-          <div class="w3-dropdown-hover w3-hide-small w3-right">
-            <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
-            <div class="w3-dropdown-content w3-bar-block w3-card-4">
-              <a href="../general/AccountSettings.html" class="w3-bar-item w3-button">Settings</a>
-              <a href="../general/HomePage.html" class="w3-bar-item w3-button">Home Page</a>
-              <a href="../general/HomePage.html" class="w3-bar-item w3-button">Log Out</a>
+            <div class="w3-dropdown-hover w3-hide-small w3-right">
+                <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
+                <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                    <a href="../general/AccountSettings.html" class="w3-bar-item w3-button">Settings</a>
+                    <a href="../general/HomePage.html" class="w3-bar-item w3-button">Home Page</a>
+                    <a href="../general/HomePage.html" class="w3-bar-item w3-button">Log Out</a>
+                </div>
             </div>
-          </div>
 
-          <div class="w3-dropdown-hover w3-hide-small w3-right">
-            <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
-            <div class="w3-dropdown-content w3-bar-block w3-card-4">
-              <a href="#" class="w3-bar-item w3-button">Researcher</a>
-              <a href="#" class="w3-bar-item w3-button">Rater</a>
-              <a href="#" class="w3-bar-item w3-button">Instructor</a>
+            <div class="w3-dropdown-hover w3-hide-small w3-right">
+                <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
+                <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                    <a href="#" class="w3-bar-item w3-button">Researcher</a>
+                    <a href="#" class="w3-bar-item w3-button">Rater</a>
+                    <a href="#" class="w3-bar-item w3-button">Instructor</a>
+                </div>
             </div>
-          </div>
 
 
 
         </div>
-        <div class="w3-container" > <!-- container to enclose the rest of the body, to add margins -->
-          <div style="text-align: center;">
-            <h2>Evaluator Dashboard</h2>
-          </div>  <!--close heading-->
+        <div class="w3-container">
+            <!-- container to enclose the rest of the body, to add margins -->
+            <div style="text-align: center;">
+                <h2>Evaluator Dashboard</h2>
+            </div>
+            <!--close heading-->
 
-          <div class="w3-responsive">
+            <div class="w3-responsive">
 
-              <table class="w3-table-all">
-                <thead>
-                  <tr>
-                    <th class='text-center'>User</th>
-                    <th class='text-center'>Word (Orig.)</th>
-                    <th class='text-center'>Word (Eng.)</th>
-                    <th class='text-center'>Speaker</th>
-                    <th class='text-center'>Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Jill Smith</td>
-                    <td>犬</td>
-                    <td>dog</td>
-                    <td>Jill Smith</td>
-                    <td>50</td>
-                  </tr>
-                  <tr>
-                    <td>Jill Smith</td>
-                    <td>犬</td>
-                    <td>dog</td>
-                    <td>Jill Smith</td>
-                    <td>50</td>
-                  </tr>
-                  <tr>
-                    <td>Jill Smith</td>
-                    <td>犬</td>
-                    <td>dog</td>
-                    <td>Jill Smith</td>
-                    <td>50</td>
-                  </tr>
-                  <tr>
-                    <td>Jill Smith</td>
-                    <td>犬</td>
-                    <td>dog</td>
-                    <td>Jill Smith</td>
-                    <td>50</td>
-                  </tr>
-                  <tr>
-                    <td>Jill Smith</td>
-                    <td>犬</td>
-                    <td>dog</td>
-                    <td>Jill Smith</td>
-                    <td>50</td>
-                  </tr>
-                  <tr>
-
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    </tr>
-
-                </tbody>
-
-              </table>
-        <td> Logged In: </td>
+                <table class="w3-table-all">
+                    <thead>
+                        <tr>
+                            <th class='text-center'>Owner</th>
+                            <th class='text-center'>Speaker</th>
+                            <th class='text-center'>Word (Orig.)</th>
+                            <th class='text-center'>Word (Eng.)</th>
+                            <th class='text-center'>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Jill Smith</td>
+                            <td>Nate J.</td>
+                            <td>犬</td>
+                            <td>dog</td>
+                            <td>50</td>
+                        </tr>
+                        <tr>
+                            <td>Jill Smith</td>
+                            <td>Kevin Q.</td>
+                            <td>犬</td>
+                            <td>dog</td>
+                            <td>50</td>
+                        </tr>
+                        <tr>
+                            <td>Jill Smith</td>
+                            <td>Karen B.</td>
+                            <td>犬</td>
+                            <td>dog</td>
+                            <td>50</td>
+                        </tr>
+                        <tr>
+                            <td>Jill Smith</td>
+                            <td>Susan G.</td>
+                            <td>犬</td>
+                            <td>dog</td>
+                            <td>50</td>
+                        </tr>
+                        <tr>
+                            <td>Jill Smith</td>
+                            <td>Jill Smith</td>
+                            <td>犬</td>
+                            <td>dog</td>
+                            <td>50</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <td> Logged In: </td>
                 <div class="w3-row">
-
                     <td> <button class="w3-button w3-med w3-white w3-border w3-round">N. Chomsky</button></td>
                     <td> <button class="w3-button w3-med w3-white w3-border w3-round">F. de Saussure</button></td>
                     <td> <button class="w3-button w3-med w3-white w3-border w3-round">S. Pinker</button></td>
                     <td> </td>
                     <td> </td>
                 </div>
-
-          </div><!--close w3-responsive-->
-        </div> <!-- close main body container -->
-
-      </div>
-
-
-<!--
-  <div class="taskbar">
-    <a href="#viewdata" >View Data</a>
-    <a href="#recordaudio">Record Audio</a>
-    <a href="#uploadaudio">Upload Audio</a>
-    <a href="#managecontacts">Rate Data</a>
-    <a href="#about">About</a>
-    <a style="float:right;" href="#settings">Settings</a>
-
-</div> <!--close nav container-->
--->
+            </div><!--close w3-responsive-->
+        </div><!-- close main body container -->
+    </div>
 </body>
+
 </html>
