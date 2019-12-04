@@ -19,11 +19,10 @@
             font-size: 70px;
         }
     </style>
-    <title>Upload Audio</title>
 </head>
 
 <body>
-    <div class="w3-top "  style="overflow-y:scroll; height:100%;">
+    <div class="w3-top " style="background-color: grey; height: 100%; overflow-y: scroll;">
         <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
             <a href="../general/HomePage.html"><img src="../general/Images/alr example logo.jpg" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
             <h4 class="home-header">Applied Language Resources</h4>
@@ -31,8 +30,7 @@
             <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
             <a href="../general/Dashboard.html" class="w3-bar-item w3-button w3-padding-large">Dashboard</a>
             <a href="../general/ViewData.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">View Data</a>
-            <a href="../general/RecordAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Record Audio</a>
-            <a href="../general/UploadAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Upload Audio</a>
+            <a href="../general/RecordAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Upload Audio</a>
             <a href="../researcher/UsersManagement.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Manage Contacts</a>
             <a href="../general/AboutUs.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">About</a>
             <div class="w3-dropdown-hover w3-hide-small w3-right">
@@ -53,16 +51,30 @@
             </div>
         </div>
         <div style="text-align: center;">
-            <h1>Record Audio</h1>
+            <h1>Upload Audio</h1>
         </div>
         <div style="margin-left: 1%;" class="input">
-            <img style="margin-left: 1%;" src="Images/seekbar.gif" width="500px" height="100px">
+
+                <div style= "float: left;">
+                  <img class = "w3-bar-item" style=" margin-left: 1%;" src="Images/seekbar.gif" width="500px" height="100px"></img>
+                </div>
+                <div style= "float: left;">
+                  <label style = "margin-left: 250%;">OR</label>
+                </div>
+                <div style= "float: left;">
+                  <input class = "w3-bar-item" style = "float: left; margin-left: 50%;" type="file" name="fileToUpload" id="fileToUpload"></input>
+                </div>
+
+
+
+
             <div class="w3-bar">
                 <div class="w3-left">
                     <input style="margin-left: 150px;" type="image" src="Images/play.jpg" alt="submit" width="70" height="70">
                     <input style="margin-left: 15px;" type="image" src="Images/record.jpg" alt="submit" width="70" height="70">
                 </div>
             </div>
+
             <label style="text-align: center;">Speaker</label>
             <br>
             <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>
@@ -79,7 +91,7 @@
             <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>
             <br>
             <br>
-            <button style="vertical-align: bottom;margin-bottom: 1%; float: left;    font-size: 20px;   padding: 13px 30px;">Upload</button>
+            <a href="../general/TrimAudio.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small" style = "background-color: white;margin-bottom: 1%;">Upload</a>
             <br>
 
         </div>
