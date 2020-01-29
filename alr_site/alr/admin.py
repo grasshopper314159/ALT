@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-import eSports.models as models
+import alr.models as models
 
 # Register your models here.
 admin.site.register(models.User)
