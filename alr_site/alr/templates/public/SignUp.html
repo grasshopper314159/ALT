@@ -9,8 +9,9 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link ref="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../static/PAGENAME/CSS/PAGENAME.css">
-
+  {% load static %}
+  <!-- localized stylesheets -->
+  <link rel="stylesheet" href="{% static 'STYLE SHEET' %}"></style>
   <title>ALR Sign Up</title>
 </head>
 
@@ -18,20 +19,20 @@
   <div class="w3-grey w3-top w3-bottom w3-left w3-right">
     <div class="w3-top w3-left w3-right" style="background-color:#5e001d; height:12.5vh">
       <div class="w3-third h-100" style="margin-left:1vw; margin-top:0.5vh">
-        <a href="./HomePage.html">
-          <img src="Images/alr example logo.jpg" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo">
+        <a href="/">
+          <img src="{% static '/imgs/alr_example_logo.jpg' %}" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo">
           <h4 class="home-header">Applied Language Resources</h4>
         </a>
       </div>
       <div class="w3-rest" style="margin-top:2vh;">
         <ul>
           <li class="home-bar">
-            <a href="./AboutUs.html" class="w3-btn w3-red w3-large w3-border w3-border-white">
+            <a href="/AboutUs/" class="w3-btn w3-red w3-large w3-border w3-border-white">
               About Us
             </a>
           </li>
           <li>
-            <a href="./HomePage.html" class="w3-btn w3-red w3-large w3-border w3-border-white">
+            <a href="/" class="w3-btn w3-red w3-large w3-border w3-border-white">
               Log In
             </a>
           </li>
@@ -82,7 +83,7 @@
             <br>
             <p class="w3-center">By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
             <div class="w3-center">
-              <a href="./HomePage.html"><button type="button" class="w3-btn w3-red">Cancel</button></a>
+              <a href="/"><button type="button" class="w3-btn w3-red">Cancel</button></a>
               <button type="submit" class="w3-btn w3-green">Sign Up</button>
             </div>
           </div>

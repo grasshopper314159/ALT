@@ -6,19 +6,31 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 def display_home(request):
-    return render(request, 'general/HomePage.html') ## TODO: change to index.html
+    return render(request, 'public/index.html') ## TODO: change to index.html
 
-def display_create(request):
-    return render(request, '## TODO: ')
+def display_aboutUs(request):
+    return render(request, 'public/AboutUs.html')
 
-def display_dash(request):
-    return render(request, '## TODO: ')
+def display_signUp(request):
+    return render(request, 'public/SignUp.html')
 
 def display_data(request):
     return render(request, '## TODO: ')
 
 def logout_view(request):
     return render(request)
+
+def login_user(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        # Redirect to a success page.
+        ...
+    else:
+        # Return an 'invalid login' error message.
+        ...
 
 @csrf_exempt
 def post_data(request):
