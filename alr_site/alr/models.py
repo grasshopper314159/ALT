@@ -72,5 +72,5 @@ class Assignment(models.Model):
     due_date = models.DateTimeField()
     comments = models.TextField(default=None, blank=True, null=True)
     grade = models.CharField(max_length = 1)
-    submission = models.BooleanField(default=False) #Not sure what the data type for this should be
+    submission = models.BooleanField(default=False)
     big_audio_files = models.ManyToManyField('BigAudio') #Assignment and big audio 'can involve' relationship
