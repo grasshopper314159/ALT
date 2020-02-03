@@ -2,9 +2,14 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_exempt
-# from .models import ## TODO: Add DB tables
+from alr.models import AudioTrim
 
 # Create your views here.
+def display_data(request):
+    all_audio_trims = AudioTrim.objects.all()
+    context = {'all_audio_trims':all_audio_trims}
+    return render(request, 'public/ViewData.html')
+
 def display_home(request):
     return render(request, 'public/index.html') ## TODO: change to index.html
 
@@ -13,9 +18,6 @@ def display_aboutUs(request):
 
 def display_signUp(request):
     return render(request, 'public/SignUp.html')
-
-def display_data(request):
-    return render(request, '## TODO: ')
 
 def logout_view(request):
     return render(request)

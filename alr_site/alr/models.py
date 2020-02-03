@@ -30,7 +30,7 @@ class AudioTrim(models.Model): #Weak entity (No primary key), BigAudio is the ow
     original_text = models.TextField()
     english_text = models.TextField()
     phonetic_text = models.TextField(default=None, blank=True, null=True)
-    last_listened_date = models.DateTimeField(default=None, null=True)
+    last_listened_date = models.DateTimeField(default=None, blank=True, null=True)
     measurements = models.IntegerField(default=None, blank=True, null=True) #Not sure what the data type for this should be (might need to convert this into an entity)
     score = models.IntegerField(default=None, blank=True, null=True)
     word_count = models.IntegerField(default=None, blank=True, null=True)
