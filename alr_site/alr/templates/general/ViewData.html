@@ -10,8 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   {% load static %}
   <!-- localized stylesheets -->
-  <link rel="stylesheet" href="{% static 'STYLE SHEET.css' %}"></style>
-  <script type="text/javascript" src="{% static 'FILE.js' %}"></script>
+  <!-- <link rel="stylesheet" href="{% static 'STYLE SHEET.css' %}"></style> -->
   <style>
     body {
     margin: 0;
@@ -82,10 +81,7 @@
                 <th class='text-center'>Review</th>
               </tr>
             </thead>
-            {% for audo_trim in all_audio_trims %}
-            <p>{{audio_trim.original_text}}</p>
-            {% endfor %}
-            <tbody>
+            <tbody id="data">
               <tr>
                 <td>
                   <div class="w3-bar">
@@ -98,22 +94,6 @@
                 <td>JPNS101</td>
                 <td>猫</td>
                 <td>cat</td>
-                <td>4</td>
-                <td>7/20/20</td>
-                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="w3-bar">
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                  </div>
-                </td>
-                <td>M. Miyashita</td>
-                <td>Mike Mansfield</td>
-                <td>Website Development</td>
-                <td>犬</td>
-                <td>dog</td>
                 <td>4</td>
                 <td>7/20/20</td>
                 <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
@@ -233,5 +213,7 @@
     </div> <!-- close main body container -->
   </div>
 </body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="{% static 'js/ajax_getAllAudioTrims.js' %}"></script>
 
 </html>
