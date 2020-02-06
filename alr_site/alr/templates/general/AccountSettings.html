@@ -12,6 +12,32 @@
   <!-- localized stylesheets -->
   <link rel="stylesheet" href="{% static 'STYLE SHEET.css' %}"></style>
   <script type="text/javascript" src="{% static 'FILE.js' %}"></script>
+  <!-- Function to change font size -->
+  <script>
+  var large_font = false;
+  function changeFontSize()
+  {
+    var account_settings_font = document.getElementById('accountSettings');
+    if(!large_font)
+    {
+      account_settings_font.style.fontSize = "300%";
+      large_font = true;
+    }
+    else 
+    {
+      account_settings_font.style.fontSize = "100%";
+      large_font = false;
+    }
+  }
+  
+  function displayAccessibility()
+  {
+    var font_settings = document.createElement("BUTTON");
+    font_settings.setAttribute('onclick', 'changeFontSize()');
+    font_settings.innerHTML = "Increase Font Size";
+    document.getElementById("mainContent").appendChild(font_settings);
+  }
+  </script>
   <title>Account Settings</title>
 </head>
 
@@ -49,7 +75,7 @@
       <div class="w3-container">
         <div class="w3-third">
           <div class="w3-border">
-            <h3 class="w3-center settings-header">Account Settings</h3>
+            <h3 id="accountSettings" class="w3-center settings-header">Account Settings</h3>
             <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayAccount()">Account</button>
             <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayPrivacy()">Privacy</button>
             <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayLanguage()">Language</button>
@@ -57,8 +83,8 @@
             <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayTerms()">Terms and Conditions</button>
           </div>
         </div>
-        <div class="w3-twothird w3-panel w3-leftbar w3-border-blue w3-pale-blue" style="margin-top: 0vh; margin-bottom: 0vh">
-          <p id="changeableText" style="height:100%;"><br>
+        <div id="mainContent" class="w3-twothird w3-panel w3-leftbar w3-border-blue w3-pale-blue" style="margin-top: 0vh; margin-bottom: 0vh">
+          <p style="height:100%;"><br>
             <br><br>
           </p>
         </div>
