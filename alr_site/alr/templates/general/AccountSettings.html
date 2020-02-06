@@ -13,31 +13,7 @@
   <link rel="stylesheet" href="{% static 'STYLE SHEET.css' %}"></style>
   <script type="text/javascript" src="{% static 'FILE.js' %}"></script>
   <!-- Function to change font size -->
-  <script>
-  var large_font = false;
-  function changeFontSize()
-  {
-    var account_settings_font = document.getElementById('accountSettings');
-    if(!large_font)
-    {
-      account_settings_font.style.fontSize = "300%";
-      large_font = true;
-    }
-    else 
-    {
-      account_settings_font.style.fontSize = "100%";
-      large_font = false;
-    }
-  }
-  
-  function displayAccessibility()
-  {
-    var font_settings = document.createElement("BUTTON");
-    font_settings.setAttribute('onclick', 'changeFontSize()');
-    font_settings.innerHTML = "Increase Font Size";
-    document.getElementById("mainContent").appendChild(font_settings);
-  }
-  </script>
+
   <title>Account Settings</title>
 </head>
 
@@ -92,4 +68,29 @@
     </div>
   </div>
 </body>
+<script>
+  var large_font = false;
+  function changeFontSize()
+  {
+    var account_settings_font = document.getElementById('accountSettings');
+    if(!large_font)
+    {
+      account_settings_font.style.fontSize = "300%";
+      large_font = true;
+    }
+    else
+    {
+      account_settings_font.style.fontSize = "100%";
+      large_font = false;
+    }
+  }
+
+  function displayAccessibility()
+  {
+    var font_settings = document.createElement("BUTTON");
+    font_settings.setAttribute('onclick', 'changeFontSize()');
+    font_settings.innerHTML = "Increase Font Size";
+    document.getElementById("mainContent").appendChild(font_settings);
+  }
+</script>
 </html>
