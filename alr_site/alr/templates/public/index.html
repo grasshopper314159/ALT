@@ -2,74 +2,97 @@
 <html lang="en" dir="ltr">
 
 <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link ref="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    {% load static %}
-    <!-- localized stylesheets -->
-    <link rel="stylesheet" href="{% static 'STYLE SHEET' %}"></style>
-    <title>Home Page</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link ref="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  {% load static %}
+  <!-- localized stylesheets -->
+  <link rel="stylesheet" href="{% static '/css/master.css' %}">
+  </style>
+  <title>Home Page</title>
 
 </head>
 
 <body>
-    <div class="home-background w3-grey w3-top w3-bottom w3-left w3-right">
-        <div class="w3-top w3-left w3-right" style="background-color:#5e001d; height:12.5vh">
-            <div class="w3-third h-100" style="margin-left:1vw; margin-top:0.5vh;">
-                <a href="/">
-                <img src="{% static '/imgs/alr_example_logo.jpg' %}" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo">
-                <h4 class="home-header">Applied Language Resources</h4>
-                </a>
-            </div>
-            <div class="w3-rest" style="margin-top:2vh;">
-                <ul>
-                    <li class="home-bar">
-                        <a href="/AboutUs/" class="w3-btn w3-red w3-large w3-border w3-border-white">
-                            About Us
-                        </a>
-                    </li>
-                    <li class="home-bar">
-                        <a href="/SignUp/" class="w3-btn w3-red w3-large w3-border w3-border-white">
-                            Sign Up
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="w3-light-grey" style="margin-top:18vh">
-            <div class="w3-third">
-                <hr>
-            </div>
-            <div class="w3-container w3-third w3-white w3-round-large">
-                <div class="w3-container">
-                    <form class="modal-content" action="#">
-                        <div class="w3-container">
-                            <h1>Login</h1>
-                            <p>Please fill in this form to sign in.</p>
-                            <hr>
-                            <label for="email"><b>Email</b></label>
-                            <br>
-                            <input type="text" placeholder="Enter Email" name="email" required>
-                            <br>
-                            <label for="psw"><b>Password</b></label>
-                            <br>
-                            <input type="password" placeholder="Enter Password" name="psw" required>
-                            <br>
-                            <hr>
-                        </div>
-                    </form>
-                    <div class="w3-center">
-                        <button id="login_user" type="submit" class="w3-btn w3-green">Create Account</button>
-                    </div>
-                    <div class="w3-center">
-                        <a href="/SignUp/"><button type="button" class="w3-btn w3-green">Create Account</button></a>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="home-background w3-grey w3-top w3-bottom w3-left w3-right">
+    <div class="w3-top w3-left w3-right" style="background-color:#5e001d; height:12.5vh">
+      <div class="w3-third h-100" style="margin-left:1vw; margin-top:0.5vh;">
+        <a href="/">
+          <img src="{% static '/imgs/alr_example_logo.jpg' %}" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo">
+          <h4 class="home-header">Applied Language Resources</h4>
+        </a>
+      </div>
+      <div class="w3-rest" style="margin-top:2vh;">
+        <ul>
+          <li class="home-bar">
+            <a href="/AboutUs/" class="w3-btn w3-red w3-large w3-border w3-border-white">
+              About Us
+            </a>
+          </li>
+          <li class="home-bar">
+            <a href="/SignUp/" class="w3-btn w3-red w3-large w3-border w3-border-white">
+              Sign Up
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
-</body>
 
+    <!-- This div needs a background image or something -->
+    <div class="w3-light-grey" style="margin-top:18vh">
+      <div class="w3-third">
+        <hr>
+      </div>
+      <!-- Login div -->
+      <div class="w3-container w3-third w3-white w3-card-4 w3-round-large">
+        <div class="w3-white w3-container">
+          <!-- login form -->
+          <form class="" action="/ajax/loginUser/" method="post">
+            <div class="w3-container">
+              <br><br>
+              <h3 class="w3-center">Login</h3>
+              <input class="w3-input" type="text" placeholder="Enter email" name="username" required>
+              <label for="username"><b>Email</b></label><br>
+              <br>
+              <input class="w3-input" type="password" placeholder="Enter Password" name="password" required>
+              <label for="password"><b>Password</b></label><br>
+              <div class="w3-center w3-round-large">
+                <button type="submit" class="w3-btn w3-green">Login</button>
+                Or
+                <a href="/SignUp/"><button type="button" class="w3-btn w3-green">Create Account</button></a>
+              </div>
+            </div>
+            <div class="w3-container w3-center ">
+              <span class="">Forgot <a href="#">password?</a></span>
+              <br><br>
+            </div>
+            <div class="w3-center w3-round-large">
+            </div>
+          </form>
+          <!-- end login form -->
+        </div>
+      </div>
+      <!-- end login div -->
+      <div class="w3-third">
+        <hr>
+      </div>
+    </div>
+    <div id='success' class="hide max-w-50vw w3-bottom w3-left w3-light-blue">
+      <span onclick="this.parentElement.style.display='none'"
+      class="w3-button w3-hover-red w3-large w3-display-topright">&times;</span>
+      <h3>Message!</h3>
+      {% if messages %}
+        <p>{{ message }}</p>
+      {% endif %}
+
+    </div>
+  </div>
+</body>
+<script>
+  '{% if messages %}'
+    document.getElementById('success').style.display = 'block';
+  '{% endif %}'
+</script>
 </html>

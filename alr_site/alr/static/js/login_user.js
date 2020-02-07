@@ -16,4 +16,4 @@
 //     }
 //   );
 // });
-$("login_user").ajaxSubmit({url: '/ajax/login_user', type: 'POST'})
+$("login_user").ajaxSubmit({url: '/ajax/loginUser', type: 'POST'})

@@ -1,7 +1,7 @@
 from django.db import models
 
 class User(models.Model):
-    num_audio_files = models.IntegerField(default=None, null=True)
+    num_audio_files = models.IntegerField(default=None, blank=True, null=True)
     last_login_date = models.DateTimeField(auto_now=True)
     user_type = models.CharField(max_length = 15)
     password = models.CharField(max_length = 20)

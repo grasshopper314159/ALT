@@ -10,7 +10,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   {% load static %}
   <!-- localized stylesheets -->
-  <!-- <link rel="stylesheet" href="{% static 'STYLE SHEET.css' %}"></style> -->
+  <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
   <style>
     body {
     margin: 0;
@@ -61,7 +63,7 @@
         <input class="w3-input w3-border w3-animate-input" type="text">
       </div>
       <!--close search area-->
-      <div class="w3-rest" style="text-align: center;">
+      <div class="w3-rest w3-center">
         <h2>View Data</h2>
       </div>
       <!--close heading-->
@@ -82,117 +84,12 @@
               </tr>
             </thead>
             <tbody id="data">
-              <tr>
-                <td>
-                  <div class="w3-bar">
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                  </div>
-                </td>
-                <td>M. Miyashita</td>
-                <td>Mike Mansfield</td>
-                <td>JPNS101</td>
-                <td>猫</td>
-                <td>cat</td>
-                <td>4</td>
-                <td>7/20/20</td>
-                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="w3-bar">
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                  </div>
-                </td>
-                <td>M. Miyashita</td>
-                <td>Mike Mansfield</td>
-                <td>JPNS101</td>
-                <td>犬</td>
-                <td>dog</td>
-                <td>4</td>
-                <td>7/20/20</td>
-                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="w3-bar">
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                  </div>
-                </td>
-                <td>M. Miyashita</td>
-                <td>Jill Smith</td>
-                <td>Website Development</td>
-                <td>犬</td>
-                <td>dog</td>
-                <td>4</td>
-                <td>7/20/20</td>
-                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-              <tr>
-                <td>
-                  <div class="w3-bar">
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                  </div>
-                </td>
-                <td>M. Miyashita</td>
-                <td>Jill Smith</td>
-                <td>Website Development</td>
-                <td>犬</td>
-                <td>dog</td>
-                <td>4</td>
-                <td>7/20/20</td>
-                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="w3-bar">
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                  </div>
-                </td>
-                <td>M. Miyashita</td>
-                <td>Mike Mansfield</td>
-                <td>JPNS101</td>
-                <td>義理</td>
-                <td>duty</td>
-                <td>4</td>
-                <td>7/20/20</td>
-                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="w3-bar">
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                  </div>
-                </td>
-                <td>M. Miyashita</td>
-                <td>Jill Smith</td>
-                <td>Website Development</td>
-                <td>犬</td>
-                <td>dog</td>
-                <td>4</td>
-                <td>7/20/20</td>
-                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="w3-bar">
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>
-                    <button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>
-                  </div>
-                </td>
-                <td>M. Miyashita</td>
-                <td>Jill Smith</td>
-                <td>Website Development</td>
-                <td>犬</td>
-                <td>dog</td>
-                <td>4</td>
-                <td>7/20/20</td>
-                <td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button></td>
-              </tr>
+              <!-- data entries -->
+              <select id="options" class="js-basic-single" name="Game" style="width:30vw;">
+                <option value="NULL">Select a Player</option>
+              </select>
+              <input type="submit" onclick="getURL()">
+              
             </tbody>
           </table>
         </div>
@@ -213,7 +110,7 @@
     </div> <!-- close main body container -->
   </div>
 </body>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script type="text/javascript" src="{% static 'js/ajax_getAllAudioTrims.js' %}"></script>
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
+<script type="text/javascript" src="{% static '/js/ajax_getAllAudioTrims.js' %}"></script>
 
 </html>

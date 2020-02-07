@@ -1,0 +1,6 @@
+.hide {
+  display: none;
+}
+.max-w-50vw {
+  max-width: 50vw!important;
+}
