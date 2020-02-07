@@ -8,6 +8,7 @@ $(document).ready(function(){
       success: function(response)
       {
         data = document.getElementById('data');
+        // test data
         owner = 'Me';
         speaker = 'you';
         project = 'mine';
@@ -15,7 +16,7 @@ $(document).ready(function(){
         text_english = 'Hello';
         score = '7';
         date = '02/07/2020';
-        console.log('HELP');
+
         for (var key in response) {
           entry = '<tr><td>' +
             '<div class="w3-bar">' +
@@ -31,6 +32,7 @@ $(document).ready(function(){
             '<td>' + date + '</td>' +
             '<td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button>' +
             '</td></tr>';
+          data.innerHTML += entry;
         }
       },
 
@@ -40,27 +42,4 @@ $(document).ready(function(){
       }
     }
   );
-  console.log("FUCK")
 });
-
-
-// $(document).ready(function(){
-//   $.ajax(
-//     {
-//       type: 'GET',
-//       url: '/ajax/getAllAudioTrim/',
-//
-//       success: function(response)
-//       {
-//         alert('success')
-//             data.innerHTML += entry;
-//       },
-//
-//       failure: function()
-//       {
-//         console.log('HELP')
-//         alert("AJAX FAILED!");
-//       }
-//     }
-//   );
-// });
