@@ -1,23 +1,26 @@
 from django.db import models
+from django.contrib.auth.models import User as user_account
 
 class User(models.Model):
     num_audio_files = models.IntegerField(default=None, blank=True, null=True)
     last_login_date = models.DateTimeField(auto_now=True)
     user_type = models.CharField(max_length = 15)
     # password = models.CharField(default=None, max_length = 20)
-    firstname = models.CharField(default=None, max_length = 20)
-    lastname = models.CharField(default=None, max_length = 20)
-    email = models.EmailField(default=None)
-    user_id = models.AutoField(unique=True, primary_key = True)
-    classes = models.ManyToManyField('Class', default=None, blank=True, null=True) #User and class 'part of' relationship
-    audio_trims = models.ManyToManyField('AudioTrim', default=None, blank=True, null=True) #User and audio trim 'can rate' relationship
-    assignments = models.ManyToManyField('Assignment', default=None, blank=True, null=True) #User and assignment 'are assigned' relationship
-    languages = models.ManyToManyField('Language', default=None, blank=True, null=True) #User and language 'studies' relationship
+    # firstname = models.CharField(default=None, max_length = 20)
+    # lastname = models.CharField(default=None, max_length = 20)
+    # email = models.EmailField(default=None)
+    # user_id = models.AutoField(unique=True, primary_key = True)
+    # user_id = models.ForeignKey(user_account, primary_key = True, on_delete=models.CASCADE)
+    user_id = models.OneToOneField(user_account, primary_key = True, on_delete=models.CASCADE)
+    classes = models.ManyToManyField('Class', default=None, blank=True) #User and class 'part of' relationship
+    audio_trims = models.ManyToManyField('AudioTrim', default=None, blank=True) #User and audio trim 'can rate' relationship
+    assignments = models.ManyToManyField('Assignment', default=None, blank=True) #User and assignment 'are assigned' relationship
+    languages = models.ManyToManyField('Language', default=None, blank=True) #User and language 'studies' relationship
     reviews = models.ManyToManyField('BigAudio', through = 'Review', related_name = 'big_audio_reviews') #User and big audio 'can review' relationship
     comments = models.ManyToManyField('BigAudio', through = 'Comment', related_name = 'big_audio_comments') # User and big audio 'can comment' relationship
 
     def __str__(self):
-        return (self.firstname + ', ' + self.lastname)
+        return (self.user_id.firstname + ', ' + self.user_account.lastname)
 
 
 class Review(models.Model): #Sub-class
@@ -26,7 +29,7 @@ class Review(models.Model): #Sub-class
     review = models.TextField() #Not sure what the data type for this should be
 
     def __str__(self):
-        return (self.firstname + ', ' + self.lastname + ': ' + str(self.big_audio.big_audio_id))
+        return (self.user.user_id.firstname + ', ' + self.user.user_id.lastname + ': ' + str(self.big_audio.big_audio_id))
 
 
 class Comment(models.Model): #Sub-class
@@ -35,7 +38,7 @@ class Comment(models.Model): #Sub-class
     comment = models.TextField()
 
     def __str__(self):
-        return (self.firstname + ', ' + self.lastname + ': ' + str(self.big_audio.big_audio_id))
+        return (self.user.user_id.firstname + ', ' + self.user.user_id.lastname + ': ' + str(self.big_audio.big_audio_id))
 
 
 class AudioTrim(models.Model): #Weak entity (No primary key), BigAudio is the owner entity
@@ -65,7 +68,7 @@ class BigAudio(models.Model):
     private = models.BooleanField(default=True)
 
     def __str__(self):
-        return (self.Owner + ': ' + str(self.big_audio_id))
+        return (self.owner.user_id.firstname + ', ' + self.owner.user_id.lastname + ': ' + str(self.big_audio_id))
 
 class Speaker(models.Model):
     speaker_id = models.AutoField(unique=True, primary_key = True)
@@ -94,7 +97,7 @@ class Class(models.Model):
     language = models.ForeignKey('Language', on_delete = models.CASCADE, default = None) #Class and language 'focuses on' relationship
 
     def __str__(self):
-        return (self.teacher.firstname + ', ' + self.lastname + ': ' + str(self.class_id))
+        return (self.teacher.user_id.firstname + ', ' + self.teacher.user_id.lastname + ': ' + str(self.class_id))
 
 class Assignment(models.Model):
     assignment_id = models.AutoField(unique=True, primary_key = True)

@@ -78,7 +78,7 @@ def ajax_createUser(request):
             user = authenticate(request, username=email, password=password)
 
             # create alr user
-            u = alr_user(firstname=first,lastname=last, email=email, user_type=user_type)
+            u = alr_user(user_type=user_type)
             u.save()
             # login new user
             if user is not None:
