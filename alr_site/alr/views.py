@@ -23,11 +23,19 @@ active_messages = {'viewData': '', 'home': '', 'signup': '' }
 def display_viewData(request):
     return render(request, 'general/ViewData.html')
 
+def redirect_home(request):
+    return redirect('/home/') ## TODO: change to index.html
+
+
 def display_home(request):
     if active_messages['home'] != '':
         messages.info(request, active_messages['home'])
         active_messages['home'] = ''
     return render(request, 'public/index.html') ## TODO: change to index.html
+
+def display_taskBar(request):
+    return render(request, 'general/TaskBar.html')
+
 
 def display_aboutUs(request):
     return render(request, 'public/AboutUs.html')
@@ -73,7 +81,7 @@ def ajax_createUser(request):
             user_type = request.POST['user_type']
 
             # create django user
-            u = User.objects.create_user(email, email, password, last_name=last)
+            u = User.objects.create_user(email, email, password, first_name=first, last_name=last)
             u.save()
             user = authenticate(request, username=email, password=password)
 
@@ -115,11 +123,13 @@ def ajax_loginUser(request):
 @csrf_exempt
 def ajax_logoutUser(request):
     logout(request)
+    active_messages['home'] = 'You are logged out'
     return redirect('/home/')
 
 # end of ajax calls
 
 # start of other functions
+# might not need
 def auth_user(username, password):
     user = authenticate(username=username, password=password)
     if user is not None:

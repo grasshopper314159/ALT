@@ -5,11 +5,13 @@ from django.contrib.auth.views import LoginView
 
 urlpatterns = [
 
-    url(r'^$', views.display_home, name='display_home'),
+    url(r'^$', views.redirect_home, name='redirect_home'),
     url(r'^home/$', views.display_home, name='display_home'),
     url(r'^AboutUs/$', views.display_aboutUs, name='display_about'),
     url(r'^SignUp/$', views.display_signUp, name='display_signUp'),
     url(r'^ViewData/$', views.display_viewData, name='display_viewData'),
+    url(r'^TaskBar/$', views.display_taskBar, name='display_taskBar'),
+
 
     url(r'^ajax/createUser/$', views.ajax_createUser, name='ajax_createUser'),
     url(r'^ajax/loginUser/$', views.ajax_loginUser, name='ajax_loginUser'),

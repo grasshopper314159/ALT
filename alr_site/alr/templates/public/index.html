@@ -4,7 +4,6 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link ref="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   {% load static %}
@@ -16,29 +15,71 @@
 </head>
 
 <body>
-  <div class="home-background w3-grey w3-top w3-bottom w3-left w3-right">
-    <div class="w3-top w3-left w3-right" style="background-color:#5e001d; height:12.5vh">
-      <div class="w3-third h-100" style="margin-left:1vw; margin-top:0.5vh;">
-        <a href="/">
-          <img src="{% static '/imgs/alr_example_logo.jpg' %}" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo">
-          <h4 class="home-header">Applied Language Resources</h4>
-        </a>
-      </div>
-      <div class="w3-rest" style="margin-top:2vh;">
-        <ul>
-          <li class="home-bar">
-            <a href="/AboutUs/" class="w3-btn w3-red w3-large w3-border w3-border-white">
-              About Us
-            </a>
-          </li>
-          <li class="home-bar">
-            <a href="/SignUp/" class="w3-btn w3-red w3-large w3-border w3-border-white">
-              Sign Up
-            </a>
-          </li>
-        </ul>
+  <div class="w3-grey w3-top w3-bottom w3-left w3-right">
+    <div class="home-background">
+      <div class="w3-top" style="background-color: #5e001d; color: white;">
+        <a href="/"><img src="{% static '/imgs/alr_example_logo.jpg'%}" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
+        <br>
+        <div class="w3-bar w3-card w3-center">
+          <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+          {% if user.is_authenticated %}
+          <a href="#" class="w3-bar-item w3-button w3-padding-large w3-xlarge">Dashboard</a>
+          <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
+          <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Record Audio</a>
+          <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
+          <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Manage Contacts</a>
+          {% endif %}
+          <a href="/AboutUs/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">AboutUs</a>
+          {% if user.is_anonymous %}
+          <a href="/SignUp/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Sign Up</a>
+          {% endif %}
+          <div class="w3-dropdown-hover w3-hide-small w3-right  w3-xlarge">
+            <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+              <a href="/home/settings" class="w3-bar-item w3-button">Settings</a>
+              <a href="/home/" class="w3-bar-item w3-button">Home Page</a>
+              {% if user.is_authenticated %}
+              <a href="/ajax/logoutUser" class="w3-bar-item w3-button">Log Out</a>
+              {% endif %}
+            </div>
+          </div>
+          {% if user.is_authenticated %}
+          <div class="w3-dropdown-hover w3-hide-small w3-right w3-xlarge"> <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+              <a href="#" class="w3-bar-item w3-button">Researcher</a>
+              <a href="#" class="w3-bar-item w3-button">Rater</a>
+              <!-- <a href="#" class="w3-bar-item w3-button">Instructor</a>
+                      <a href="#" class="w3-bar-item w3-button">Student</a> -->
+            </div>
+          </div>
+          {% endif %}
+        </div>
       </div>
     </div>
+    <!-- <div class="w3-top w3-left w3-right" style="background-color:#5e001d; height:12.5vh">
+      <div class="w3-third h-100" style="margin-left:1vw; margin-top:0.5vh;">
+        <a href="/">
+          <img class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" style="float:left;" src="{% static '/imgs/alr_example_logo.jpg' %}" alt="ALT Logo">
+          <h2 style="margin-top:5%">Applied Language Resources</h2>
+        </a>
+      </div>
+      <div class="w3-third w3-center" style="margin-top:3vh;">
+        <a href="/AboutUs/" class="w3-btn w3-red w3-large w3-border w3-border-white">
+          About Us
+        </a>
+        {% if user.is_anonymous %}
+        <a href="/SignUp/" class="w3-btn w3-red w3-large w3-border w3-border-white">
+          Sign Up
+        </a>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <a href="/ajax/logoutUser/" class="w3-btn w3-red w3-large w3-border w3-border-white">
+          Logout
+        </a>
+        {% endif %}
+
+      </div>
+    </div> -->
 
     <!-- This div needs a background image or something -->
     <div class="w3-light-grey" style="margin-top:18vh">
@@ -49,6 +90,7 @@
       <div class="w3-container w3-third w3-white w3-card-4 w3-round-large">
         <div class="w3-white w3-container">
           <!-- login form -->
+          {% if user.is_anonymous %}
           <form class="" action="/ajax/loginUser/" method="post">
             <div class="w3-container">
               <br><br>
@@ -71,6 +113,7 @@
             <div class="w3-center w3-round-large">
             </div>
           </form>
+          {% endif %}
           <!-- end login form -->
         </div>
       </div>
@@ -83,8 +126,7 @@
     {% if messages %}
     {% for message in messages %}
     <div id='success' class="hide max-w-50vw w3-bottom w3-left w3-light-blue">
-      <span onclick="this.parentElement.style.display='none'"
-      class="w3-button w3-hover-red w3-large w3-display-topright">&times;</span>
+      <span onclick="this.parentElement.style.display='none'" class="w3-button w3-hover-red w3-large w3-display-topright">&times;</span>
       <h3>Message!</h3>
       <p>{{ message }}</p>
     </div>
@@ -95,7 +137,8 @@
 </body>
 <script>
   '{% if messages %}'
-    document.getElementById('success').style.display = 'block';
+  document.getElementById('success').style.display = 'block';
   '{% endif %}'
 </script>
+
 </html>

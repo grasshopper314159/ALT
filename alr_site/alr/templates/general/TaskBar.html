@@ -7,6 +7,8 @@
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+      {% load static %}
+
       <style>
           body {
               margin: 0;
@@ -20,8 +22,8 @@
               <a href="/"><img src="{% static '/imgs/alr_example_logo.jpg'%}" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
               <br>
               <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-              <a href="#" class="w3-bar-item w3-button w3-padding-large w3-xlarge">Dashboard</a>
-              <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
+              <a href="/home/" class="w3-bar-item w3-button w3-padding-large w3-xlarge">Dashboard</a>
+              <a href="/ViewData/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
               <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Record Audio</a>
               <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
               <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Manage Contacts</a>
