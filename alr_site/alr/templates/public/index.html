@@ -79,15 +79,18 @@
         <hr>
       </div>
     </div>
+    <!-- display a message -->
+    {% if messages %}
+    {% for message in messages %}
     <div id='success' class="hide max-w-50vw w3-bottom w3-left w3-light-blue">
       <span onclick="this.parentElement.style.display='none'"
       class="w3-button w3-hover-red w3-large w3-display-topright">&times;</span>
       <h3>Message!</h3>
-      {% if messages %}
-        <p>{{ message }}</p>
-      {% endif %}
-
+      <p>{{ message }}</p>
     </div>
+    {% endfor %}
+    {% endif %}
+    <!--  -->
   </div>
 </body>
 <script>

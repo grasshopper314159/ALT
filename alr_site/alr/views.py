@@ -8,21 +8,22 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
+
 from alr.models import AudioTrim
+from alr.models import User as alr_user
 from . import alr
 
 # Create your views here.
 
 # Start of page views
-
-active_messages = {'viewData': '', 'home': '', }
+# This is to display a message to the user
+active_messages = {'viewData': '', 'home': '', 'signup': '' }
 
 @login_required(login_url='/home/')
 def display_viewData(request):
     return render(request, 'general/ViewData.html')
 
 def display_home(request):
-    print(active_messages['home'])
     if active_messages['home'] != '':
         messages.info(request, active_messages['home'])
         active_messages['home'] = ''
@@ -32,6 +33,9 @@ def display_aboutUs(request):
     return render(request, 'public/AboutUs.html')
 
 def display_signUp(request):
+    if active_messages['signup'] != '':
+        messages.info(request, active_messages['signup'])
+        active_messages['signup'] = ''
     return render(request, 'public/SignUp.html')
 
 # end of page views
@@ -42,18 +46,6 @@ def display_signUp(request):
 def ajax_getAllAudioTrims(request):
     if request.method == 'GET':
         return JsonResponse(alr.GetAllAudioTrim(), safe=False)
-
-# @csrf_exempt
-# @login_required(login_url='/home/')
-# def ajax_getAllAudioTrims(request):
-#     if request.user.is_authenticated:
-#         pass
-#     else:
-#         pass
-#
-#     if request.method == 'GET':
-#         return JsonResponse(alr.GetAllAudioTrim(request.user), safe=False)
-
 
 # TODO: This is would allow users to Publish a post for example, might be useful
 # from myapp.models import BlogPost
@@ -66,31 +58,46 @@ def ajax_getAllAudioTrims(request):
 #         content_type=content_type,
 #     )
 
-#
-# @login_required(login_url='/home/')
-# def post_delete(request, id=None):
-#     ...
-#
-
-
 @csrf_exempt
-def ajax_createUser(first, last, email, password):
+def ajax_createUser(request):
     # try authenticating the user
-    user = authenticate(request, username=email, password=password)
+    user = authenticate(request=None, username=request.POST['email'], password=request.POST['password'])
+
     # if None then user DNE
-    if user is None:
-        # create user
-        u = User.objects.create_user(first, email, password, last_name=last)
-        u.save()
-        # authenticate user
-        user = authenticate(request, username=email, password=password)
-        # log this new user in
-        login(request, user)
-        # messages.info(request, 'Some Message')
-        return redirect('/home/')
-    else:
-        # messages.info(request, 'Some Message')
+    try:
+        if user is None:
+            first = request.POST['firstname']
+            last = request.POST['lastname']
+            email = request.POST['email']
+            password = request.POST['password']
+            user_type = request.POST['user_type']
+
+            # create django user
+            u = User.objects.create_user(email, email, password, last_name=last)
+            u.save()
+            user = authenticate(request, username=email, password=password)
+
+            # create alr user
+            u = alr_user(firstname=first,lastname=last, email=email, user_type=user_type)
+            u.save()
+            # login new user
+            if user is not None:
+                login(request, user)
+                active_messages['home'] = 'You have successfully logged in'
+                return redirect('/home/')
+            else:
+                active_messages['signup'] = 'Your account was not created for some reason'
+                return redirect('/SignUp/')
+        else:
+            active_messages['signup'] = 'That email is already used.'
+            return redirect('/SignUp/')
+    except Exception as e:
+        if str(e) == 'UNIQUE constraint failed: auth_user.username':
+            active_messages['signup'] = 'That email is already used.'
+        else:
+            active_messages['signup'] = e
         return redirect('/SignUp/')
+
 
 @csrf_exempt
 def ajax_loginUser(request):
@@ -101,7 +108,6 @@ def ajax_loginUser(request):
         login(request, user)
         active_messages['home'] = 'You have successfully logged in'
         return redirect('/home/')
-        # return display_home(request)
     else:
         active_messages['home'] = 'Your account was not found or Your password was incorrect'
         return redirect('/home/')

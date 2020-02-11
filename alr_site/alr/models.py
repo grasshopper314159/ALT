@@ -4,10 +4,10 @@ class User(models.Model):
     num_audio_files = models.IntegerField(default=None, blank=True, null=True)
     last_login_date = models.DateTimeField(auto_now=True)
     user_type = models.CharField(max_length = 15)
-    password = models.CharField(max_length = 20)
-    firstname = models.CharField(max_length = 20)
-    lastname = models.CharField(max_length = 20)
-    email = models.EmailField()
+    # password = models.CharField(default=None, max_length = 20)
+    firstname = models.CharField(default=None, max_length = 20)
+    lastname = models.CharField(default=None, max_length = 20)
+    email = models.EmailField(default=None)
     user_id = models.AutoField(unique=True, primary_key = True)
     classes = models.ManyToManyField('Class', default=None, blank=True, null=True) #User and class 'part of' relationship
     audio_trims = models.ManyToManyField('AudioTrim', default=None, blank=True, null=True) #User and audio trim 'can rate' relationship
