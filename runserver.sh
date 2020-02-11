@@ -1,2 +1,2 @@
-sudo git pull
+sudo git pull --force
 python3 ./alr_site/manage.py runserver 10.10.40.137:8000
