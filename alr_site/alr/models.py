@@ -15,27 +15,9 @@ class User(models.Model):
     assignments = models.ManyToManyField("Assignment", default=None, blank=True) #User and assignment 'are assigned' relationship
     audio_trims = models.ManyToManyField("AudioTrim", default=None, blank=True) #User and audio trim 'can rate' relationship
     languages = models.ManyToManyField('Language', default=None, blank=True) #User and language 'studies' relationship
-    
+
     def __str__(self):
         return (self.id.first_name + ', ' + self.id.last_name)
-
-class AudioTrim(models.Model):
-    id = models.AutoField(unique=True, primary_key=True)
-    big_audio_id = models.ForeignKey("BigAudio", on_delete=models.CASCADE, default=None)
-    original_text = models.TextField()
-    english_text = models.TextField()
-    phonetic_text = models.TextField(default=None, blank=True, null=True)
-    last_listened_date = models.DateTimeField(default=None, blank=True, null=True) 
-    score = models.IntegerField(default=None, blank=True, null=True)
-    word_count = models.IntegerField(default=None, blank=True, null=True)
-    length = models.IntegerField(default=None, blank=True, null=True)
-    start_time = models.TimeField()
-    
-    class Meta:
-        unique_together = (("big_audio_id", "start_time")) #AudioTrim has a composite key.
-
-    def __str__(self):
-        return (self.english_text + ': ' + str(self.id))
 
 
 class BigAudio(models.Model):
@@ -50,34 +32,7 @@ class BigAudio(models.Model):
     private = models.BooleanField(default=True)
 
     def __str__(self):
-        return (self.owner.id.first_name + ', ' + self.owner.id.last_name + ': ' + str(self.id))
-
-class Review(models.Model):
-    user_id = models.ForeignKey("User", on_delete=models.CASCADE)
-    big_audio_id = models.ForeignKey("BigAudio", on_delete=models.CASCADE, default=None)
-    review = models.TextField()
-
-    def __str__(self):
-        return (self.user.id.first_name + ', ' + self.user.id.last_name + ': ' + str(self.big_audio.id))
-
-
-class Comment(models.Model):
-    user_id = models.ForeignKey("User", on_delete=models.CASCADE)
-    big_audio_id = models.ForeignKey("BigAudio", on_delete=models.CASCADE, default=None)
-    comment = models.TextField()
-
-    def __str__(self):
-        return (self.user.id.first_name + ', ' + self.user.id.last_name + ': ' + str(self.big_audio.id))
-
-#Need input from Miyashita for this one:
-class Measurements(models.Model):
-    audio_trim_id = models.ForeignKey("AudioTrim", on_delete=models.CASCADE, default=None)
-    set_number = models.IntegerField(unique=True)
-    wavelength = models.IntegerField(default=None, blank=True, null=True)
-    frequency = models.IntegerField(default=None, blank=True, null=True)
-    
-    class Meta:
-        unique_together = (("audio_trim_id", "set_number")) #Measurements has a composite key.
+        return ('Owner: ' + self.owner_id.id.first_name + ', ' + self.owner_id.id.last_name + ' id: ' + str(self.id))
 
 class Speaker(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
@@ -96,6 +51,55 @@ class Language(models.Model):
     def __str__(self):
         return (self.name + ': ' + str(self.id))
 
+class Review(models.Model):
+    user_id = models.ForeignKey("User", on_delete=models.CASCADE)
+    big_audio_id = models.ForeignKey("BigAudio", on_delete=models.CASCADE, default=None)
+    review = models.TextField()
+
+    def __str__(self):
+        return (self.user_id.id.first_name + ', ' + self.user_id.id.last_name + ', BigAudio: ' + str(self.big_audio_id.id))
+
+
+class AudioTrim(models.Model):
+    id = models.AutoField(unique=True, primary_key=True)
+    big_audio_id = models.ForeignKey("BigAudio", on_delete=models.CASCADE, default=None)
+    original_text = models.TextField()
+    english_text = models.TextField()
+    phonetic_text = models.TextField(default=None, blank=True, null=True)
+    last_listened_date = models.DateTimeField(default=None, blank=True, null=True)
+    score = models.IntegerField(default=None, blank=True, null=True)
+    word_count = models.IntegerField(default=None, blank=True, null=True)
+    # Length should probably be required
+    length = models.IntegerField(default=None, blank=True, null=True)
+    start_time = models.TimeField()
+
+    class Meta:
+        unique_together = (("big_audio_id", "start_time")) #AudioTrim has a composite key.
+
+    def __str__(self):
+        return (self.english_text + ', Trim: ' + str(self.id) + ', Big: ' + str(self.big_audio_id.id))
+
+class Comment(models.Model):
+    user_id = models.ForeignKey("User", on_delete=models.CASCADE)
+    big_audio_id = models.ForeignKey("BigAudio", on_delete=models.CASCADE, default=None)
+    comment = models.TextField()
+
+    def __str__(self):
+        return (self.user_id.id.first_name + ', ' + self.user_id.id.last_name + ', Trim?Audio: ' + str(self.big_audio_id.id))
+
+#Need input from Miyashita for this one:
+class Measurements(models.Model):
+    audio_trim_id = models.ForeignKey("AudioTrim", on_delete=models.CASCADE, default=None)
+    set_number = models.IntegerField(unique=True)
+    wavelength = models.IntegerField(default=None, blank=True, null=True)
+    frequency = models.IntegerField(default=None, blank=True, null=True)
+
+    class Meta:
+        unique_together = (("audio_trim_id", "set_number")) #Measurements has a composite key.
+
+    def __str__(self):
+        return ('Trim: ' + self(self.audio_trim_id.id) + ' Measurement: ' + str(self.id))
+
 
 class Class(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
@@ -103,12 +107,12 @@ class Class(models.Model):
     end_date = models.DateField()
     teacher_id = models.ForeignKey("User", on_delete=models.CASCADE, default=None) #Class and user 'teaches' relationship
     language_id = models.ForeignKey("Language", on_delete=models.CASCADE, default=None) #Class and language 'focuses on' relationship
-    
+
     assignments = models.ForeignKey('Assignment', on_delete = models.CASCADE, default=None, blank=True, null=True) #Class and assignment 'assigns' relationship
-    
+
 
     def __str__(self):
-        return (self.teacher.id.first_name + ', ' + self.teacher.id.last_name + ': ' + str(self.id))
+        return (self.teacher_id.id.first_name + ', ' + self.teacher_id.id.last_name + ': ' + str(self.id))
 
 class Assignment(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
@@ -121,4 +125,4 @@ class Assignment(models.Model):
     big_audio_files = models.ManyToManyField("BigAudio") #Assignment and big audio 'can involve' relationship
 
     def __str__(self):
-        return (str(self.id))
+        return ('Class: ' + str(self.id) + ' With: ' + self.class_id.teacher_id.id.last_name)
