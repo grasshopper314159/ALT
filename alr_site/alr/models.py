@@ -41,6 +41,7 @@ class AudioTrim(models.Model):
 class BigAudio(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
     upload_date = models.DateField(auto_now_add=True)
+    sound_file = models.FileField(upload_to="")
     length = models.TimeField()
     owner_id = models.ForeignKey("User", on_delete=models.CASCADE, default=None) #Big audio and user 'owns' relationship
     speaker_id = models.ForeignKey("Speaker", on_delete=models.CASCADE, default=None) #Big audio and speaker 'spoken by' relationship
