@@ -28,7 +28,6 @@ class BigAudio(models.Model):
     speaker_id = models.ForeignKey("Speaker", on_delete=models.CASCADE, default=None) #Big audio and speaker 'spoken by' relationship
     language_id = models.ForeignKey("Language", on_delete=models.CASCADE, default=None) #Big and language 'spoken in' relationship
     reviews = models.ManyToManyField("User", through="Review", related_name="big_audio_reviews") #User and big audio 'can review' relationship
-    comments = models.ManyToManyField("User", through="Comment", related_name="big_audio_comments") # User and big audio 'can comment' relationship
     private = models.BooleanField(default=True)
 
     def __str__(self):
@@ -66,6 +65,7 @@ class AudioTrim(models.Model):
     original_text = models.TextField()
     english_text = models.TextField()
     phonetic_text = models.TextField(default=None, blank=True, null=True)
+    comments = models.ManyToManyField("User", through="Comment", related_name="big_audio_comments") # User and big audio 'can comment' relationship
     last_listened_date = models.DateTimeField(default=None, blank=True, null=True)
     score = models.IntegerField(default=None, blank=True, null=True)
     word_count = models.IntegerField(default=None, blank=True, null=True)
@@ -81,11 +81,11 @@ class AudioTrim(models.Model):
 
 class Comment(models.Model):
     user_id = models.ForeignKey("User", on_delete=models.CASCADE)
-    big_audio_id = models.ForeignKey("BigAudio", on_delete=models.CASCADE, default=None)
+    audio_trim_id = models.ForeignKey("AudioTrim", on_delete=models.CASCADE, default=None)
     comment = models.TextField()
 
     def __str__(self):
-        return (self.user_id.id.first_name + ', ' + self.user_id.id.last_name + ', Trim?Audio: ' + str(self.big_audio_id.id))
+        return (self.user_id.id.first_name + ', ' + self.user_id.id.last_name + ', TrimAudio: ' + str(self.trim_audio_id.id))
 
 #Need input from Miyashita for this one:
 class Measurements(models.Model):
