@@ -19,5 +19,5 @@ def encoder_JSON(data):
     for key in data:
         obj = []
         obj.append(key.original_text)
-        response[key.audio_trim_id] = obj
+        response[key.id] = obj
     return response
