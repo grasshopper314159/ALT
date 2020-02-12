@@ -2,111 +2,123 @@ from django.db import models
 from django.contrib.auth.models import User as user_account
 
 class User(models.Model):
-    num_audio_files = models.IntegerField(default=None, blank=True, null=True)
+    id = models.OneToOneField(user_account, primary_key=True, on_delete=models.CASCADE)
+    #id = models.AudtoField(unique=True, primary_key=True)
+    #first_name = models.CharField(default=None, max_length=20)
+    #last_name = models.CharField(default=None, max_length=20)
+    #email = models.EmailField(default=None)
+    #password = models.CharField(default=None, max_length=20)
+    type = models.CharField(max_length=15)
     last_login_date = models.DateTimeField(auto_now=True)
-    user_type = models.CharField(max_length = 15)
-    # password = models.CharField(default=None, max_length = 20)
-    # firstname = models.CharField(default=None, max_length = 20)
-    # lastname = models.CharField(default=None, max_length = 20)
-    # email = models.EmailField(default=None)
-    # user_id = models.AutoField(unique=True, primary_key = True)
-    # user_id = models.ForeignKey(user_account, primary_key = True, on_delete=models.CASCADE)
-    user_id = models.OneToOneField(user_account, primary_key = True, on_delete=models.CASCADE)
-    classes = models.ManyToManyField('Class', default=None, blank=True) #User and class 'part of' relationship
-    audio_trims = models.ManyToManyField('AudioTrim', default=None, blank=True) #User and audio trim 'can rate' relationship
-    assignments = models.ManyToManyField('Assignment', default=None, blank=True) #User and assignment 'are assigned' relationship
+    num_audio_files = models.IntegerField(default=None, blank=True, null=True)
+    classes = models.ManyToManyField("Class", default=None, blank=True) #User and class 'part of' relationship
+    assignments = models.ManyToManyField("Assignment", default=None, blank=True) #User and assignment 'are assigned' relationship
+    audio_trims = models.ManyToManyField("AudioTrim", default=None, blank=True) #User and audio trim 'can rate' relationship
     languages = models.ManyToManyField('Language', default=None, blank=True) #User and language 'studies' relationship
-    reviews = models.ManyToManyField('BigAudio', through = 'Review', related_name = 'big_audio_reviews') #User and big audio 'can review' relationship
-    comments = models.ManyToManyField('BigAudio', through = 'Comment', related_name = 'big_audio_comments') # User and big audio 'can comment' relationship
-
+    
     def __str__(self):
-        return (self.user_id.first_name + ', ' + self.user_id.last_name)
+        return (self.id.first_name + ', ' + self.id.last_name)
 
-
-class Review(models.Model): #Sub-class
-    user = models.ForeignKey('User', on_delete = models.CASCADE)
-    big_audio = models.ForeignKey('BigAudio', on_delete = models.CASCADE, default = None)
-    review = models.TextField() #Not sure what the data type for this should be
-
-    def __str__(self):
-        return (self.user.user_id.first_name + ', ' + self.user.user_id.last_name + ': ' + str(self.big_audio.big_audio_id))
-
-
-class Comment(models.Model): #Sub-class
-    user = models.ForeignKey('User', on_delete = models.CASCADE)
-    big_audio = models.ForeignKey('BigAudio', on_delete = models.CASCADE, default = None)
-    comment = models.TextField()
-
-    def __str__(self):
-        return (self.user.user_id.first_name + ', ' + self.user.user_id.last_name + ': ' + str(self.big_audio.big_audio_id))
-
-
-class AudioTrim(models.Model): #Weak entity (No primary key), BigAudio is the owner entity
-    audio_trim_id = models.AutoField(unique=True, primary_key=True)
+class AudioTrim(models.Model):
+    id = models.AutoField(unique=True, primary_key=True)
+    big_audio_id = models.ForeignKey("BigAudio", on_delete=models.CASCADE, default=None)
     original_text = models.TextField()
     english_text = models.TextField()
     phonetic_text = models.TextField(default=None, blank=True, null=True)
-    last_listened_date = models.DateTimeField(default=None, blank=True, null=True)
-    measurements = models.IntegerField(default=None, blank=True, null=True) #Not sure what the data type for this should be (might need to convert this into an entity)
+    last_listened_date = models.DateTimeField(default=None, blank=True, null=True) 
     score = models.IntegerField(default=None, blank=True, null=True)
     word_count = models.IntegerField(default=None, blank=True, null=True)
     length = models.IntegerField(default=None, blank=True, null=True)
-    start_time = models.TimeField() #Partial key
+    start_time = models.TimeField()
+    
+    class Meta:
+        unique_together = (("big_audio_id", "start_time")) #AudioTrim has a composite key.
 
     def __str__(self):
-        return (self.english_text + ': ' + str(self.audio_trim_id))
+        return (self.english_text + ': ' + str(self.id))
 
 
 class BigAudio(models.Model):
-    big_audio_id = models.AutoField(unique=True, primary_key = True)
+    id = models.AutoField(unique=True, primary_key=True)
     upload_date = models.DateField(auto_now_add=True)
     length = models.TimeField()
-    owner = models.ForeignKey('User', on_delete = models.CASCADE, default = None) #Big audio and user 'owns' relationship
-    audio_trims = models.ForeignKey('AudioTrim', on_delete = models.CASCADE, default=None, blank=True, null=True) #Big audio and audio trim 'section of' relationship, this is an indetifying relationship
-    speaker = models.ForeignKey('Speaker', on_delete = models.CASCADE, default = None) #Big audio and speaker 'spoken by' relationship
-    language = models.ForeignKey('Language', on_delete = models.CASCADE, default = None) #Big and language 'spoken in' relationship
+    owner_id = models.ForeignKey("User", on_delete=models.CASCADE, default=None) #Big audio and user 'owns' relationship
+    speaker_id = models.ForeignKey("Speaker", on_delete=models.CASCADE, default=None) #Big audio and speaker 'spoken by' relationship
+    language_id = models.ForeignKey("Language", on_delete=models.CASCADE, default=None) #Big and language 'spoken in' relationship
+    reviews = models.ManyToManyField("User", through="Review", related_name="big_audio_reviews") #User and big audio 'can review' relationship
+    comments = models.ManyToManyField("User", through="Comment", related_name="big_audio_comments") # User and big audio 'can comment' relationship
     private = models.BooleanField(default=True)
 
     def __str__(self):
-        return (self.owner.user_id.first_name + ', ' + self.owner.user_id.last_name + ': ' + str(self.big_audio_id))
+        return (self.owner.id.first_name + ', ' + self.owner.id.last_name + ': ' + str(self.id))
+
+class Review(models.Model):
+    user_id = models.ForeignKey("User", on_delete=models.CASCADE)
+    big_audio_id = models.ForeignKey("BigAudio", on_delete=models.CASCADE, default=None)
+    review = models.TextField()
+
+    def __str__(self):
+        return (self.user.id.first_name + ', ' + self.user.id.last_name + ': ' + str(self.big_audio.id))
+
+
+class Comment(models.Model):
+    user_id = models.ForeignKey("User", on_delete=models.CASCADE)
+    big_audio_id = models.ForeignKey("BigAudio", on_delete=models.CASCADE, default=None)
+    comment = models.TextField()
+
+    def __str__(self):
+        return (self.user.id.first_name + ', ' + self.user.id.last_name + ': ' + str(self.big_audio.id))
+
+#Need input from Miyashita for this one:
+class Measurements(models.Model):
+    audio_trim_id = models.ForeignKey("AudioTrim", on_delete=models.CASCADE, default=None)
+    set_number = models.IntegerField(unique=True)
+    wavelength = models.IntegerField(default=None, blank=True, null=True)
+    frequency = models.IntegerField(default=None, blank=True, null=True)
+    
+    class Meta:
+        unique_together = (("audio_trim_id", "set_number")) #Measurements has a composite key.
 
 class Speaker(models.Model):
-    speaker_id = models.AutoField(unique=True, primary_key = True)
-    firstname = models.CharField(max_length = 20)
-    lastname = models.CharField(max_length = 20)
-    languages = models.ManyToManyField('Language') #Speaker and language 'speaks' relationship
-    user = models.OneToOneField('User', on_delete = models.CASCADE, default=None, blank=True, null=True) #User and speaker 'can be' relationship
+    id = models.AutoField(unique=True, primary_key=True)
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
+    user_id = models.OneToOneField("User", on_delete=models.CASCADE, default=None, blank=True, null=True) #User and speaker 'can be' relationship.  This gives speaker a foreign key to user.
+    languages = models.ManyToManyField("Language") #Speaker and language 'speaks' relationship
 
     def __str__(self):
-        return (self.firstname + ', ' + self.lastname + ': ' + str(self.speaker_id))
+        return (self.first_name + ', ' + self.last_name + ': ' + str(self.id))
 
 class Language(models.Model):
-    lang_id = models.AutoField(unique=True, primary_key = True)
-    name = models.CharField(max_length = 50)
+    id = models.AutoField(unique=True, primary_key=True)
+    name = models.CharField(max_length=50)
 
     def __str__(self):
-        return (self.name + ': ' + str(self.lang_id))
+        return (self.name + ': ' + str(self.id))
 
 
 class Class(models.Model):
+    id = models.AutoField(unique=True, primary_key=True)
     start_date = models.DateField(auto_now_add=True)
     end_date = models.DateField()
-    class_id = models.AutoField(unique=True, primary_key=True)
-    teacher = models.ForeignKey('User', on_delete = models.CASCADE, default = None) #Class and user 'teaches' relationship
+    teacher_id = models.ForeignKey("User", on_delete=models.CASCADE, default=None) #Class and user 'teaches' relationship
+    language_id = models.ForeignKey("Language", on_delete=models.CASCADE, default=None) #Class and language 'focuses on' relationship
+    
     assignments = models.ForeignKey('Assignment', on_delete = models.CASCADE, default=None, blank=True, null=True) #Class and assignment 'assigns' relationship
-    language = models.ForeignKey('Language', on_delete = models.CASCADE, default = None) #Class and language 'focuses on' relationship
+    
 
     def __str__(self):
-        return (self.teacher.user_id.first_name + ', ' + self.teacher.user_id.last_name + ': ' + str(self.class_id))
+        return (self.teacher.id.first_name + ', ' + self.teacher.id.last_name + ': ' + str(self.id))
 
 class Assignment(models.Model):
-    assignment_id = models.AutoField(unique=True, primary_key = True)
+    id = models.AutoField(unique=True, primary_key=True)
     description = models.TextField()
     due_date = models.DateTimeField()
-    comments = models.TextField(default=None, blank=True, null=True)
-    grade = models.CharField(max_length = 1)
+    comment = models.TextField(default=None, blank=True, null=True)
+    grade = models.CharField(max_length=1)
     submission = models.BooleanField(default=False)
-    big_audio_files = models.ManyToManyField('BigAudio') #Assignment and big audio 'can involve' relationship
+    class_id = models.ForeignKey("Class", on_delete=models.CASCADE, default=None)
+    big_audio_files = models.ManyToManyField("BigAudio") #Assignment and big audio 'can involve' relationship
 
     def __str__(self):
-        return (str(self.assignment_id))
+        return (str(self.id))
