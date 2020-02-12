@@ -19,11 +19,10 @@ class User(models.Model):
     def __str__(self):
         return (self.id.first_name + ', ' + self.id.last_name)
 
-
 class BigAudio(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
     upload_date = models.DateField(auto_now_add=True)
-    sound_file = models.FileField(upload_to="")
+    sound_file = models.FileField(upload_to="", default=None, blank=True, null=True)
     length = models.TimeField()
     owner_id = models.ForeignKey("User", on_delete=models.CASCADE, default=None) #Big audio and user 'owns' relationship
     speaker_id = models.ForeignKey("Speaker", on_delete=models.CASCADE, default=None) #Big audio and speaker 'spoken by' relationship
@@ -101,16 +100,12 @@ class Measurements(models.Model):
     def __str__(self):
         return ('Trim: ' + self(self.audio_trim_id.id) + ' Measurement: ' + str(self.id))
 
-
 class Class(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
     start_date = models.DateField(auto_now_add=True)
     end_date = models.DateField()
     teacher_id = models.ForeignKey("User", on_delete=models.CASCADE, default=None) #Class and user 'teaches' relationship
     language_id = models.ForeignKey("Language", on_delete=models.CASCADE, default=None) #Class and language 'focuses on' relationship
-
-    assignments = models.ForeignKey('Assignment', on_delete = models.CASCADE, default=None, blank=True, null=True) #Class and assignment 'assigns' relationship
-
 
     def __str__(self):
         return (self.teacher_id.id.first_name + ', ' + self.teacher_id.id.last_name + ': ' + str(self.id))
@@ -122,7 +117,7 @@ class Assignment(models.Model):
     comment = models.TextField(default=None, blank=True, null=True)
     grade = models.CharField(max_length=1)
     submission = models.BooleanField(default=False)
-    class_id = models.ForeignKey("Class", on_delete=models.CASCADE, default=None)
+    class_id = models.ForeignKey("Class", on_delete=models.CASCADE, default=None) #Class and assignment 'assigns' relationship
     big_audio_files = models.ManyToManyField("BigAudio") #Assignment and big audio 'can involve' relationship
 
     def __str__(self):
