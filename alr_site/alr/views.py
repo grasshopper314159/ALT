@@ -24,8 +24,7 @@ def display_viewData(request):
     return render(request, 'general/ViewData.html')
 
 def redirect_home(request):
-    return redirect('/home/') ## TODO: change to index.html
-
+    return redirect('/home/')
 
 def display_home(request):
     if active_messages['home'] != '':
@@ -81,13 +80,13 @@ def ajax_createUser(request):
             user_type = request.POST['user_type']
 
             # create django user
-            u = User.objects.create_user(email, email, password, first_name=first, last_name=last)
-            u.save()
-            user = authenticate(request, username=email, password=password)
-
+            user_acc = User.objects.create_user(email, email, password, first_name=first, last_name=last)
+            user_acc.save()
             # create alr user
-            u = alr_user(user_type=user_type)
+            u = alr_user(id=user_acc, type=user_type)
             u.save()
+
+            user = authenticate(request, username=email, password=password)
             # login new user
             if user is not None:
                 login(request, user)
@@ -95,16 +94,16 @@ def ajax_createUser(request):
                 return redirect('/home/')
             else:
                 active_messages['signup'] = 'Your account was not created for some reason'
-                return redirect('/SignUp/')
+                return redirect('/signUp/')
         else:
             active_messages['signup'] = 'That email is already used.'
-            return redirect('/SignUp/')
+            return redirect('/signUp/')
     except Exception as e:
         if str(e) == 'UNIQUE constraint failed: auth_user.username':
             active_messages['signup'] = 'That email is already used.'
         else:
             active_messages['signup'] = e
-        return redirect('/SignUp/')
+        return redirect('/signUp/')
 
 
 @csrf_exempt

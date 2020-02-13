@@ -3,18 +3,13 @@ from django.contrib.auth.models import User as user_account
 
 class User(models.Model):
     id = models.OneToOneField(user_account, primary_key=True, on_delete=models.CASCADE)
-    #id = models.AudtoField(unique=True, primary_key=True)
-    #first_name = models.CharField(default=None, max_length=20)
-    #last_name = models.CharField(default=None, max_length=20)
-    #email = models.EmailField(default=None)
-    #password = models.CharField(default=None, max_length=20)
     type = models.CharField(max_length=15)
     last_login_date = models.DateTimeField(auto_now=True)
     num_audio_files = models.IntegerField(default=None, blank=True, null=True)
     classes = models.ManyToManyField("Class", default=None, blank=True) #User and class 'part of' relationship
     assignments = models.ManyToManyField("Assignment", default=None, blank=True) #User and assignment 'are assigned' relationship
     audio_trims = models.ManyToManyField("AudioTrim", default=None, blank=True) #User and audio trim 'can rate' relationship
-    languages = models.ManyToManyField('Language', default=None, blank=True) #User and language 'studies' relationship
+    languages = models.ManyToManyField("Language", default=None, blank=True) #User and language 'studies' relationship
 
     def __str__(self):
         return (self.id.first_name + ', ' + self.id.last_name)
@@ -24,7 +19,7 @@ class BigAudio(models.Model):
     upload_date = models.DateField(auto_now_add=True)
     sound_file = models.FileField(upload_to="", default=None, blank=True, null=True)
     length = models.TimeField()
-    owner_id = models.ForeignKey("User", on_delete=models.CASCADE, default=None) #Big audio and user 'owns' relationship
+    owner_id = models.ForeignKey("User", on_delete=models.CASCADE, default=None, blank=True, null=True) #Big audio and user 'owns' relationship
     speaker_id = models.ForeignKey("Speaker", on_delete=models.CASCADE, default=None) #Big audio and speaker 'spoken by' relationship
     language_id = models.ForeignKey("Language", on_delete=models.CASCADE, default=None) #Big and language 'spoken in' relationship
     reviews = models.ManyToManyField("User", through="Review", related_name="big_audio_reviews") #User and big audio 'can review' relationship
@@ -81,7 +76,7 @@ class AudioTrim(models.Model):
 
 class Comment(models.Model):
     user_id = models.ForeignKey("User", on_delete=models.CASCADE)
-    audio_trim_id = models.ForeignKey("AudioTrim", on_delete=models.CASCADE, default=None)
+    audio_trim_id = models.ForeignKey("AudioTrim", on_delete=models.CASCADE, default=None, blank=True, null=True)
     comment = models.TextField()
 
     def __str__(self):
