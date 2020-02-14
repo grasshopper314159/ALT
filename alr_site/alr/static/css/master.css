@@ -4,3 +4,55 @@
 .max-w-50vw {
   max-width: 50vw!important;
 }
+
+#simpleHeader {
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+#mainHeader {
+  text-align: left;
+  padding-left: 1em;
+  font-family: sans-serif;
+  color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+#navigationBar {
+  border: 5px;
+  border-color: black;
+}
+
+.form form {
+  padding: 1em;
+  border: 3px solid #262626;
+  border-radius: 1em;
+  background-color: #acb5b3;
+}
+
+.form form li + li {
+  margin-top: 1em;
+}
+
+.form label {
+  display: inline-block;
+  width: 15%;
+  text-align: right;
+}
+
+.form ul {
+  padding: 0%;
+  margin: 0%;
+}
+
+.form input {
+  width: 40%;
+}
+
+.form input:focus, textarea:focus {
+  border-color: #000;
+}
+
+.submitButton {
+  padding-left: 15%;
+}
