@@ -22,8 +22,19 @@
 
 /*Navigation Bar*/
 #navigationBar {
-  border: 5px;
-  border-color: black;
+  background-color: #5e001d; 
+  color: white;
+}
+
+#navigationButtons a, #navigationButtons button {
+  border-top: 1px solid #777777;
+  border-right: 1px solid #333333;
+  border-bottom: 1px solid #444444;
+  border-left: 1px solid #777777;
+}
+
+#navigationButtons a:hover, #navigationButtons button:hover{
+  border: 1px solid black;
 }
 
 /*Forms*/
@@ -59,7 +70,7 @@
 /*Sign-Up*/
 #signUpForm {
   height: auto; 
-  margin-top: 24vh;
+  margin-top: 20vh;
 }
 
 .signUpForm h1 {
