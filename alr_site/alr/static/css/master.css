@@ -1,3 +1,4 @@
+/*General*/
 .hide {
   display: none;
 }
@@ -5,6 +6,7 @@
   max-width: 50vw!important;
 }
 
+/*Headers*/
 #simpleHeader {
   font-family: sans-serif;
   font-weight: bold;
@@ -18,41 +20,68 @@
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
+/*Navigation Bar*/
 #navigationBar {
   border: 5px;
   border-color: black;
 }
 
-.form form {
+/*Forms*/
+/*Login*/
+.loginForm {
+  margin-top: 10vh;
+}
+
+.loginForm input {
+  margin: 0em;
+  margin-bottom: 0.5em;
+}
+
+.loginForm h2 {
+  font-weight: bold;
+}
+
+.loginForm button {
+  margin-bottom: 1em;
+  border: 2px solid black;
+  border-radius: 4px;
+}
+
+.signUpForm form {
   padding: 1em;
   border: 3px solid #262626;
   border-radius: 1em;
   background-color: #acb5b3;
+  width: 80%;
+  margin: 0 auto;
 }
 
-.form form li + li {
-  margin-top: 1em;
+/*Sign-Up*/
+#signUpForm {
+  height: auto; 
+  margin-top: 24vh;
 }
 
-.form label {
+.signUpForm h1 {
+  font-weight: bold;
+}
+
+.signUpForm label, input, select{
   display: inline-block;
-  width: 15%;
+  margin-left: 2em;
+}
+
+.signUpForm label {
+  width: 33%;
   text-align: right;
 }
 
-.form ul {
-  padding: 0%;
-  margin: 0%;
-}
-
-.form input {
-  width: 40%;
-}
-
-.form input:focus, textarea:focus {
+.signUpForm input:focus {
   border-color: #000;
 }
 
-.submitButton {
-  padding-left: 15%;
+.signUpForm button {
+  margin-bottom: 1em;
+  border: 2px solid black;
+  border-radius: 4px;
 }

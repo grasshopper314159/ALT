@@ -85,31 +85,35 @@
     <!-- This div needs a background image or something -->
     <div class="w3-light-grey" style="margin-top:18vh">
       <div class="w3-third">
+        <img src="{% static '/imgs/sunrise_on_oval.jpg' %}">
         <hr>
       </div>
       <!-- Login div -->
-      <div class="w3-container w3-third w3-white w3-card-4 w3-round-large">
+      <div class="loginForm w3-container w3-third w3-white w3-card-4 w3-round-large">
         <div class="w3-white w3-container">
           <!-- login form -->
           {% if user.is_anonymous %}
           <form class="" action="/ajax/loginUser/" method="post">
             <div class="w3-container">
               <br><br>
-              <h3 class="w3-center">Login</h3>
-              <input class="w3-input" type="text" placeholder="Enter email" name="username" required>
+              <h2 class="w3-center">Login</h2>
+              <input class="w3-input" type="email" placeholder="Enter email" name="username" required>
               <label for="username"><b>Email</b></label><br>
               <br>
               <input class="w3-input" type="password" placeholder="Enter Password" name="password" required>
               <label for="password"><b>Password</b></label><br>
+              <div class="w3-container w3-center ">
+                <span class="">Forgot <a href="#">password?</a></span>
+                <br><br>
+              </div>
               <div class="w3-center w3-round-large">
                 <button type="submit" class="w3-btn w3-green">Login</button>
-                Or
+                <br>
+                <p>
+                  Don't have an account?  Create an account here.
+                </p>
                 <a href="/signUp/"><button type="button" class="w3-btn w3-green">Create Account</button></a>
               </div>
-            </div>
-            <div class="w3-container w3-center ">
-              <span class="">Forgot <a href="#">password?</a></span>
-              <br><br>
             </div>
             <div class="w3-center w3-round-large">
             </div>
