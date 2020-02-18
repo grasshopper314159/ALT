@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, permission_required
 
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import User, Permission, Group
 from django.contrib.contenttypes.models import ContentType
 from django.core.serializers import serialize
 from django.http import JsonResponse, HttpResponse
@@ -57,12 +57,15 @@ def display_signUp(request):
 # end of page views
 
 # start of ajax calls
+# @permission_required(, login_url='/home/')
 @csrf_exempt
-@login_required(login_url='/home/')
-@permission_required('')
 def ajax_getAllAudioTrims(request):
+    print(request.user, ' Perms: ', Permission.objects.filter(user=request.user))#, request.user.groups.get_perms())
     if request.method == 'GET':
         return JsonResponse(alr.GetAllAudioTrim(), safe=False)
+
+
+
 
 # TODO: This is would allow users to Publish a post for example, might be useful
 # from myapp.models import BlogPost
@@ -90,7 +93,7 @@ def ajax_createUser(request):
             user_type = request.POST['user_type']
 
             # create django user
-            user_acc = User.objects.create_user(email, email, password, first_name=first, last_name=last)
+            user_acc = User.objects.create_user(email, email, password, first_name=first, last_name=last) #, groups=Group.)
             user_acc.save()
             # create alr user
             u = alr_user(id=user_acc, type=user_type)
