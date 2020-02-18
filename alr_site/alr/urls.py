@@ -7,9 +7,13 @@ urlpatterns = [
 
     url(r'^$', views.redirect_home, name='redirect_home'),
     url(r'^home/$', views.display_home, name='display_home'),
+    url(r'^home/settings$', views.display_settings, name='display_settings'),
     url(r'^aboutUs/$', views.display_aboutUs, name='display_about'),
     url(r'^signUp/$', views.display_signUp, name='display_signUp'),
+
     url(r'^viewData/$', views.display_viewData, name='display_viewData'),
+
+    # For testing
     url(r'^taskBar/$', views.display_taskBar, name='display_taskBar'),
 
 

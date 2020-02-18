@@ -1,12 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
+
 from django.contrib.auth.models import User, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.serializers import serialize
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 
 
 from alr.models import AudioTrim
@@ -17,7 +19,7 @@ from . import alr
 
 # Start of page views
 # This is to display a message to the user
-active_messages = {'viewData': '', 'home': '', 'signup': '' }
+active_messages = {'home': '', 'settings':'', 'signup': '', 'viewData': ''}
 
 @login_required(login_url='/home/')
 def display_viewData(request):
@@ -32,6 +34,13 @@ def display_home(request):
         active_messages['home'] = ''
     return render(request, 'public/index.html') ## TODO: change to index.html
 
+def display_settings(request):
+    if active_messages['settings'] != '':
+        messages.info(request, active_messages['settings'])
+        active_messages['settings'] = ''
+    return render(request, 'general/AccountSettings.html') ## TODO: change to index.html
+
+# not permanent
 def display_taskBar(request):
     return render(request, 'general/TaskBar.html')
 
@@ -50,6 +59,7 @@ def display_signUp(request):
 # start of ajax calls
 @csrf_exempt
 @login_required(login_url='/home/')
+@permission_required('')
 def ajax_getAllAudioTrims(request):
     if request.method == 'GET':
         return JsonResponse(alr.GetAllAudioTrim(), safe=False)
