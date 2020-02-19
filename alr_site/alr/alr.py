@@ -33,8 +33,8 @@ def encoder_JSON(data, request):
 
         print(key.big_audio_id.owner_id.id == request.user)
         if (key.big_audio_id.owner_id.id == request.user):
-            obj['owner'] = (key.big_audio_id.owner_id.id.first_name, ' ', key.big_audio_id.owner_id.id.last_name)
-            obj['speaker'] = (key.big_audio_id.speaker_id.first_name, ' ', key.big_audio_id.speaker_id.last_name)
+            obj['owner'] = key.big_audio_id.owner_id.id.first_name + ' ' + key.big_audio_id.owner_id.id.last_name
+            obj['speaker'] = key.big_audio_id.speaker_id.first_name + ' ' + key.big_audio_id.speaker_id.last_name
             obj['original_text'] = (key.original_text)
             obj['english_text'] = (key.english_text)
             obj['score'] = (key.score)
