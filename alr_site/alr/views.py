@@ -26,10 +26,10 @@ def display_viewData(request):
     return render(request, 'general/ViewData.html')
     
 def display_uploadAudio(request):
-    return render(request, 'general/uploadAudio.html')
+    return render(request, 'general/UploadAudio.html')
 
 def display_rateData(request):
-    return(request, 'general/rateData.html')
+    return render(request, 'rater/RateData.html')
 
 def redirect_home(request):
     return redirect('/home/')

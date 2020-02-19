@@ -8,13 +8,13 @@
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../static/PAGENAME/CSS/PAGENAME.css">
+  {% load static %}
+  <link rel="stylesheet" href="{% static '/css/master.css' %}">
 
   <title>Rate Data</title>
 
   <style>
     body {
-        margin: 0;
         font-family: Arial, Helvetica, sans-serif;
     }
 
@@ -30,11 +30,36 @@
     .checkboxgroup label {
         display: block;
     }
+    
+    .checkboxgroup input {
+      width: 13px;
+      height: 13px;
+    }
+    
+    #background {
+       background-image: url('{% static '/imgs/neutralBackground.jpg' %}');
+       background-size: cover;
+       overflow-y: scroll;
+       height: 100%;
+     }
+     #ratingBox {
+       display: inline-block;
+       padding: 0;
+       width: 100%;
+       text-align: center;
+       border-radius: 25px;
+       border: solid 1px grey;
+     }
+     #uploadButton {
+       margin-bottom: 1em;
+       border: 2px solid black;
+       border-radius: 4px;
+     }
   </style>
 </head>
 
 <body>
-  <div class="w3-top w3-grey" style="overflow-y:scroll;height:100%;">
+  <div class="w3-top w3-grey" id="background">
     <div class="home-background">
       <div class="w3-top" id="navigationBar">
         <a href="/"><img src="{% static '/imgs/alr_example_logo.jpg'%}" class="w3-col w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" style="width:5em" alt="ALT Logo"></a>
@@ -46,6 +71,7 @@
           <a href="/viewData/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
           <a href="/uploadAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
           <a href="#" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Manage Contacts</a>
+          <a href="/rateData/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Rate Data</a> <!--Need this here for UI testing. Will change later.-->
           {% endif %}
           <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
           {% if user.is_anonymous %}
@@ -64,6 +90,7 @@
         </div>
       </div>
     </div>
+    
     <div class="w3-container">
       <!-- container to enclose the rest of the body, to add margins -->
       <br>
@@ -77,9 +104,9 @@
       </div>
       <!--close heading-->
 
-      <div class="w3-responsive" style="padding: 5px">
+      <div class="w3-responsive" style="padding: 5px; margin-top: 10vh;">
         <div class="w3-threequarter">
-          <table class="w3-table-all">
+          <table class="w3-table-all" style="width: 99%">
             <thead>
               <tr>
                 <th class='text-center'>Owner</th>
@@ -170,14 +197,11 @@
 
         </div>
         <!--close table three quarter-->
-        <div class="w3-quarter w3-white">
-          <div class="w3-container" style=" border-radius: 25px; padding: 0px; border: solid 1px grey; text-align: center">
+        <div class="w3-quarter w3-white" style="border-radius: 25px;">
+          <div class="w3-container" id="ratingBox">
             <div style="display: inline-block; padding: 0px; width: 100%; ">
               <h6 style="text-align: center">Owner | Researcher</h3>
                 <h3 style="text-align: center">J. Smith | M. Miyashita</h3>
-                <div style="border: solid 1px grey; border-radius: 5px; padding: 2px">
-                  <input style="" type="image" src="Images/play.jpg" alt="submit" width="32" height="32"></input>
-                </div>
                 <div style="border: solid 1px grey; border-radius: 5px; padding: 2px">
                   <p> 1 - Not native-like <br>
                     2 - Slightly native-like <br>
@@ -191,32 +215,32 @@
                 <div style="border: solid 1px grey; border-radius: 5px; padding: 2px">
                   <div class="w3-bar">
                     <div class="checkboxgroup">
-                      <input class="w3-radio" type="radio" name="radiorating" value="1">
-                      <label for="my_radio_button_id2">1</label>
+                      <input type="radio" name="radiorating" value="7">
+                      <label for="radiorating">1</label>
                     </div>
                     <div class="checkboxgroup">
-                      <input class="w3-radio" type="radio" name="radiorating" value="2">
-                      <label for="my_radio_button_id2">2</label>
+                      <input type="radio" name="radiorating" value="7">
+                      <label for="radiorating">2</label>
                     </div>
+                      <div class="checkboxgroup">
+                        <input type="radio" name="radiorating" value="7">
+                        <label for="radiorating">3</label>
+                      </div>
+                      <div class="checkboxgroup">
+                        <input type="radio" name="radiorating" value="7">
+                        <label for="radiorating">4</label>
+                      </div>
+                      <div class="checkboxgroup">
+                        <input type="radio" name="radiorating" value="7">
+                        <label for="radiorating">5</label>
+                      </div>
+                      <div class="checkboxgroup">
+                        <input type="radio" name="radiorating" value="7">
+                        <label for="radiorating">6</label>
+                      </div>
                     <div class="checkboxgroup">
-                      <input class="w3-radio" type="radio" name="radiorating" value="3">
-                      <label for="my_radio_button_id2">3</label>
-                    </div>
-                    <div class="checkboxgroup">
-                      <input class="w3-radio" type="radio" name="radiorating" value="4">
-                      <label for="my_radio_button_id2">4</label>
-                    </div>
-                    <div class="checkboxgroup">
-                      <input class="w3-radio" type="radio" name="radiorating" value="5">
-                      <label for="my_radio_button_id2">5</label>
-                    </div>
-                    <div class="checkboxgroup">
-                      <input class="w3-radio" type="radio" name="radiorating" value="6">
-                      <label for="my_radio_button_id2">6</label>
-                    </div>
-                    <div class="checkboxgroup">
-                      <input class="w3-radio" type="radio" name="radiorating" value="7">
-                      <label for="my_radio_button_id2">7</label>
+                      <input type="radio" name="radiorating" value="7">
+                      <label for="radiorating">7</label>
                     </div>
                   </div><!-- close radio button bar -->
                 </div>
@@ -225,6 +249,7 @@
                   <h3>Comments</h3>
                   <textarea rows="10" cols="30" style="border: solid 1px grey; padding: 3px; width: 90%;">Great job!</textarea>
                 </div>
+                <button type="submit" class="w3-btn w3-green" id="uploadButton">Upload</button>
             </div>
             <!--close inline block div-->
           </div>
