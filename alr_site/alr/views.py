@@ -63,7 +63,7 @@ def display_signUp(request):
 # @permission_required(, login_url='/home/')
 @csrf_exempt
 def ajax_getAllAudioTrims(request):
-    print(request.user, ' Perms: ', Permission.objects.filter(user=request.user))#, request.user.groups.get_perms())
+    # print(request.user, ' Perms: ', Permission.objects.filter(user=request.user))#, request.user.groups.get_perms())
     if request.method == 'GET':
         return JsonResponse(alr.GetAllAudioTrim(request), safe=False)
 
