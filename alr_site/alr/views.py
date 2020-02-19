@@ -62,10 +62,12 @@ def display_signUp(request):
 def ajax_getAllAudioTrims(request):
     print(request.user, ' Perms: ', Permission.objects.filter(user=request.user))#, request.user.groups.get_perms())
     if request.method == 'GET':
-        return JsonResponse(alr.GetAllAudioTrim(), safe=False)
+        return JsonResponse(alr.GetAllAudioTrim(request), safe=False)
 
-
-
+@csrf_exempt
+def ajax_postUploadAudio(request):
+    if request.method == 'POST':
+        return JsonResponse(None, safe=False)
 
 # TODO: This is would allow users to Publish a post for example, might be useful
 # from myapp.models import BlogPost

@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'^ajax/logoutUser/$', views.ajax_logoutUser, name='ajax_logoutUser'),
 
     url(r'^ajax/getAllAudioTrim/$', views.ajax_getAllAudioTrims, name='ajax_getAllAudioTrims'),
-    # url(r'^ajax/getGamePlayer/$', views.ajax_getGamePlayer, name='ajax_getGamePlayer'),
+    url(r'^ajax/postUploadAudio/$', views.ajax_postUploadAudio, name='ajax_postUploadAudio'),
     # url(r'^ajax/registerUser/$', views.ajax_CreateUser, name='display_create_user'),
 
     #url(r'^test/$', views.display_test, name='test'),

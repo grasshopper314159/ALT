@@ -8,14 +8,13 @@ $(document).ready(function(){
       success: function(response)
       {
         data = document.getElementById('data');
-        // test data
-        owner = 'Me';
-        speaker = 'you';
-        project = 'mine';
-        text_original = 'Hello';
-        text_english = 'Hello';
-        score = '7';
-        date = '02/07/2020';
+        // // test data
+        // owner = 'Me';
+        // speaker = 'you';
+        // text_original = 'Hello';
+        // text_english = 'Hello';
+        // score = '7';
+        // date = '02/07/2020';
 
         for (var key in response) {
           entry = '<tr><td>' +
@@ -23,13 +22,12 @@ $(document).ready(function(){
             '<button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>'+
             '<button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>'+
             '</div></td>' +
-            '<td>' + owner + '</td>' +
-            '<td>' + speaker + '</td>' +
-            '<td>' + project + '</td>' +
-            '<td>' + text_original + '</td>' +
-            '<td>' + text_english + '</td>' +
-            '<td>' + score + '</td>' +
-            '<td>' + date + '</td>' +
+            '<td>' + key[owner] + '</td>' +
+            '<td>' + key[speaker] + '</td>' +
+            '<td>' + key[text_original] + '</td>' +
+            '<td>' + key[text_english] + '</td>' +
+            '<td>' + key[score] + '</td>' +
+            '<td>' + key[date] + '</td>' +
             '<td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button>' +
             '</td></tr>';
           data.innerHTML += entry;
