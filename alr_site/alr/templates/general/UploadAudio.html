@@ -9,101 +9,112 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   {% load static %}
   <!-- localized stylesheets -->
-  <link rel="stylesheet" href="{% static 'STYLE SHEET.css' %}"></style>
+  <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>
   <script type="text/javascript" src="{% static 'FILE.js' %}"></script>
   <style>
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background-color: gray;
     }
-
     .h1 {
       font-size: 70px;
     }
+    #background {
+       background-image: url('{% static '/imgs/neutralBackground.jpg' %}');
+       background-size: cover;
+       height: 100%;
+       overflow-y: scroll;
+       margin-top: 20vh;
+     }
   </style>
   <title>Upload Audio</title>
 </head>
 
 <body>
-  <div class="w3-top w3-grey" style="height: 100%; overflow-y: scroll;">
-    <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
-      <a href="/"><img src="{% static '/imgs/alr_example_logo.jpg'%}" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
-      <h4 class="home-header w3-xlarge">Applied Language Resources</h4>
+  <div class="w3-top" id="background">
+    <div class="home-background">
+      <div class="w3-top" id="navigationBar">
+        <a href="/"><img src="{% static '/imgs/alr_example_logo.jpg'%}" class="w3-col w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" style="width:5em" alt="ALT Logo"></a>
+        <a href="/" style="text-decoration: none"><h2 class="w3-rest" id="mainHeader"> Applied Language Resources </h2></a>
+        <br>
+        <div class="w3-bar w3-card w3-center" id="navigationButtons">
+          <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+          {% if user.is_authenticated %}
+          <a href="/viewData/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
+          <a href="/uploadAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Audio</a>
+          <a href="#" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Manage Contacts</a>
+          {% endif %}
+          <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
+          {% if user.is_anonymous %}
+          <a href="/signUp/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Sign Up</a>
+          {% endif %}
+          <div class="w3-dropdown-hover w3-hide-small w3-right  w3-xlarge">
+            <button class="w3-round w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+              <a href="/home/settings" class="w3-bar-item w3-button">Settings</a>
+              <a href="/home/" class="w3-bar-item w3-button">Home</a>
+              {% if user.is_authenticated %}
+              <a href="/ajax/logoutUser" class="w3-bar-item w3-button">Log Out</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- form -->
       <br>
-      <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-xlarge">Dashboard</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Manage Contacts</a>
-      <a href="/AboutUs/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About</a>
-      <div class="w3-dropdown-hover w3-hide-small w3-right w3-xlarge">
-        <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
-        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-          <a href="#" class="w3-bar-item w3-button">Settings</a>
-          <a href="/" class="w3-bar-item w3-button">Home Page</a>
-          <a href="/" class="w3-bar-item w3-button">Log Out</a>
-        </div>
-      </div>
-      <div class="w3-dropdown-hover w3-hide-small w3-right w3-xlarge">
-        <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
-        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-          <a href="#" class="w3-bar-item w3-button">Researcher</a>
-          <a href="#" class="w3-bar-item w3-button">Rater</a>
-          <a href="#" class="w3-bar-item w3-button">Instructor</a>
-          <a href="#" class="w3-bar-item w3-button">Student</a>
-        </div>
-      </div>
-    </div>
-    <div style="clear: both">
-      <h1 class="w3-left" style="margin-left: 150px">Record Audio</h1>
-      <h1 class="w3-center" style="margin-right: 375px; line-height: 75px">Upload Audio</h1>
-    </div>
-    <hr>
-    <div style="margin-left: 1%;" class="input">
+      <div class="audioForm" style="float: left; margin-left: 5vh;">
+        <label style="font-weight: bold">Choose a File to Upload:</label>
+        <br>
+        <input class="w3-bar-item" type="file" name="fileToUpload" id="fileToUpload" style="margin-left:0;"></input>
+        <br><br>
+        <label style="text-align: center;">Speaker</label>
+        <br>
+        <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>
+        <br><br>
 
-      <div style="float: left;">
-        <img class="w3-bar-item" style=" margin-left: 1%;" src="Images/seekbar.gif" width="500px" height="100px"></img>
-      </div>
-      <div style="float: left;">
-        <input class="w3-bar-item" style="float: left; margin-left: 50%;" type="file" name="fileToUpload" id="fileToUpload"></input>
+        <label>Text (Original)</label><br>
+        <textarea style="vertical-align: middle;" rows="3" cols="100"></textarea>
+        <br><br>
+
+        <label>Text (English)</label><br>
+        <textarea style="vertical-align: middle;" rows="3" cols="100"></textarea>
+        <br><br>
+        <label>Language</label><br>
+        <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>
+        <br><br>
+        <button type="submit" class="w3-btn w3-green">Upload</button>
+        <br><br>
       </div>
 
-
-
-
+<!--Record Audio -->
+    <div style="float: right; margin: auto; width: 40%">
+      <div id="fancyHeader">
+        <h1>Record a New Audio File</h2>
+      </div>
+      <br>
+      <div>
+        <img class="w3-bar-item" src="{% static '/imgs/seekbar.gif'%}" width="500px" height="100px"></img>
+      </div>
+      <br>
       <div class="w3-bar">
-        <div class="w3-btn w3-grey" style="margin-left: 165px">
-          <i class="fa fa-play-circle-o fa-3x" aria-hidden="true"></i>
-          <h4>Play</h4>
-        </div>
-        <div class="w3-btn w3-grey">
+        <div class="w3-btn" style="margin-left: 10vh">
           <i class="fa fa-microphone fa-3x" aria-hidden="true"></i>
-          <h4>Record</h4>
+          <h4 id="fancyText">RECORD</h4>
+        </div>
+        <div class="w3-btn">
+          <i class="fa fa-play-circle-o fa-3x" aria-hidden="true"></i>
+          <h4 id="fancyText">PLAY</h4>
+        </div>
+        <div class="w3-btn" style="margin-left: 10vh">
+          <i class="fa fa-save fa-3x" aria-hidden="true"></i>
+          <h4 id="fancyText">SAVE</h4>
         </div>
       </div>
-
-      <label style="text-align: center;">Speaker</label>
-      <br>
-      <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>
-      <br><br>
-
-      <label>Text (origional)</label><br>
-      <textarea style="vertical-align: middle;" rows="3" cols="100"></textarea>
-      <br><br>
-
-      <label>Text (English)</label><br>
-      <textarea style="vertical-align: middle;" rows="3" cols="100"></textarea>
-      <br><br>
-      <label>Language</label><br>
-      <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>
-      <br>
-      <br>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small" style="background-color: white;margin-bottom: 1%;">Upload</a>
-      <br>
-
+      
     </div>
-
+    
+  </div>
 </body>
-
 </html>

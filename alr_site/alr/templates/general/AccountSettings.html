@@ -3,52 +3,51 @@
 
 <head>
   <meta charset="utf-8">
-
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link ref="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   {% load static %}
   <!-- localized stylesheets -->
-  <link rel="stylesheet" href="{% static 'STYLE SHEET.css' %}"></style>
+  <link rel="stylesheet" href="{% static '/css/master.css' %}">
   <script type="text/javascript" src="{% static 'FILE.js' %}"></script>
   <!-- Function to change font size -->
-
   <title>Account Settings</title>
 </head>
 
 <body>
   <div class="w3-grey w3-top w3-bottom w3-left w3-right">
-    <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
-      <a href="/"><img src="{% static '/imgs/alr_example_logo.jpg'%}" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
-      <h4 class="home-header w3-xlarge">Applied Language Resources</h4>
-      <br>
-      <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-xlarge">Dashboard</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Manage Contacts</a>
-      <a href="/AboutUs/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About</a>
-      <div class="w3-dropdown-hover w3-hide-small w3-right w3-xlarge">
-        <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
-        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-          <a href="#" class="w3-bar-item w3-button">Settings</a>
-          <a href="/" class="w3-bar-item w3-button">Home Page</a>
-          <a href="/" class="w3-bar-item w3-button">Log Out</a>
-        </div>
-      </div>
-      <div class="w3-dropdown-hover w3-hide-small w3-right w3-xlarge">
-        <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
-        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-          <a href="#" class="w3-bar-item w3-button">Researcher</a>
-          <a href="#" class="w3-bar-item w3-button">Rater</a>
-          <a href="#" class="w3-bar-item w3-button">Instructor</a>
-          <a href="#" class="w3-bar-item w3-button">Student</a>
+    <div class="home-background">
+      <div class="w3-top" id="navigationBar">
+        <a href="/"><img src="{% static '/imgs/alr_example_logo.jpg'%}" class="w3-col w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" style="width:5em" alt="ALT Logo"></a>
+        <a href="/" style="text-decoration: none"><h2 class="w3-rest" id="mainHeader"> Applied Language Resources </h2></a>
+        <br>
+        <div class="w3-bar w3-card w3-center" id="navigationButtons">
+          <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+          {% if user.is_authenticated %}
+          <a href="/viewData/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
+          <a href="/uploadAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Audio</a>
+          <a href="#" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Manage Contacts</a>
+          {% endif %}
+          <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
+          {% if user.is_anonymous %}
+          <a href="/signUp/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Sign Up</a>
+          {% endif %}
+          <div class="w3-dropdown-hover w3-hide-small w3-right  w3-xlarge">
+            <button class="w3-round w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+              <a href="/home/settings" class="w3-bar-item w3-button">Settings</a>
+              <a href="/home/" class="w3-bar-item w3-button">Home</a>
+              {% if user.is_authenticated %}
+              <a href="/ajax/logoutUser" class="w3-bar-item w3-button">Log Out</a>
+              {% endif %}
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    
     <div class="w3-container w3-light-grey">
-      <div class="w3-container">
+      <div class="w3-container" style="margin-top:19vh">
         <div class="w3-third">
           <div class="w3-border">
             <h3 id="accountSettings" class="w3-center settings-header">Account Settings</h3>
@@ -83,14 +82,6 @@
       account_settings_font.style.fontSize = "100%";
       large_font = false;
     }
-  }
-
-  function displayAccessibility()
-  {
-    var font_settings = document.createElement("BUTTON");
-    font_settings.setAttribute('onclick', 'changeFontSize()');
-    font_settings.innerHTML = "Increase Font Size";
-    document.getElementById("mainContent").appendChild(font_settings);
   }
 </script>
 </html>

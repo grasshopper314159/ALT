@@ -24,6 +24,9 @@ active_messages = {'home': '', 'settings':'', 'signup': '', 'viewData': ''}
 @login_required(login_url='/home/')
 def display_viewData(request):
     return render(request, 'general/ViewData.html')
+    
+def display_audio(request):
+    return render(request, 'general/uploadAudio.html')
 
 def redirect_home(request):
     return redirect('/home/')

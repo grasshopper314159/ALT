@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^signUp/$', views.display_signUp, name='display_signUp'),
 
     url(r'^viewData/$', views.display_viewData, name='display_viewData'),
+    url(r'^uploadAudio/$', views.display_audio, name='display_audio'),
 
     # For testing
     url(r'^taskBar/$', views.display_taskBar, name='display_taskBar'),
