@@ -13,7 +13,6 @@
   <script type="text/javascript" src="{% static 'FILE.js' %}"></script>
   <style>
     body {
-      margin: 0;
       font-family: Arial, Helvetica, sans-serif;
     }
     .h1 {
@@ -22,9 +21,8 @@
     #background {
        background-image: url('{% static '/imgs/neutralBackground.jpg' %}');
        background-size: cover;
-       height: 100%;
-       overflow-y: scroll;
-       margin-top: 20vh;
+       overflow: scroll;
+       position: relative;
      }
   </style>
   <title>Upload Audio</title>
@@ -63,8 +61,8 @@
     </div>
     
     <!-- form -->
-      <br>
-      <div class="audioForm" style="float: left; margin-left: 5vh;">
+    <br><br><br><br><br><br><br><br>
+      <form class="audioForm" style="float: left; margin-left: 5vh;">
         <label style="font-weight: bold">Choose a File to Upload:</label>
         <br>
         <input class="w3-bar-item" type="file" name="fileToUpload" id="fileToUpload" style="margin-left:0;"></input>
@@ -73,20 +71,24 @@
         <br>
         <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>
         <br><br>
-
         <label>Text (Original)</label><br>
         <textarea style="vertical-align: middle;" rows="3" cols="100"></textarea>
         <br><br>
-
         <label>Text (English)</label><br>
         <textarea style="vertical-align: middle;" rows="3" cols="100"></textarea>
         <br><br>
         <label>Language</label><br>
         <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>
         <br><br>
+        <input type="radio" name="private" value="private" style="margin-left:0">
+        <label for="private">Private</label><br>
+        <input type="radio" name="not_private" value="not_private" style="margin-left:0">
+        <label for="not_private">Not Private</label><br>
+        <br>
         <button type="submit" class="w3-btn w3-green">Upload</button>
-        <br><br>
-      </div>
+        <br>
+        <br>
+      </form>
 
 <!--Record Audio -->
     <div style="float: right; margin: auto; width: 40%">
