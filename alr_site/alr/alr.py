@@ -17,7 +17,7 @@ def GetAllAudioTrim(request):
 def encoder_JSON(data, request):
     response = {}
     for key in data:
-        obj = []
+        obj = {}
         # id = models.AutoField(unique=True, primary_key=True)
 #         big_audio_id = models.ForeignKey("BigAudio", on_delete=models.CASCADE, default=None)
 #         original_text = models.TextField()
@@ -31,13 +31,14 @@ def encoder_JSON(data, request):
 #         length = models.IntegerField(default=None, blank=True, null=True)
 #         start_time = models.TimeField()
 
-        if (key.big_audio_id.owner_id == request.user.id):
-            obj.append(key.big_audio_id.owner_id.id.first_name, ' ', key.big_audio_id.owner_id.id.last_name)
-            obj.append(key.speaker_id.first_name, ' ', key.speaker_id.last_name)
-            obj.append(key.original_text)
-            obj.append(key.english_text)
-            obj.append(key.score)
-            obj.append(key.last_listened_date)
+        print(key.big_audio_id.owner_id.id == request.user)
+        if (key.big_audio_id.owner_id.id == request.user):
+            obj['owner'] = (key.big_audio_id.owner_id.id.first_name, ' ', key.big_audio_id.owner_id.id.last_name)
+            obj['speaker'] = (key.big_audio_id.speaker_id.first_name, ' ', key.big_audio_id.speaker_id.last_name)
+            obj['original_text'] = (key.original_text)
+            obj['english_text'] = (key.english_text)
+            obj['score'] = (key.score)
+            obj['date'] = (key.last_listened_date)
 
             response[key.id] = obj
 
