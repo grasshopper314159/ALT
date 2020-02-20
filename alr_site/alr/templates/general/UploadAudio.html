@@ -10,7 +10,6 @@
   {% load static %}
   <!-- localized stylesheets -->
   <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>
-  <script type="text/javascript" src="{% static 'FILE.js' %}"></script>
   <style>
     .h1 {
       font-size: 70px;
@@ -83,7 +82,8 @@
         <input type="radio" name="not_private" value="not_private" style="margin-left:0">
         <label for="not_private">Not Private</label><br>
         <br>
-        <button type="submit" class="w3-btn w3-green">Upload</button>
+        <!--<button type="submit" class="w3-btn w3-green">Upload</button>-->
+        <a href="/viewData/" class="w3-btn w3-green">Upload</a> <!-- Fake Upload button -->
         <br>
         <br>
       </form>
@@ -112,9 +112,7 @@
           <h4 id="fancyText">SAVE</h4>
         </div>
       </div>
-      
     </div>
-    
   </div>
 </body>
 </html>
