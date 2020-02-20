@@ -10,6 +10,10 @@
    font-family: Arial, Helvetica, sans-serif;
  }
 
+ .hide {
+   display: none!important;
+ }
+
 /*Headers*/
 #simpleHeader {
   font-family: sans-serif;
@@ -37,7 +41,7 @@
 
 /*Navigation Bar*/
 #navigationBar {
-  background-color: #5e001d; 
+  background-color: #5e001d;
   color: white;
 }
 
@@ -84,7 +88,7 @@
 
 /*Sign-Up*/
 #signUpForm {
-  height: auto; 
+  height: auto;
   margin-top: 20vh;
 }
 

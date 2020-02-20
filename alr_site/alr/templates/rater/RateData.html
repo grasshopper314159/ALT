@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   {% load static %}
   <link rel="stylesheet" href="{% static '/css/master.css' %}">
+  <script src="{% static '/js/rateData.js' %}" charset="utf-8"></script>
 
   <title>Rate Data</title>
 
@@ -26,12 +27,12 @@
     .checkboxgroup label {
         display: block;
     }
-    
+
     .checkboxgroup input {
       width: 13px;
       height: 13px;
     }
-    
+
     #background {
        background-image: url('{% static '/imgs/neutralBackground.jpg' %}');
        background-size: cover;
@@ -86,7 +87,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="w3-container">
       <!-- container to enclose the rest of the body, to add margins -->
       <br>
@@ -109,74 +110,20 @@
                 <th class='text-center'>Researcher</th>
                 <th class='text-center'>Text</th>
                 <th class='text-center'>Date</th>
+                <th class='text-center'>Score</th>
                 <th class='text-center'></th>
-                <th class='text-center'><input class="w3-check" type="checkbox"></th>
+                <th class='text-center'>Save on submit</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr id="0">
                 <td>Jill Smith</td>
                 <td>M.Miyashita</td>
                 <td>犬</td>
                 <td>7/20/20</td>
-                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                <td><input class="w3-check" type="checkbox"></td>
-              </tr>
-              <tr>
-                <td>Jill Smith</td>
-                <td>M.Miyashita</td>
-                <td>犬</td>
-                <td>7/20/20</td>
-                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                <td><input class="w3-check" type="checkbox"></td>
-              </tr>
-              <tr>
-                <td>Jill Smith</td>
-                <td>M.Miyashita</td>
-                <td>犬</td>
-                <td>7/20/20</td>
-                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                <td><input class="w3-check" type="checkbox"></td>
-              </tr>
-              <tr>
-                <td>Jill Smith</td>
-                <td>M.Miyashita</td>
-                <td>犬</td>
-                <td>7/20/20</td>
-                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                <td><input class="w3-check" type="checkbox"></td>
-              </tr>
-              <tr>
-                <td>Jill Smith</td>
-                <td>M.Miyashita</td>
-                <td>犬</td>
-                <td>7/20/20</td>
-                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                <td><input class="w3-check" type="checkbox"></td>
-              </tr>
-              <tr>
-                <td>Jill Smith</td>
-                <td>M.Miyashita</td>
-                <td>犬</td>
-                <td>7/20/20</td>
-                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                <td><input class="w3-check" type="checkbox"></td>
-              </tr>
-              <tr>
-                <td>Jill Smith</td>
-                <td>M.Miyashita</td>
-                <td>犬</td>
-                <td>7/20/20</td>
-                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                <td><input class="w3-check" type="checkbox"></td>
-              </tr>
-              <tr>
-                <td>Jill Smith</td>
-                <td>M.Miyashita</td>
-                <td>犬</td>
-                <td>7/20/20</td>
-                <td><button class="w3-button w3-tiny w3-white w3-border w3-round">Rate</button></td>
-                <td><input class="w3-check" type="checkbox"></td>
+                <td id="score_0" >N/A</td>
+                <td><button class="w3-button w3-tiny w3-white w3-border w3-round" onclick="toggle_rate('0')">Rate</button></td>
+                <td><input id="submit_check_0" class="w3-check" type="checkbox"></td>
               </tr>
               <tr>
                 <td></td>
@@ -185,7 +132,7 @@
                 <td></td>
                 <td></td>
                 <td>
-                  <button class="w3-button w3-med w3-white w3-border w3-round">Submit</button>
+                  <button class="w3-button w3-med w3-white w3-border w3-round" onclick="fake_messsage()" >Submit</button>
                 </td>
               </tr>
             </tbody>
@@ -195,59 +142,65 @@
         <!--close table three quarter-->
         <div class="w3-quarter w3-white" style="border-radius: 25px;">
           <div class="w3-container" id="ratingBox">
-            <div style="display: inline-block; padding: 0px; width: 100%; ">
-              <h6 style="text-align: center">Owner | Researcher</h3>
-                <h3 style="text-align: center">J. Smith | M. Miyashita</h3>
-                <div style="border: solid 1px grey; border-radius: 5px; padding: 2px">
-                  <p> 1 - Not native-like <br>
-                    2 - Slightly native-like <br>
-                    3 - Somewhat native-like <br>
-                    4 - Moderately native-like <br>
-                    5 - Mostly native-like <br>
-                    6 - Almost native-like <br>
-                    7 - Native-like 
-                </div>
-                <!--close input (play button) div-->
-                <div style="border: solid 1px grey; border-radius: 5px; padding: 2px">
-                  <div class="w3-bar">
-                    <div class="checkboxgroup">
-                      <input type="radio" name="radiorating" value="7">
-                      <label for="radiorating">1</label>
-                    </div>
-                    <div class="checkboxgroup">
-                      <input type="radio" name="radiorating" value="7">
-                      <label for="radiorating">2</label>
-                    </div>
+            <!-- <form class="" action="ajax/postRating/" method="POST"> -->
+              <div id="Rate_0" class="hide" style="padding: 0px; width: 100%;">
+                <h6 style="text-align: center">Owner | Researcher</h3>
+                  <h3 style="text-align: center">J. Smith | M. Miyashita</h3>
+                  <div style="border: solid 1px grey; border-radius: 5px; padding: 2px">
+                    <p> 1 - Not native-like <br>
+                      2 - Slightly native-like <br>
+                      3 - Somewhat native-like <br>
+                      4 - Moderately native-like <br>
+                      5 - Mostly native-like <br>
+                      6 - Almost native-like <br>
+                      7 - Native-like <br>
+                    </p>
+                  </div>
+                  <!--close input (play button) div-->
+                  <div style="border: solid 1px grey; border-radius: 5px; padding: 2px">
+                    <div class="w3-bar">
                       <div class="checkboxgroup">
-                        <input type="radio" name="radiorating" value="7">
+                        <input id="radio_0_1" type="radio" name="radiorating" value="1">
+                        <label for="radiorating">1</label>
+                      </div>
+                      <div class="checkboxgroup">
+                        <input id="radio_0_2" type="radio" name="radiorating" value="2">
+                        <label for="radiorating">2</label>
+                      </div>
+                      <div class="checkboxgroup">
+                        <input id="radio_0_3" type="radio" name="radiorating" value="3">
                         <label for="radiorating">3</label>
                       </div>
                       <div class="checkboxgroup">
-                        <input type="radio" name="radiorating" value="7">
+                        <input id="radio_0_4" type="radio" name="radiorating" value="4">
                         <label for="radiorating">4</label>
                       </div>
                       <div class="checkboxgroup">
-                        <input type="radio" name="radiorating" value="7">
+                        <input id="radio_0_5" type="radio" name="radiorating" value="5">
                         <label for="radiorating">5</label>
                       </div>
                       <div class="checkboxgroup">
-                        <input type="radio" name="radiorating" value="7">
+                        <input id="radio_0_6" type="radio" name="radiorating" value="6">
                         <label for="radiorating">6</label>
                       </div>
-                    <div class="checkboxgroup">
-                      <input type="radio" name="radiorating" value="7">
-                      <label for="radiorating">7</label>
-                    </div>
-                  </div><!-- close radio button bar -->
+                      <div class="checkboxgroup">
+                        <input id="radio_0_7" type="radio" name="radiorating" value="7">
+                        <label for="radiorating">7</label>
+                      </div>
+                    </div><!-- close radio button bar -->
+                  </div>
+                  <div class="" style="border: solid 1px grey; border-radius: 5px; padding: 2px"><!-- Audio Controls -->
+                    Audio Controls will be here
+                  </div>
+                  <div>
+                    <h3>Comments</h3>
+                    <textarea rows="10" cols="30" style="border: solid 1px grey; padding: 3px; width: 90%;" placeholder="Great job!"></textarea>
+                  </div>
+                  <input type="submit" class="w3-btn w3-green" id="uploadButton" value="Upload" onclick="add_rating('0')"></input>
                 </div>
-                <!--close mystery 000000s div-->
-                <div>
-                  <h3>Comments</h3>
-                  <textarea rows="10" cols="30" style="border: solid 1px grey; padding: 3px; width: 90%;">Great job!</textarea>
-                </div>
-                <button type="submit" class="w3-btn w3-green" id="uploadButton">Upload</button>
-            </div>
-            <!--close inline block div-->
+                <!--close inline block div-->
+
+            <!-- </form> -->
           </div>
           <!--close w3-container-center-->
         </div>
@@ -255,7 +208,25 @@
       </div>
       <!--close w3-responsive-->
     </div><!-- close main body container -->
+    <!-- display a message -->
+
+    <!-- message currently fake -->
+    <div id='message' class="hide max-w-50vw w3-bottom w3-left w3-light-blue">
+      <span onclick="this.parentElement.classList.toggle('hide')" class="w3-button w3-hover-red w3-large w3-display-topright">&times;</span>
+      <h3>Message!</h3>
+      <p id='fake_messsage' style="height:100px!important;">Your changes have been saved.</p>
+    </div>
+    <!-- {% if messages %}
+    {% for message in messages %} -->
+    <!-- {% endfor %}
+    {% endif %} -->
+    <!--  -->
   </div>
 </body>
+<script>
+  // '{% if messages %}'
+  // document.getElementById('message').style.display = 'block';
+  // '{% endif %}'
+</script>
 
 </html>

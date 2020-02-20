@@ -19,7 +19,7 @@ from . import alr
 
 # Start of page views
 # This is to display a message to the user
-active_messages = {'home': '', 'settings':'', 'signup': '', 'viewData': ''}
+active_messages = {'home': '', 'settings':'', 'signup': '', 'viewData': '', 'rateData': ''}
 
 @login_required(login_url='/home/')
 def display_viewData(request):
@@ -29,7 +29,11 @@ def display_viewData(request):
 def display_audio(request):
     return render(request, 'general/UploadAudio.html')
 
+# @login_required(login_url='/home/')
 def display_rateData(request):
+    if active_messages['rateData'] != '':
+        messages.info(request, active_messages['rateData'])
+        active_messages['rateData'] = ''
     return render(request, 'rater/RateData.html')
 
 def redirect_home(request):
@@ -71,9 +75,15 @@ def ajax_getAllAudioTrims(request):
         return JsonResponse(alr.GetAllAudioTrim(request), safe=False)
 
 @csrf_exempt
+def ajax_postRating(request):
+    if request.method == 'POST':
+        return JsonResponse(None, safe=False)
+
+@csrf_exempt
 def ajax_postUploadAudio(request):
     if request.method == 'POST':
         return JsonResponse(None, safe=False)
+
 
 # TODO: This is would allow users to Publish a post for example, might be useful
 # from myapp.models import BlogPost
