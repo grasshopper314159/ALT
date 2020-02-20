@@ -24,8 +24,9 @@ active_messages = {'home': '', 'settings':'', 'signup': '', 'viewData': ''}
 @login_required(login_url='/home/')
 def display_viewData(request):
     return render(request, 'general/ViewData.html')
-    
-def display_uploadAudio(request):
+
+# @login_required(login_url='/home/')
+def display_audio(request):
     return render(request, 'general/UploadAudio.html')
 
 def display_rateData(request):
@@ -49,7 +50,6 @@ def display_settings(request):
 # not permanent
 def display_taskBar(request):
     return render(request, 'general/TaskBar.html')
-
 
 def display_aboutUs(request):
     return render(request, 'public/AboutUs.html')
