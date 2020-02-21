@@ -10,6 +10,9 @@
   {% load static %}
   <!-- localized stylesheets -->
   <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>
+  <!-- Load p5 library from CDN,  -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
+  <script src="record_audio.js"></script>
   <style>
     .h1 {
       font-size: 70px;
@@ -93,7 +96,7 @@
 <!--Record Audio -->
     <div style="float: right; margin: auto; width: 40%">
       <div id="fancyHeader">
-        <h1>Record a New Audio File</h2>
+        <h1>Record a New Audio File!!</h2>
       </div>
       <br>
       <div>
@@ -115,6 +118,39 @@
         </div>
       </div>
     </div>
+    <div style="float: right; margin: auto; width: 40%">
+      <div id="fancyHeader">
+        <h1>Record a New Audio File!!</h2>
+      </div>
+            <br>
+      <div id="record_audio_container">
+        <!-- put 5 canvas here -->
+        testing
+        
+        
+      </div>
+      <br>
+      <!--
+      <div class="w3-bar">
+        <div class="w3-btn" style="margin-left: 10vh">
+          <i class="fa fa-microphone fa-3x" aria-hidden="true"></i>
+          <h4 id="fancyText">RECORD</h4>
+        </div>
+        <div class="w3-btn">
+          <i class="fa fa-play-circle-o fa-3x" aria-hidden="true"></i>
+          <h4 id="fancyText">PLAY</h4>
+        </div>
+        <div class="w3-btn" style="margin-left: 10vh">
+          <i class="fa fa-save fa-3x" aria-hidden="true"></i>
+          <h4 id="fancyText">SAVE</h4>
+        </div>
+      </div>
+      -->
+    </div>
+    
+    
+    
+    
   </div>
 </body>
 </html>
