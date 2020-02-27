@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^uploadAudio/$', views.display_uploadAudio, name='display_uploadAudio'),
     url(r'^rateData/$', views.display_rateData, name='display_rateData'),
     url(r'^userManagement/$', views.display_userManagement, name='display_userManagement'),
+    url(r'^trimAudio/$', views.display_trimAudio, name='display_trimAudio'),
 
     # For testing
     url(r'^taskBar/$', views.display_taskBar, name='display_taskBar'),
