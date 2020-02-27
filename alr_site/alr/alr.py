@@ -6,32 +6,17 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import AudioTrim
+# import all db tables
+from .models import User, BigAudio, Speaker, Language, Review, AudioTrim, Comment, Measurements, Class, Assignment
 
 
 def GetAllAudioTrim(request):
     all_trims = AudioTrim.objects.all()
-    all_audio_trims = encoder_JSON(all_trims, request)#, all_trims.attributes)
-    return all_audio_trims
 
-def encoder_JSON(data, request):
+    # This is linear to the number of total audio_trims (i.e. might get slow?)
     response = {}
-    for key in data:
+    for key in all_trims:
         obj = {}
-        # id = models.AutoField(unique=True, primary_key=True)
-#         big_audio_id = models.ForeignKey("BigAudio", on_delete=models.CASCADE, default=None)
-#         original_text = models.TextField()
-#         english_text = models.TextField()
-#         phonetic_text = models.TextField(default=None, blank=True, null=True)
-#         comments = models.ManyToManyField("User", through="Comment", related_name="big_audio_comments") # User and big audio 'can comment' relationship
-#         last_listened_date = models.DateTimeField(default=None, blank=True, null=True)
-#         score = models.IntegerField(default=None, blank=True, null=True)
-#         word_count = models.IntegerField(default=None, blank=True, null=True)
-#         # Length should probably be required
-#         length = models.IntegerField(default=None, blank=True, null=True)
-#         start_time = models.TimeField()
-
-        print(key.big_audio_id.owner_id.id == request.user)
         if (key.big_audio_id.owner_id.id == request.user):
             obj['owner'] = key.big_audio_id.owner_id.id.first_name + ' ' + key.big_audio_id.owner_id.id.last_name
             obj['speaker'] = key.big_audio_id.speaker_id.first_name + ' ' + key.big_audio_id.speaker_id.last_name
@@ -39,7 +24,51 @@ def encoder_JSON(data, request):
             obj['english_text'] = (key.english_text)
             obj['score'] = (key.score)
             obj['date'] = (key.last_listened_date)
-
             response[key.id] = obj
 
     return response
+
+def getEval(request):
+    pass
+
+def getEvalUrl(request):
+    trims = request.POST['trims']
+    firstname = request.POST['eval_firstname']
+    lastname = request.POST['eval_lastname']
+    email = request.POST['email']
+    pin = request.POST['eval_pin']
+
+    username = firstname + "." + lastname
+    user_type = 'eval_user'
+
+    user = authenticate(request=None, username=username, password=pin)
+    try:
+        if user is None:
+
+            # create django user
+            user_acc = User.objects.create_user(username, email, pin, first_name=firstname, last_name=lastname) #, groups=Group.)
+            user_acc.save()
+            user_acc.groups.add(name='auth_user')
+            user_acc.groups.add(name=str(user_type))
+            user_acc.save()
+
+            # create alr user
+            u = alr_user(id=user_acc, type=user_type)
+            u.save()
+
+            active_messages['home'] = 'You have created an account for '
+            return redirect('/home/')
+        else:
+            active_messages['signup'] = 'That email is already used.'
+            return redirect('/signUp/')
+    except Exception as e:
+        if str(e) == 'UNIQUE constraint failed: auth_user.username':
+            active_messages['signup'] = 'That email is already used.'
+        else:
+            active_messages['signup'] = e
+        return redirect('/signUp/')
+
+def updateRating(request):
+    trim = AudioTrim.objects.filter(id=request.POST['trim_id'])
+    trim.score = request.POST['score']
+    trim.save()

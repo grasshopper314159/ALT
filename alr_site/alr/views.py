@@ -38,7 +38,7 @@ def display_uploadAudio(request):
 def display_rateData(request):
     request = check_message(request, 'rateData')
     return render(request, 'rater/RateData.html')
-    
+
 # for alr.hs.umt.edu/userManagement/ as url
 @login_required(login_url='/home/')
 def display_userManagement(request):
@@ -101,25 +101,33 @@ def is_user_type(request, type, OR=False, AND=False):
 # start of ajax calls
 # @permission_required(, login_url='/home/')
 @csrf_exempt
+@login_required(login_url='/home/')
 def ajax_getAllAudioTrims(request):
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
         if request.method == 'GET':
             return JsonResponse(alr.GetAllAudioTrim(request), safe=False)
+    else:
+        return redirect_home(request)
 
-    # print()# in request.user.groups.all())
+
 @csrf_exempt
-def ajax_post_getUserType(request):
+@login_required(login_url='/home/')
+def ajax_postTogetRatingURL(request):
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
-        if request.method == 'GET':
-            return JsonResponse(alr.GetAllAudioTrim(request), safe=False)
+        if request.method == 'POST':
+            return JsonResponse(alr.getEvalUrl(request), safe=False)
 
 
 @csrf_exempt
+@login_required(login_url='/home/')
 def ajax_postRating(request):
     if request.method == 'POST':
-        return JsonResponse(None, safe=False)
+        alr.updateRating(request)
+        active_messages['rateData'] = 'Your changes have been saved'
+        return redirect('/rateData/')
 
 @csrf_exempt
+@login_required(login_url='/home/')
 def ajax_postUploadAudio(request):
     if request.method == 'POST':
         return JsonResponse(None, safe=False)
