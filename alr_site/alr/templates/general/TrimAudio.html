@@ -9,66 +9,69 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   {% load static %}
-  <!-- localized stylesheets -->
-  <link rel="stylesheet" href="{% static 'STYLE SHEET.css' %}"></style>
+  <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>
   <script type="text/javascript" src="{% static 'FILE.js' %}"></script>
-  <title>Trim Audio</title>
   <style>
-    body {
-                margin: 0;
-                font-family: Arial, Helvetica, sans-serif;
-            }
-
-            .h1 {
-                font-size: 70px;
-            }
-        </style>
+    .h1 {
+      font-size: 70px;
+    }
+    #background {
+       background-image: url('{% static '/imgs/neutralBackground.jpg' %}');
+       background-size: cover;
+       overflow-y: scroll;
+       height: 100%;
+     }
+  </style>
+  <title>Trim Audio</title>
 </head>
 
 <body>
-  <div class="w3-top w3-bottom w3-left w3-right w3-grey" style="overflow-y:scroll;height:100%;">
-    <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
-      <a href="/"><img src="{% static '/imgs/alr_example_logo.jpg'%}" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
-      <h4 class="home-header w3-xlarge">Applied Language Resources</h4>
-      <br>
-      <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-xlarge">Dashboard</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Manage Contacts</a>
-      <a href="/AboutUs/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About</a>
-      <div class="w3-dropdown-hover w3-hide-small w3-right w3-xlarge">
-        <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
-        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-          <a href="#" class="w3-bar-item w3-button">Settings</a>
-          <a href="/" class="w3-bar-item w3-button">Home Page</a>
-          <a href="/" class="w3-bar-item w3-button">Log Out</a>
-        </div>
-      </div>
-      <div class="w3-dropdown-hover w3-hide-small w3-right w3-xlarge">
-        <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
-        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-          <a href="#" class="w3-bar-item w3-button">Researcher</a>
-          <a href="#" class="w3-bar-item w3-button">Rater</a>
-          <a href="#" class="w3-bar-item w3-button">Instructor</a>
-          <a href="#" class="w3-bar-item w3-button">Student</a>
+  <div class="w3-top" id="background">
+    <div class="home-background">
+      <div class="w3-top" id="navigationBar">
+        <a href="/"><img src="{% static '/imgs/alr_example_logo.jpg'%}" class="w3-col w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" style="width:5em" alt="ALT Logo"></a>
+        <a href="/" style="text-decoration: none"><h2 class="w3-rest" id="mainHeader"> Applied Language Resources </h2></a>
+        <br>
+        <div class="w3-bar w3-card w3-center" id="navigationButtons">
+          <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+          {% if user.is_authenticated %}
+          <a href="/viewData/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
+          <a href="/uploadAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
+          <a href="/userManagement/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">User Management</a>
+          <a href="/rateData/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Rate Data</a> <!--Need this here for UI testing. Will change later.-->
+          {% endif %}
+          <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
+          {% if user.is_anonymous %}
+          <a href="/signUp/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Sign Up</a>
+          {% endif %}
+          <div class="w3-dropdown-hover w3-hide-small w3-right  w3-xlarge">
+            <button class="w3-round w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+              <a href="/home/settings" class="w3-bar-item w3-button">Settings</a>
+              <a href="/home/" class="w3-bar-item w3-button">Home</a>
+              {% if user.is_authenticated %}
+              <a href="/ajax/logoutUser" class="w3-bar-item w3-button">Log Out</a>
+              {% endif %}
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="w3-container w3-center">
+    
+    <div class="w3-container w3-center" style="margin-top: 15vh">
       <div class="">
         <br><br><br>
         <img src="{% static '/imgs/waveform.jpg'%}" alt="TODO::">
         <br>
-        <div class="w3-btn w3-grey">
+        <div class="w3-btn">
           <i class="fa fa-play-circle-o fa-3x" aria-hidden="true"></i>
           <h4>Play</h4>
         </div>
-        <div class="w3-btn w3-grey">
+        <div class="w3-btn">
           <i class="fa fa-pause-circle-o fa-3x" aria-hidden="true"></i>
           <h4>Pause</h4>
         </div>
-        <div class="w3-btn w3-grey">
+        <div class="w3-btn">
           <i class="fa fa-stop-circle-o fa-3x" aria-hidden="true"></i>
           <h4>Stop</h4>
         </div>
@@ -97,15 +100,8 @@
         <br><br>
         <label style="padding: 13px;">Language</label><br>
         <textarea style="vertical-align: middle;"></textarea>
-      </div>
-      <div class="w3-half w3-center">
-        <br><br><br><br><br><br><br><br>
-        <button class="w3-xlarge">Upload</button>
         <br><br>
-        <button class="w3-xlarge">Finish Editing</button>
-      </div>
-      <div class="w3-bottom w3-grey" style="height:20px">
-        <!-- filler div -->
+        <a href="/viewData/" class="w3-btn w3-green">Finish Editing</a>
       </div>
     </div>
   </div>
