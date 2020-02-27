@@ -17,15 +17,13 @@
     #background {
        background-image: url('{% static '/imgs/neutralBackground.jpg' %}');
        background-size: cover;
-       overflow-y: scroll;
-       height: 100%;
      }
   </style>
   <title>Account Settings</title>
 </head>
 
 <body>
-  <div class="w3-top" id="background">
+  <div class="w3-top w3-bottom" id="background">
     <div class="home-background">
       <div class="w3-top" id="navigationBar">
         <a href="/"><img src="{% static '/imgs/alr_example_logo.jpg'%}" class="w3-col w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" style="width:5em" alt="ALT Logo"></a>
@@ -60,8 +58,8 @@
     <div class="w3-container">
       <div class="w3-container" style="margin-top:19vh">
         <div class="w3-third">
-          <div class="w3-border">
-            <h3 id="accountSettings" class="w3-center settings-header">Account Settings</h3>
+          <div>
+            <h3 id="simpleHeader" class="w3-center settings-header">Account Settings</h3>
             <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayAccount()">Account</button>
             <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayPrivacy()">Privacy</button>
             <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayLanguage()">Language</button>
@@ -69,10 +67,8 @@
             <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayTerms()">Terms and Conditions</button>
           </div>
         </div>
-        <div id="mainContent" class="w3-twothird w3-panel w3-leftbar w3-border-blue w3-pale-blue" style="margin-top: 0vh; margin-bottom: 0vh">
-          <p style="height:100%;"><br>
-            <br><br>
-          </p>
+        <div id="mainContent" class="w3-twothird w3-panel w3-leftbar w3-border-blue w3-pale-blue" style="margin-top: 8vh">
+          <p></p>
         </div>
       </div>
     </div>
