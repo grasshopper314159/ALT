@@ -19,60 +19,94 @@ from . import alr
 
 # Start of page views
 # This is to display a message to the user
-active_messages = {'home': '', 'settings':'', 'signup': '', 'viewData': '', 'rateData': ''}
+active_messages = {'home': '', 'settings':'', 'signup': '', 'viewData': '', 'rateData': '', 'uploadAudio': ''}
 
+# for alr.hs.umt.edu/viewData/ as url
 @login_required(login_url='/home/')
 def display_viewData(request):
+    request = check_message(request, 'viewData')
     return render(request, 'general/ViewData.html')
 
-# @login_required(login_url='/home/')
-def display_audio(request):
+# for alr.hs.umt.edu/uploadAudio/ as url
+@login_required(login_url='/home/')
+def display_uploadAudio(request):
+    request = check_message(request, 'uploadAudio')
     return render(request, 'general/UploadAudio.html')
 
-# @login_required(login_url='/home/')
+# for alr.hs.umt.edu/rateData/ as url
+@login_required(login_url='/home/')
 def display_rateData(request):
-    if active_messages['rateData'] != '':
-        messages.info(request, active_messages['rateData'])
-        active_messages['rateData'] = ''
+    request = check_message(request, 'rateData')
     return render(request, 'rater/RateData.html')
 
+# for alr.hs.umt.edu as url
 def redirect_home(request):
     return redirect('/home/')
 
+# for alr.hs.umt.edu/home/ as url
 def display_home(request):
-    if active_messages['home'] != '':
-        messages.info(request, active_messages['home'])
-        active_messages['home'] = ''
+    request = check_message(request, 'home')
     return render(request, 'public/index.html') ## TODO: change to index.html
 
+# for alr.hs.umt.edu/home/settings as url
 def display_settings(request):
-    if active_messages['settings'] != '':
-        messages.info(request, active_messages['settings'])
-        active_messages['settings'] = ''
+    request = check_message(request, 'settings')
     return render(request, 'general/AccountSettings.html') ## TODO: change to index.html
+
+# for alr.hs.umt.edu/signUp/ as url
+def display_signUp(request):
+    request = check_message(request, 'signup')
+    return render(request, 'public/SignUp.html')
+
+# for alr.hs.umt.edu/aboutUs/ as url
+def display_aboutUs(request):
+    return render(request, 'public/AboutUs.html')
 
 # not permanent
 def display_taskBar(request):
     return render(request, 'general/TaskBar.html')
 
-def display_aboutUs(request):
-    return render(request, 'public/AboutUs.html')
-
-def display_signUp(request):
-    if active_messages['signup'] != '':
-        messages.info(request, active_messages['signup'])
-        active_messages['signup'] = ''
-    return render(request, 'public/SignUp.html')
+# for displaying a meesage to the user
+def check_message(request, page):
+    if active_messages[page] != '':
+        messages.info(request, active_messages[page])
+        active_messages[page] = ''
+    return request
 
 # end of page views
+
+# start of permission functions # TODO: put in seperate file
+def is_user_type(request, type, OR=False, AND=False):
+    if type(type) == stype(''):
+        return request.user.groups.filter(name=type).exists()
+    elif type(type) == stype([]) and ((OR and not AND) or (not OR and AND)):
+        bool = []
+        for i in range(len(type)):
+            bool[i] = request.user.groups.filter(name=type[i]).exists()
+        if OR and (True in bool):
+            return True
+        if AND and (False not in bool):
+            return True
+        return False
+
+
+# end of permission functions
 
 # start of ajax calls
 # @permission_required(, login_url='/home/')
 @csrf_exempt
 def ajax_getAllAudioTrims(request):
-    # print(request.user, ' Perms: ', Permission.objects.filter(user=request.user))#, request.user.groups.get_perms())
-    if request.method == 'GET':
-        return JsonResponse(alr.GetAllAudioTrim(request), safe=False)
+    if is_user_type(request, ['ADMIN','research_user'], OR=True):
+        if request.method == 'GET':
+            return JsonResponse(alr.GetAllAudioTrim(request), safe=False)
+
+    # print()# in request.user.groups.all())
+@csrf_exempt
+def ajax_post_getUserType(request):
+    if is_user_type(request, ['ADMIN','research_user'], OR=True):
+        if request.method == 'GET':
+            return JsonResponse(alr.GetAllAudioTrim(request), safe=False)
+
 
 @csrf_exempt
 def ajax_postRating(request):
@@ -113,6 +147,10 @@ def ajax_createUser(request):
             # create django user
             user_acc = User.objects.create_user(email, email, password, first_name=first, last_name=last) #, groups=Group.)
             user_acc.save()
+            user_acc.groups.add(name='auth_user')
+            user_acc.groups.add(name=str(user_type))
+            user_acc.save()
+
             # create alr user
             u = alr_user(id=user_acc, type=user_type)
             u.save()
@@ -169,9 +207,11 @@ def auth_user(username, password):
         pass
         # No backend authenticated the credentials
 
+@csrf_exempt
 def set_password(user, newPass):
-    u = User.objects.get(username=user)
-    u.set_password(newPass)
-    u.save()
+    if is_user_type(request, 'auth_user'):
+        u = User.objects.get(username=user)
+        u.set_password(newPass)
+        u.save()
 
 # end of other functions
