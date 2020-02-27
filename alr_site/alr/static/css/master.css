@@ -1,4 +1,10 @@
 /*General*/
+
+/*Better font sizes for data*/
+td, th {
+  font-size: 120%;
+}
+
 .hide {
   display: none;
 }
