@@ -10,10 +10,10 @@ urlpatterns = [
     url(r'^home/settings$', views.display_settings, name='display_settings'),
     url(r'^aboutUs/$', views.display_aboutUs, name='display_about'),
     url(r'^signUp/$', views.display_signUp, name='display_signUp'),
-
     url(r'^viewData/$', views.display_viewData, name='display_viewData'),
     url(r'^uploadAudio/$', views.display_uploadAudio, name='display_uploadAudio'),
     url(r'^rateData/$', views.display_rateData, name='display_rateData'),
+    url(r'^userManagement/$', views.display_userManagement, name='display_userManagement'),
 
     # For testing
     url(r'^taskBar/$', views.display_taskBar, name='display_taskBar'),

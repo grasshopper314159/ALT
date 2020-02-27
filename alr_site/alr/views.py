@@ -19,7 +19,7 @@ from . import alr
 
 # Start of page views
 # This is to display a message to the user
-active_messages = {'home': '', 'settings':'', 'signup': '', 'viewData': '', 'rateData': '', 'uploadAudio': ''}
+active_messages = {'home': '', 'settings':'', 'signup': '', 'viewData': '', 'rateData': '', 'uploadAudio': '', 'userManagement': ''}
 
 # for alr.hs.umt.edu/viewData/ as url
 @login_required(login_url='/home/')
@@ -38,6 +38,12 @@ def display_uploadAudio(request):
 def display_rateData(request):
     request = check_message(request, 'rateData')
     return render(request, 'rater/RateData.html')
+    
+# for alr.hs.umt.edu/userManagement/ as url
+@login_required(login_url='/home/')
+def display_userManagement(request):
+    request = check_message(request, 'userManagement')
+    return render(request, 'researcher/UserManagement.html')
 
 # for alr.hs.umt.edu as url
 def redirect_home(request):
