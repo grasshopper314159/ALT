@@ -211,22 +211,22 @@
     <!-- display a message -->
 
     <!-- message currently fake -->
+    {% if messages %}
+    {% for message in messages %}
     <div id='message' class="hide max-w-50vw w3-bottom w3-left w3-light-blue">
-      <span onclick="this.parentElement.classList.toggle('hide')" class="w3-button w3-hover-red w3-large w3-display-topright">&times;</span>
+      <span onclick="this.parentElement.style.display = 'none';" class="w3-button w3-hover-red w3-large w3-display-topright">&times;</span>
       <h3>Message!</h3>
-      <p id='fake_messsage' style="height:100px!important;">Your changes have been saved.</p>
+      <p>{% message %}</p>
     </div>
-    <!-- {% if messages %}
-    {% for message in messages %} -->
-    <!-- {% endfor %}
-    {% endif %} -->
+    {% endfor %}
+    {% endif %}
     <!--  -->
   </div>
 </body>
+{% if messages %}
 <script>
-  // '{% if messages %}'
-  // document.getElementById('message').style.display = 'block';
-  // '{% endif %}'
+  document.getElementById('message').style.display = 'block';
 </script>
+{% endif %}
 
 </html>

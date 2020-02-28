@@ -17,6 +17,7 @@ def GetAllAudioTrim(request):
     response = {}
     for key in all_trims:
         obj = {}
+        # TODO: change so you can see data of other people who allow you access
         if (key.big_audio_id.owner_id.id == request.user):
             obj['owner'] = key.big_audio_id.owner_id.id.first_name + ' ' + key.big_audio_id.owner_id.id.last_name
             obj['speaker'] = key.big_audio_id.speaker_id.first_name + ' ' + key.big_audio_id.speaker_id.last_name
@@ -31,7 +32,7 @@ def GetAllAudioTrim(request):
 def getEval(request):
     pass
 
-def getEvalUrl(request):
+def createEval(request, active_messages):
     trims = request.POST['trims']
     firstname = request.POST['eval_firstname']
     lastname = request.POST['eval_lastname']
@@ -44,7 +45,6 @@ def getEvalUrl(request):
     user = authenticate(request=None, username=username, password=pin)
     try:
         if user is None:
-
             # create django user
             user_acc = User.objects.create_user(username, email, pin, first_name=firstname, last_name=lastname) #, groups=Group.)
             user_acc.save()
@@ -55,18 +55,14 @@ def getEvalUrl(request):
             # create alr user
             u = alr_user(id=user_acc, type=user_type)
             u.save()
-
-            active_messages['home'] = 'You have created an account for '
-            return redirect('/home/')
+            return 'You have created an account for ' + firstname + ' ' + lastname + '.<br>' + 'their Username is ' + firstname + '.' + lastname + ' and their password is the pin you provided.<br>' + 'the URL for them is alr.hs.umt.edu/eval/login/'
         else:
-            active_messages['signup'] = 'That email is already used.'
-            return redirect('/signUp/')
+            return 'Their is already and account for ' + firstname + ' ' + lastname + '.'
     except Exception as e:
         if str(e) == 'UNIQUE constraint failed: auth_user.username':
-            active_messages['signup'] = 'That email is already used.'
+            return 'Their is already and account for ' + firstname + ' ' + lastname + '.'
         else:
-            active_messages['signup'] = e
-        return redirect('/signUp/')
+            return e
 
 def updateRating(request):
     trim = AudioTrim.objects.filter(id=request.POST['trim_id'])

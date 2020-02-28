@@ -19,19 +19,36 @@ from . import alr
 
 # Start of page views
 # This is to display a message to the user
-active_messages = {'home': '', 'settings':'', 'signup': '', 'viewData': '', 'rateData': '', 'uploadAudio': '', 'trimAudio': '', 'userManagement': ''}
+active_messages = {'home': '',
+                   'settings':'',
+                   'signup': '',
+                   'evalLogin':'',
+                   'viewData': '',
+                   'rateData': '',
+                   'uploadAudio': '',
+                   'trimAudio': '',
+                   'userManagement': '',
+                   'createEval': '',
+                   }
+
 
 # for alr.hs.umt.edu/viewData/ as url
 @login_required(login_url='/home/')
 def display_viewData(request):
-    request = check_message(request, 'viewData')
-    return render(request, 'general/ViewData.html')
+    if is_user_type(request, ['ADMIN','research_user'], OR=True):
+        request = check_message(request, 'viewData')
+        return render(request, 'general/ViewData.html')
+    else:
+        return redirect_home(request)
 
 # for alr.hs.umt.edu/uploadAudio/ as url
 @login_required(login_url='/home/')
 def display_uploadAudio(request):
-    request = check_message(request, 'uploadAudio')
-    return render(request, 'general/UploadAudio.html')
+    if is_user_type(request, ['ADMIN','research_user'], OR=True):
+        request = check_message(request, 'uploadAudio')
+        return render(request, 'general/UploadAudio.html')
+    else:
+        return redirect_home(request)
 
 # for alr.hs.umt.edu/rateData/ as url
 @login_required(login_url='/home/')
@@ -42,13 +59,29 @@ def display_rateData(request):
 # for alr.hs.umt.edu/userManagement/ as url
 @login_required(login_url='/home/')
 def display_userManagement(request):
-    request = check_message(request, 'userManagement')
-    return render(request, 'researcher/UserManagement.html')
-    
+    if is_user_type(request, ['ADMIN','research_user'], OR=True):
+        request = check_message(request, 'userManagement')
+        return render(request, 'researcher/UserManagement.html')
+    else:
+        return redirect_home(request)
+
+@login_required(login_url='/home/')
+def display_createEval(request):
+    if is_user_type(request, ['ADMIN','research_user'], OR=True):
+        request = check_message(request, 'createEval')
+        return render(request, 'researcher/createEval.html')
+    else:
+        return redirect_home(request)
+
 @login_required(login_url='/home/')
 def display_trimAudio(request):
     request = check_message(request, 'trimAudio')
     return render(request, 'general/TrimAudio.html')
+
+def display_evalLogin(request):
+    request = check_message(request, 'evalLogin')
+    return render(request, 'rater/RaterLink.html')
+
 
 # for alr.hs.umt.edu as url
 def redirect_home(request):
@@ -60,6 +93,7 @@ def display_home(request):
     return render(request, 'public/index.html') ## TODO: change to index.html
 
 # for alr.hs.umt.edu/home/settings as url
+@login_required(login_url='/home/')
 def display_settings(request):
     request = check_message(request, 'settings')
     return render(request, 'general/AccountSettings.html') ## TODO: change to index.html
@@ -83,7 +117,6 @@ def check_message(request, page):
         messages.info(request, active_messages[page])
         active_messages[page] = ''
     return request
-
 # end of page views
 
 # start of permission functions # TODO: put in seperate file
@@ -114,13 +147,13 @@ def ajax_getAllAudioTrims(request):
     else:
         return redirect_home(request)
 
-
 @csrf_exempt
 @login_required(login_url='/home/')
-def ajax_postTogetRatingURL(request):
+def ajax_createEval(request):
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
         if request.method == 'POST':
-            return JsonResponse(alr.getEvalUrl(request), safe=False)
+            active_messages['createEval'] = alr.createEval(request)
+            return redirect('researcher/createEval/')
 
 
 @csrf_exempt
@@ -193,6 +226,19 @@ def ajax_createUser(request):
             active_messages['signup'] = e
         return redirect('/signUp/')
 
+@csrf_exempt
+def ajax_loginEvalUser(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        active_messages['evalLogin'] = 'You have successfully logged in'
+        return redirect('/eval/RateData/')
+    else:
+        active_messages['evalLogin'] = 'Your account was not found or Your Pin was incorrect'
+        return redirect('/eval/login/')
+
 
 @csrf_exempt
 def ajax_loginUser(request):
@@ -216,16 +262,6 @@ def ajax_logoutUser(request):
 # end of ajax calls
 
 # start of other functions
-# might not need
-def auth_user(username, password):
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        pass
-        # A backend authenticated the credentials
-    else:
-        pass
-        # No backend authenticated the credentials
-
 @csrf_exempt
 def set_password(user, newPass):
     if is_user_type(request, 'auth_user'):
