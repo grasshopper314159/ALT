@@ -120,13 +120,13 @@ def check_message(request, page):
 # end of page views
 
 # start of permission functions # TODO: put in seperate file
-def is_user_type(request, type, OR=False, AND=False):
-    if type(type) == stype(''):
+def is_user_type(request, input, OR=False, AND=False):
+    if type(input) == type(''):
         return request.user.groups.filter(name=type).exists()
-    elif type(type) == stype([]) and ((OR and not AND) or (not OR and AND)):
+    elif type(input) == type([]) and ((OR and not AND) or (not OR and AND)):
         bool = []
-        for i in range(len(type)):
-            bool[i] = request.user.groups.filter(name=type[i]).exists()
+        for i in range(len(input)):
+            bool.append(request.user.groups.filter(name=input[i]).exists())
         if OR and (True in bool):
             return True
         if AND and (False not in bool):

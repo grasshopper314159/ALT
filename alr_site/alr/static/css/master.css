@@ -106,7 +106,7 @@ td, th {
   font-weight: bold;
 }
 
-.signUpForm label, input, select{
+.signUpForm label, input, select {
   display: inline-block;
   margin-left: 2em;
 }
