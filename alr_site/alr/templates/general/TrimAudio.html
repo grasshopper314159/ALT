@@ -54,8 +54,7 @@
       makePeaks(soundFile);
     }
 		function draw() {
-			getAudioContext().resume();
-			console.log('draw');
+			//getAudioContext().resume();
 			resizeCanvas(600, 150, true);
 			background(audio_background_color);
 			beginShape();
@@ -133,6 +132,10 @@
       min-width: 700px;
       min-height: 200px;
       background-color: powderblue;
+			display: flex;
+			align-items: center;
+			justify-content: center; 			
+			
 }
 
   </style>
@@ -186,7 +189,7 @@
         <h1>Segment audio file</h2>
       </div>
             <br>
-      <div id="trim_audio_container">
+      <div id="trim_audio_container" >
         <!-- p5 canvas is attached to this div here -->
       </div>
       <br>
