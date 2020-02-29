@@ -62,7 +62,7 @@
 				vertex(i, map(peaks[i], -1, 1, height, 0));
 			}
 			endShape();
-			
+			drawPlayhead();
 		}
 
       function makePeaks(soundFile) {
@@ -74,7 +74,13 @@
         
       }
 
-    
+    function drawPlayhead() {
+			noStroke();
+			fill(0,255,0);
+			rect(map(soundFile.currentTime(), 0, soundFile.duration(), 0, width), 0, 5, height);
+		}
+		
+		
     function play() {
       getAudioContext().resume();
       console.log(state);
