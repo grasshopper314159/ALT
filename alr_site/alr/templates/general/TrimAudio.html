@@ -29,7 +29,7 @@
     let state = 0; // state 0: nothing, state 1: recording;  state 2: audio recorded state 3: warned
     let audio_message, second_str = "", tenths_str="";
     let audio_background_color = 'grey';
-    let recording_time, seconds, ready = 0;
+    let recording_time, seconds, ready, playheadTime = 0;
    // PRELOAD causes the canvas to not display!
     function preload() {
       //getAudioContext().resume();
@@ -62,7 +62,10 @@
 				vertex(i, map(peaks[i], -1, 1, height, 0));
 			}
 			endShape();
-			drawPlayhead();
+			if (soundFile.isPlaying()) {
+				playheadTime=soundFile.currentTime();
+			}
+			drawPlayhead(playheadTime);
 		}
 
       function makePeaks(soundFile) {
@@ -74,10 +77,10 @@
         
       }
 
-    function drawPlayhead() {
+    function drawPlayhead(playheadTime) {
 			noStroke();
 			fill(0,255,0);
-			rect(map(soundFile.currentTime(), 0, soundFile.duration(), 0, width), 0, 5, height);
+			rect(map(playheadTime, 0, soundFile.duration(), 0, width), 0, 5, height);
 		}
 		
 		
@@ -97,6 +100,13 @@
         state = 2;       
       }
     }
+		
+		function pause() {
+			//getAudioContext().resume();
+			playheadTime = soundFile.currentTime()
+			soundFile.pause();
+		}
+		
     function save_audio() {
       console.log(state);
       try {
@@ -204,8 +214,8 @@
           <i class="fa fa-play-circle-o fa-3x" aria-hidden="true" onclick="play()"></i>
           <h4 id="fancyText">PLAY</h4>
         </div>
-        <div class="w3-btn" style="margin-left: 10vh">
-          <i class="fa fa-pause-circle fa-3x" aria-hidden="true" onclick="record()"></i>
+        <div class="w3-btn" style="margin-left: 10vh" onclick="pause()">
+          <i class="fa fa-pause-circle fa-3x" aria-hidden="true" onclick="pause()"></i>
           <h4 id="fancyText">Pause</h4>
         </div>
         <div class="w3-btn" style="margin-left: 10vh">
