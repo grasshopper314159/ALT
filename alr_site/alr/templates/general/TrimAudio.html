@@ -1,114 +1,218 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-
 <head>
+  {% load static %}
+
+
+	<script src="{% static '/js/p5.js'%}"></script>
+	<script src="{% static '/js/addons/p5.sound.js'%}"></script>
+	<script src="{% static '/js/addons/p5.dom.js'%}"></script>
+	  <!-- Load p5 library from CDN,  
+	//<script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
+  //<script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
+  //<script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.sound.js"></script>
+	-->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  {% load static %}
-  <!-- localized stylesheets -->
-  <link rel="stylesheet" href="{% static 'STYLE SHEET.css' %}"></style>
-  <script type="text/javascript" src="{% static 'FILE.js' %}"></script>
-  <title>Trim Audio</title>
-  <style>
-    body {
-                margin: 0;
-                font-family: Arial, Helvetica, sans-serif;
-            }
 
-            .h1 {
-                font-size: 70px;
-            }
-        </style>
+  <!-- localized stylesheets -->
+  <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>
+  
+
+  <script >
+    console.log('START');
+    var soundFile,  peaks;
+    let state = 0; // state 0: nothing, state 1: recording;  state 2: audio recorded state 3: warned
+    let audio_message, second_str = "", tenths_str="";
+    let audio_background_color = 'grey';
+    let recording_time, seconds, ready = 0;
+   // PRELOAD causes the canvas to not display!
+    function preload() {
+      //getAudioContext().resume();
+      soundFile = loadSound("{% static '/sounds/french_1.wav'%}");
+      console.log('PRELOAD');
+      state=2;
+    }
+    function setup() {
+      getAudioContext().resume();
+      console.log('setup1');
+      recording_time = 0;
+      var canvas = createCanvas(500, 150);
+      canvas.parent('trim_audio_container');
+      canvas.style("visibility", "visible");
+      background(audio_background_color);
+      fill(0);
+      //soundFile = loadSound("{% static '/sounds/french_1.wav'%}");
+      // create an empty sound file that we will use to playback the recording
+      //soundFile = loadSound("{% static '/sounds/french_1.wav'%}");
+      state=2;
+      console.log('setup2');
+      makePeaks(soundFile);
+    }
+		function draw() {
+			getAudioContext().resume();
+			console.log('draw');
+			resizeCanvas(600, 150, true);
+			background(audio_background_color);
+			beginShape();
+			for (i = 0; i < peaks.length; i++) {
+				vertex(i, map(peaks[i], -1, 1, height, 0));
+			}
+			endShape();
+			
+		}
+
+      function makePeaks(soundFile) {
+        resizeCanvas(600, 150, true);
+        ready = 1;
+        if (ready == 1) {
+          peaks = soundFile.getPeaks();
+        }
+        
+      }
+
+    
+    function play() {
+      getAudioContext().resume();
+      console.log(state);
+      if (state === 0) {
+        audio_message = 'Nothing to play.  Record audio first.';
+      } else if (state === 1) {
+        audio_message = 'Currently recording.  Press the recording icon to stop.';
+      } else if (state === 2 || state ===3) {
+        audio_background_color = 'green';
+        audio_message = 'Playing.';
+        soundFile.play();
+        soundFile.playMode("restart")
+        soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})  
+        state = 2;       
+      }
+    }
+    function save_audio() {
+      console.log(state);
+      try {
+        let soundBlob = soundFile.getBlob();
+        let serverUrl = 'http://jsonplaceholder.typicode.com/posts';
+        let httpRequestOptions = {
+          method: 'POST',
+          body: new FormData().append('soundBlob', soundBlob),
+          headers: new Headers({
+            'Content-Type': 'multipart/form-data'
+          })
+        };
+        httpDo(serverUrl, httpRequestOptions);
+
+      }
+      catch(err) {
+        console.log(err);
+      }
+      // write to database here
+    }
+
+    function timeIt() {
+      // 1 counter = 0.1 second
+      recording_time++;
+    }
+
+  </script>
+  <style>
+    .h1 {
+      font-size: 70px;
+    }
+    #background2 {
+       background-image: url('{% static '/imgs/neutralBackground.jpg' %}');
+       background-size: cover;
+       overflow-y: scroll;
+       height: 100%;
+     }
+     #trim_audio_container {
+      min-width: 700px;
+      min-height: 200px;
+      background-color: powderblue;
+}
+
+  </style>
+  <title>Upload Audio</title>
 </head>
 
 <body>
-  <div class="w3-top w3-bottom w3-left w3-right w3-grey" style="overflow-y:scroll;height:100%;">
-    <div class="w3-bar w3-card" style=" background-color: #5e001d; color: white;">
-      <a href="/"><img src="{% static '/imgs/alr_example_logo.jpg'%}" class="w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" alt="ALT Logo"></a>
-      <h4 class="home-header w3-xlarge">Applied Language Resources</h4>
+  <div class="w3-top" id="background2">
+    <div class="home-background">
+      <div class="w3-top" id="navigationBar">
+        <a href="/"><img src="{% static '/imgs/alr_example_logo.jpg'%}" class="w3-col w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" style="width:5em" alt="ALT Logo"></a>
+        <a href="/" style="text-decoration: none"><h2 class="w3-rest" id="mainHeader"> Applied Language Resources </h2></a>
+        <br>
+        <div class="w3-bar w3-card w3-center" id="navigationButtons">
+          <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+          {% if user.is_authenticated %}
+          <a href="/viewData/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
+          <a href="/uploadAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
+          <a href="#" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">User Management</a>
+          <a href="/rateData/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Rate Data</a> <!--Need this here for UI testing. Will change later.-->
+          {% endif %}
+          <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
+          {% if user.is_anonymous %}
+          <a href="/signUp/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Sign Up</a>
+          {% endif %}
+          <div class="w3-dropdown-hover w3-hide-small w3-right  w3-xlarge">
+            <button class="w3-round w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+              <a href="/home/settings" class="w3-bar-item w3-button">Settings</a>
+              <a href="/home/" class="w3-bar-item w3-button">Home</a>
+              {% if user.is_authenticated %}
+              <a href="/ajax/logoutUser" class="w3-bar-item w3-button">Log Out</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- form -->
+    <br><br><br><br><br><br><br><br>
+    <div class="w3-half">
+      
+    </div>
+
+<!--Record Audio -->
+
+    <div style="float: center; margin: auto; width: 70%">
+      <div id="fancyHeader">
+        <br><br>
+        <h1>Segment audio file</h2>
+      </div>
+            <br>
+      <div id="trim_audio_container">
+        <!-- p5 canvas is attached to this div here -->
+      </div>
       <br>
-      <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-xlarge">Dashboard</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Manage Contacts</a>
-      <a href="/AboutUs/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About</a>
-      <div class="w3-dropdown-hover w3-hide-small w3-right w3-xlarge">
-        <button class="w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
-        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-          <a href="#" class="w3-bar-item w3-button">Settings</a>
-          <a href="/" class="w3-bar-item w3-button">Home Page</a>
-          <a href="/" class="w3-bar-item w3-button">Log Out</a>
+      <div class="w3-bar">
+        <div class="w3-btn">
+          <i class="fa fa-play-circle-o fa-3x" aria-hidden="true" onclick="play()"></i>
+          <h4 id="fancyText">PLAY</h4>
         </div>
-      </div>
-      <div class="w3-dropdown-hover w3-hide-small w3-right w3-xlarge">
-        <button class="w3-padding-large w3-button" title="More">Views <i class="fa fa-caret-down"></i></button>
-        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-          <a href="#" class="w3-bar-item w3-button">Researcher</a>
-          <a href="#" class="w3-bar-item w3-button">Rater</a>
-          <a href="#" class="w3-bar-item w3-button">Instructor</a>
-          <a href="#" class="w3-bar-item w3-button">Student</a>
+        <div class="w3-btn" style="margin-left: 10vh">
+          <i class="fa fa-pause-circle fa-3x" aria-hidden="true" onclick="record()"></i>
+          <h4 id="fancyText">Pause</h4>
         </div>
-      </div>
-    </div>
-    <div class="w3-container w3-center">
-      <div class="">
-        <br><br><br>
-        <img src="{% static '/imgs/waveform.jpg'%}" alt="TODO::">
-        <br>
-        <div class="w3-btn w3-grey">
-          <i class="fa fa-play-circle-o fa-3x" aria-hidden="true"></i>
-          <h4>Play</h4>
+        <div class="w3-btn" style="margin-left: 10vh">
+          <i class="fa fa-check-circle-o fa-3x" aria-hidden="true" onclick="save_audio()"></i>
+          <h4 id="fancyText">Mark Start</h4>
         </div>
-        <div class="w3-btn w3-grey">
-          <i class="fa fa-pause-circle-o fa-3x" aria-hidden="true"></i>
-          <h4>Pause</h4>
+        <div class="w3-btn" style="margin-left: 10vh">
+          <i class="fa fa-window-close fa-3x" aria-hidden="true" onclick="save_audio()"></i>
+          <h4 id="fancyText">Mark End</h4>
         </div>
-        <div class="w3-btn w3-grey">
-          <i class="fa fa-stop-circle-o fa-3x" aria-hidden="true"></i>
-          <h4>Stop</h4>
-        </div>
-        <div class="">
-          <button class="">Auto-select</button>
-          <button class="">Set Start</button>
-          <input class="w3-rest w3-panel w3-border w3-round-xlarge" style="max-width:110px" type="text" name="StartTime" value="00:02:43">
-          <button>Set stop</button>
-          <input class="w3-rest w3-panel w3-border w3-round-xlarge" style="max-width:110px" type="text" name="StopTime" value="00:03:20">
-          <button>Clear</button>
-        </div>
-      </div>
-    </div>
-    <div class="w3-container">
-      <div class="w3-half">
-        <br>
-        <label>Title</label>
-        <br>
-        <textarea style="vertical-align: middle;"></textarea>
-        <br><br>
-        <label style="padding: 13px;">Text (original)</label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="75"></textarea>
-        <br><br>
-        <label style="padding: 13px;">Text (English)</label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="75"></textarea>
-        <br><br>
-        <label style="padding: 13px;">Language</label><br>
-        <textarea style="vertical-align: middle;"></textarea>
-      </div>
-      <div class="w3-half w3-center">
-        <br><br><br><br><br><br><br><br>
-        <button class="w3-xlarge">Upload</button>
-        <br><br>
-        <button class="w3-xlarge">Finish Editing</button>
-      </div>
-      <div class="w3-bottom w3-grey" style="height:20px">
-        <!-- filler div -->
-      </div>
+        <div class="w3-btn" style="margin-left: 10vh">
+          <i class="fa fa-save fa-3x" aria-hidden="true" onclick="save_audio()"></i>
+          <h4 id="fancyText">Save Audio Clip</h4>
+        </div>        
+      </div>     
     </div>
   </div>
 </body>
-
 </html>

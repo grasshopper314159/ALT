@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
+  <!-- Load p5 library from CDN,  -->
   <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.sound.js"></script>
@@ -13,7 +14,7 @@
   {% load static %}
   <!-- localized stylesheets -->
   <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>
-  <!-- Load p5 library from CDN,  -->
+  
 
   <script >
     let mic, recorder, soundFile;
@@ -104,12 +105,9 @@
     function play() {
       getAudioContext().resume()
       print(state);
-      // use the '.enabled' boolean to make sure user enabled the mic (otherwise we'd record silence)
       if (state === 0) {
         audio_message = 'Nothing to play.  Record audio first.';
-        //background(255, 0, 0);
       } else if (state === 1) {
-        //recorder.stop(); // stop recorder, and send the result to soundFile
         audio_message = 'Currently recording.  Press the recording icon to stop.';
       } else if (state === 2 || state ===3) {
         audio_background_color = 'green';
@@ -117,11 +115,27 @@
         soundFile.play();
         soundFile.playMode("restart")
         soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})  
-        state = 2;       // save file
+        state = 2;       
       }
     }
     function save_audio() {
       print(state);
+      try {
+        let soundBlob = soundFile.getBlob();
+        let serverUrl = 'http://jsonplaceholder.typicode.com/posts';
+        let httpRequestOptions = {
+          method: 'POST',
+          body: new FormData().append('soundBlob', soundBlob),
+          headers: new Headers({
+            'Content-Type': 'multipart/form-data'
+          })
+        };
+        httpDo(serverUrl, httpRequestOptions);
+
+      }
+      catch(err) {
+        print(err)
+      }
       // write to database here
     }
 
@@ -130,8 +144,6 @@
       recording_time++;
     }
 
-  
-  
   </script>
   <style>
     .h1 {
@@ -207,7 +219,7 @@
         <label for="not_private">Not Private</label><br>
         <br>
         <!--<button type="submit" class="w3-btn w3-green">Upload</button>-->
-        <a href="/viewData/" class="w3-btn w3-green">Upload</a> <!-- Fake Upload button -->
+        <a href="/trimAudio/" class="w3-btn w3-green">Upload</a> <!-- Fake Upload button -->
         <br>
         <br>
       </form>
@@ -221,7 +233,7 @@
       </div>
             <br>
       <div id="record_audio_container">
-        <!-- put 5 canvas here -->
+        <!-- p5 canvas is attached to this div here -->
       </div>
       <br>
       <div class="w3-bar">
