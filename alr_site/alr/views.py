@@ -50,8 +50,12 @@ def display_uploadAudio(request):
     else:
         return redirect_home(request)
 
+# @login_required(login_url='/home/')
+def display_trimAudio(request):
+    return render(request, 'general/TrimAudio.html')
+
+# @login_required(login_url='/home/')
 # for alr.hs.umt.edu/rateData/ as url
-@login_required(login_url='/home/')
 def display_rateData(request):
     request = check_message(request, 'rateData')
     return render(request, 'rater/RateData.html')
@@ -258,6 +262,47 @@ def ajax_logoutUser(request):
     logout(request)
     active_messages['home'] = 'You are logged out'
     return redirect('/home/')
+
+
+@csrf_exempt
+def ajax_postUploadAudio(request):
+    # try authenticating the user
+    user = authenticate(request=None, username=request.POST['email'], password=request.POST['password'])
+
+    # if None then user DNE
+    try:
+        if user is None:
+            first = request.POST['firstname']
+            last = request.POST['lastname']
+            email = request.POST['email']
+            password = request.POST['password']
+            user_type = request.POST['user_type']
+
+            # create django user
+            user_acc = User.objects.create_user(email, email, password, first_name=first, last_name=last) #, groups=Group.)
+            user_acc.save()
+            # create alr user
+            u = alr_user(id=user_acc, type=user_type)
+            u.save()
+
+            user = authenticate(request, username=email, password=password)
+            # login new user
+            if user is not None:
+                login(request, user)
+                active_messages['home'] = 'You have successfully logged in'
+                return redirect('/home/')
+            else:
+                active_messages['signup'] = 'Your account was not created for some reason'
+                return redirect('/signUp/')
+        else:
+            active_messages['signup'] = 'That email is already used.'
+            return redirect('/signUp/')
+    except Exception as e:
+        if str(e) == 'UNIQUE constraint failed: auth_user.username':
+            active_messages['signup'] = 'That email is already used.'
+        else:
+            active_messages['signup'] = e
+        return redirect('/signUp/')
 
 # end of ajax calls
 
