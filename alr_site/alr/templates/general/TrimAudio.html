@@ -117,8 +117,7 @@
       // TODO
       // function to find the next quiet spot and atumatically make a clip
       // sensitivity function (and slider) for above function
-      // make playhead draggable
-      // make generator function to give new colors for clip boxes?
+      // make generator function to give new colors for clip boxes--> only useful for overlapping clips?
       // fix save audio
       // work positioning of waveform and dynamic sizing
       function checkCursor() {
@@ -134,10 +133,6 @@
       playHeadX = map(playheadTime, 0, soundFile.duration(), 0, width);
       if (mouseX > playHeadX-3 && mouseX < playHeadX+3 && mouseY > 0 && mouseY < height) {
         dragging = true;
-        // If so, keep track of relative location of click to corner of rectangle
-        //offsetX = x-mouseX;
-       // offsetY = y-mouseY;
-
         // prevent default behavior
         return false;
       }
