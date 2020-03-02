@@ -48,7 +48,8 @@
     let startTime, endTime;
     let canvasHeight = 180;
     let canvasWidth = 650;
-    let drawBox = 0;
+    let drawBox = 0; //flag to add a box to indicate saved clip
+    let drawBoxList = [];
 
     //********************** main p5 functions **********************************
 
@@ -96,6 +97,12 @@
         //add this line if using list of boxes
         //drawBox = 0;
       }
+      //drawBoxList.forEach(drawClipBox);
+      for (i = 0; i < drawBoxList.length; i++) {
+        fill('rgba(0,255,0, 0.25)')
+        eval(drawBoxList[i])
+        fill(0)
+      }
     }
 
 //***********************  Helper Functions ****************************************************************\
@@ -103,6 +110,7 @@
       // function to find the next quiet spot and atumatically make a clip
       // sensitivity function (and slider) for above function
       // draw semi-transparent boxes on saved clip area
+      // make generator function to give new colors for clip boxes?
       // fix save audio
       // work positioning of waveform and dynamic sizing
 
@@ -114,6 +122,21 @@
         fill('rgba(0,255,0, 0.25)')
         rect(boxXstart, 0, boxWidth, height);
         fill(0)
+      }
+
+      function makeBox() {
+        boxXstart = map(startTime, 0, soundFile.duration(), 0, width);
+        boxXend = map(endTime, 0, soundFile.duration(), 0, width);
+        boxWidth = boxXend - boxXstart;
+        // height is automagic p5 var from canvas height
+        fill('rgba(0,255,0, 0.25)')
+        rect(boxXstart, 0, boxWidth, height);
+        fill(0)
+        tempString = "rect(" + boxXstart.toString() + ", 0, " + boxWidth.toString() + ", " +height.toString() + ");"
+        console.log(tempString)
+        drawBoxList.push(tempString)
+
+
       }
 
       function setStartTime() {
@@ -207,7 +230,7 @@
       console.log(recorderState);
       if (clipState === myE.DONE) {
         //clipState = myE.SAVED;
-        drawBox = 1;
+        makeBox()
         
       }
       // p5 copied code
