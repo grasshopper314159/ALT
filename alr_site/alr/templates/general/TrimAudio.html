@@ -102,8 +102,8 @@
       text("Clip start: "+startTimeStr, startMarkPosX, startMarkPosY);
       text("Clip end: "+endTimeStr, endMarkPosX, endMarkPosY);
       text("Clip length: "+clipDurStr, durMarkPosX, durMarkPosY);
-      text("Playhead x: "+ map(playheadTime, 0, soundFile.duration(), 0, width).toFixed(2) , durMarkPosX+100, durMarkPosY);
-      text("MouseX: "+ mouseX.toFixed(2), durMarkPosX+220, durMarkPosY);
+      //text("Playhead x: "+ map(playheadTime, 0, soundFile.duration(), 0, width).toFixed(2) , durMarkPosX+100, durMarkPosY);
+      //text("MouseX: "+ mouseX.toFixed(2), durMarkPosX+220, durMarkPosY);
 
       //draws boxes to show saved clips
       for (i = 0; i < drawBoxList.length; i++) {
@@ -120,6 +120,10 @@
       // make generator function to give new colors for clip boxes--> only useful for overlapping clips?
       // fix save audio
       // work positioning of waveform and dynamic sizing
+      // fix drag so it doesn't start playing immediately after drag
+      // change to single play/pause button
+      // fix layout of buttons, canvas
+      
       function checkCursor() {
         playHeadX = map(playheadTime, 0, soundFile.duration(), 0, width);
         if (mouseX > playHeadX-3 && mouseX < playHeadX+3 && mouseY > 0 && mouseY < height) {
