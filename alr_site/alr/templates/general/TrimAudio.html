@@ -50,6 +50,7 @@
     let canvasWidth = 650;
     let drawBox = 0; //flag to add a box to indicate saved clip
     let drawBoxList = [];
+    let clipBoxColor = 'rgba(0,255,0, 0.25)'
 
     //********************** main p5 functions **********************************
 
@@ -91,13 +92,8 @@
       text("Clip start: "+startTimeStr, startMarkPosX, startMarkPosY);
       text("Clip end: "+endTimeStr, endMarkPosX, endMarkPosY);
       text("Clip length: "+clipDurStr, durMarkPosX, durMarkPosY);
-      if (drawBox === 1) {
-        // to do multiple boxes, need to add this box to a list of boxes that is always drawn 
-        drawClipBox();
-        //add this line if using list of boxes
-        //drawBox = 0;
-      }
-      //drawBoxList.forEach(drawClipBox);
+
+      //draws boxes to show saved clips
       for (i = 0; i < drawBoxList.length; i++) {
         fill('rgba(0,255,0, 0.25)')
         eval(drawBoxList[i])
@@ -109,27 +105,18 @@
       // TODO
       // function to find the next quiet spot and atumatically make a clip
       // sensitivity function (and slider) for above function
-      // draw semi-transparent boxes on saved clip area
+      // make playhead draggable
       // make generator function to give new colors for clip boxes?
       // fix save audio
       // work positioning of waveform and dynamic sizing
 
-      function drawClipBox() {
-        boxXstart = map(startTime, 0, soundFile.duration(), 0, width);
-        boxXend = map(endTime, 0, soundFile.duration(), 0, width);
-        boxWidth = boxXend - boxXstart;
-        // height is automagic p5 var from canvas height
-        fill('rgba(0,255,0, 0.25)')
-        rect(boxXstart, 0, boxWidth, height);
-        fill(0)
-      }
-
+      // makeBox builds a string that will draw a box when called with eval in draw()
       function makeBox() {
         boxXstart = map(startTime, 0, soundFile.duration(), 0, width);
         boxXend = map(endTime, 0, soundFile.duration(), 0, width);
         boxWidth = boxXend - boxXstart;
         // height is automagic p5 var from canvas height
-        fill('rgba(0,255,0, 0.25)')
+        fill(clipBoxColor)
         rect(boxXstart, 0, boxWidth, height);
         fill(0)
         tempString = "rect(" + boxXstart.toString() + ", 0, " + boxWidth.toString() + ", " +height.toString() + ");"
