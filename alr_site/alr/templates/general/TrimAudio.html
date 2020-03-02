@@ -77,6 +77,7 @@
     }
     // DRAW  Runs ~50 to 60 times per second
 		function draw() {
+      console.log(dragging)
       //cursor(ARROW)
 			//getAudioContext().resume();  // I thought I would need this.  Gives a bunch of errors in the console though
 			//resizeCanvas(600, 150, true);  // if we dynamically resize canvas, may use this function
@@ -87,7 +88,7 @@
 			}
 			endShape();
       // this if is needed to draw the playhead. Don't want to move playhead if song is paused
-			if (soundFile.isPlaying()) {
+			if (soundFile.isPlaying() && dragging === false) {
 				playheadTime=soundFile.currentTime();
 			}
       checkCursor();
@@ -95,7 +96,8 @@
         drawPlayhead(playheadTime);
       }
 			else {
-        drawPlayhead(mouseX);
+        playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
+        drawPlayhead(playheadTime);
       }
       text("Clip start: "+startTimeStr, startMarkPosX, startMarkPosY);
       text("Clip end: "+endTimeStr, endMarkPosX, endMarkPosY);
@@ -129,7 +131,8 @@
       }
       function mousePressed() {
       // Did I click on the playhead?
-      if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
+      playHeadX = map(playheadTime, 0, soundFile.duration(), 0, width);
+      if (mouseX > playHeadX-3 && mouseX < playHeadX+3 && mouseY > 0 && mouseY < height) {
         dragging = true;
         // If so, keep track of relative location of click to corner of rectangle
         //offsetX = x-mouseX;
@@ -145,7 +148,12 @@
       if (dragging === true) {
         dragging = false;
         playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
-        soundFile.play(0,1,.5,playheadTime,soundFile.duration());
+        console.log("playheadtime:  "+playheadTime);
+        if (playheadTime < 0) {playheadTime = 0;} 
+        else if (playheadTime > soundFile.duration()) {playheadTime = soundfile.duration()-0.2;}
+        //soundFile.play(0,1,.5,playheadTime,soundFile.duration());
+        soundFile.stop();
+        soundFile.jump(playheadTime);
       }
       // prevent default behavior
       return false;
