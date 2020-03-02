@@ -32,7 +32,7 @@
     let audio_message, secondStr, tenthsStr, startTimeStr, endTimeStr, clipDurStr;
     audio_message = secondStr = tenthsStr = startTimeStr = endTimeStr = clipDurStr = " ";
     // myE is short for clipStateEnum.  JS doesn't have real enums, but this works.  If speed is an issue, change strings to 1,2,3,4,5 for faster comparison
-    let myE = {NOSTART: "no times yet", STARTONLY: "has start time", ENDONLY: "needs start time", DONE: "has start and end time", SAVED: "has been saved to DB"}
+    let myE = {NOSTART: "no times yet", STARTONLY: "has start time", ENDONLY: "needs start time", DONE: "has start and end time", SAVED: "has been saved to DB", INVALID: "end time < start time"}
     let clipState = myE.NOSTART;
     let myGrey = (200,200,200)
     let audio_background_color = myGrey;
@@ -44,6 +44,7 @@
     let endMarkPosY = 160;
     let durMarkPosX = 220;
     let durMarkPosY = 160;
+    let startTime, endTime;
 
     // PRELOAD everything in here finishes before setup and draw run
     function preload() {
@@ -83,7 +84,51 @@
       text("Clip start: "+startTimeStr, startMarkPosX, startMarkPosY);
       text("Clip end: "+endTimeStr, endMarkPosX, endMarkPosY);
       text("Clip length: "+clipDurStr, durMarkPosX, durMarkPosY);
-		  }
+    }
+
+//***********************  Helper Functions ****************************************************************\
+      // TODO
+      // function to find the next quiet spot and atumatically make a clip
+      // sensitivity function (and slider) for above function
+      // draw semi-transparent boxes on saved clip area
+      // fix save audio
+      // work positioning of waveform and dynamic sizing
+
+      function setStartTime() {
+        startTime = playheadTime.toFixed(2);
+        startTimeStr = startTime,toString()
+        setState();
+      }
+
+      function setEndTime() {
+        endTime = playheadTime.toFixed(2);
+        endTimeStr = endTime.toString();
+        setState();
+      }
+
+      // called whenever mark start, mark end, are called
+      function setState() {
+        if (!isNaN(parseInt(startTimeStr)) && isNaN(parseInt(endTimeStr))) {
+          clipState = myE.STARTONLY;
+          clipDurStr = " ";
+        } 
+        else if (isNaN(parseInt(startTimeStr)) && !isNaN(parseInt(endTimeStr))) {
+          clipState = myE.ENDONLY;
+          clipDurStr = " ";
+        }
+        else if (!isNaN(parseInt(startTimeStr)) && !isNaN(parseInt(endTimeStr))) {
+          if (parseInt(startTimeStr) < parseInt(endTimeStr)) {
+            clipState = myE.DONE;
+            clipDur = endTime - startTime;
+            clipDurStr = clipDur.toString();
+          }
+          else {
+            clipState = myE.INVALID;
+            clipDurStr = "End time must be after start time."
+          }
+          // Do I need a flag for saved?
+        }
+      } 
 
 
       // getPeaks returns a list of amplitude peaks.  Can take a paramter to make more
@@ -168,16 +213,17 @@
        overflow-y: scroll;
        height: 100%;
      }
-     #trim_audio_container {
-      min-width: 700px;
-      min-height: 200px;
-      background-color: #5e001d;  //Go griz!
-			display: flex;
-			align-items: center;
-			justify-content: center; 			
-			
-}
+    #centering {
+    display: flex;
+    align-items: center;
+    justify-content: center; 		
 
+    }
+    #trim_audio_container {
+    min-width: 700px;
+    min-height: 200px;
+    background-color: #5e001d;  //Go griz!
+    }
   </style>
   <title>Trim Audio</title>
 </head>
@@ -222,16 +268,18 @@
       
     </div>
 
-<!--Record Audio -->
+
 
     <div style="float: center; margin: auto; width: 70%">
       <div id="fancyHeader">
         <br><br>
         <h1>Segment audio file</h2>
       </div>
-            <br>
-      <div id="trim_audio_container" >
+      <br>
+      <div id="centering">
+        <div id="trim_audio_container" >
         <!-- p5 canvas is attached to this div here -->
+        </div>
       </div>
       <br>
       <div class="w3-bar">
@@ -245,11 +293,11 @@
           <h4 id="fancyText">Pause</h4>
         </div>
         <div class="w3-btn" style="margin-left: 10vh">
-          <i class="fa fa-check-circle-o fa-3x" aria-hidden="true" onclick="save_audio()"></i>
+          <i class="fa fa-check-circle-o fa-3x" aria-hidden="true" onclick="setStartTime()"></i>
           <h4 id="fancyText">Mark Start</h4>
         </div>
         <div class="w3-btn" style="margin-left: 10vh">
-          <i class="fa fa-window-close fa-3x" aria-hidden="true" onclick="save_audio()"></i>
+          <i class="fa fa-window-close fa-3x" aria-hidden="true" onclick="setEndTime()"></i>
           <h4 id="fancyText">Mark End</h4>
         </div>
         <div class="w3-btn" style="margin-left: 10vh">
