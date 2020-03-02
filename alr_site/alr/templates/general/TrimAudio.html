@@ -108,7 +108,7 @@
       //draws boxes to show saved clips
       for (i = 0; i < drawBoxList.length; i++) {
         fill('rgba(0,255,0, 0.25)');
-        eval(drawBoxList[i]);
+        rect(drawBoxList[i][0], 0, drawBoxList[i][1], drawBoxList[i][2]);
         fill(0);
       }
     }
@@ -159,13 +159,9 @@
         boxXstart = map(startTime, 0, soundFile.duration(), 0, width);
         boxXend = map(endTime, 0, soundFile.duration(), 0, width);
         boxWidth = boxXend - boxXstart;
-        // height is automagic p5 var from canvas height
-        fill(clipBoxColor)
-        rect(boxXstart, 0, boxWidth, height);
-        fill(0)
-        let tempString = "rect(" + boxXstart.toString() + ", 0, " + boxWidth.toString() + ", " +height.toString() + ");"
-        console.log(tempString)
-        drawBoxList.push(tempString)
+        tempParams = [boxXstart, boxWidth, height]
+        console.log(tempParams)  //for debugging
+        drawBoxList.push(tempParams)
       }
 
       function setStartTime() {
