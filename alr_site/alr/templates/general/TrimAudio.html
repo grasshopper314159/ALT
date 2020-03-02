@@ -33,9 +33,9 @@
     let audio_message, secondStr, tenthsStr, startTimeStr, endTimeStr, clipDurStr;
     audio_message = secondStr = tenthsStr = startTimeStr = endTimeStr = clipDurStr = " ";
     // myE is short for clipStateEnum.  JS doesn't have real enums, but this works.  If speed is an issue, change strings to 1,2,3,4,5 for faster comparison
-    let myE = {NOSTART: "no times yet", STARTONLY: "has start time", ENDONLY: "needs start time", DONE: "has start and end time", SAVED: "has been saved to DB", INVALID: "end time < start time"}
+    let myE = {NOSTART: "no times yet", STARTONLY: "has start time", ENDONLY: "needs start time", DONE: "has start and end time", SAVED: "has been saved to DB", INVALID: "end time < start time"};
     let clipState = myE.NOSTART;
-    let myGrey = (200,200,200)
+    let myGrey = (200,200,200);
     let audio_background_color = myGrey;
     let recording_time, seconds, ready, playheadTime = 0;
     // These are the positions for the time text on the drawing canvas
@@ -50,7 +50,8 @@
     let canvasWidth = 650;
     let drawBox = 0; //flag to add a box to indicate saved clip
     let drawBoxList = [];
-    let clipBoxColor = 'rgba(0,255,0, 0.25)'
+    let clipBoxColor = 'rgba(0,255,0, 0.25)';
+    let dragging = false;
 
     //********************** main p5 functions **********************************
 
@@ -76,6 +77,7 @@
     }
     // DRAW  Runs ~50 to 60 times per second
 		function draw() {
+      //cursor(ARROW)
 			//getAudioContext().resume();  // I thought I would need this.  Gives a bunch of errors in the console though
 			//resizeCanvas(600, 150, true);  // if we dynamically resize canvas, may use this function
 			background(audio_background_color);  // need to force a redraw for every frame
@@ -88,16 +90,24 @@
 			if (soundFile.isPlaying()) {
 				playheadTime=soundFile.currentTime();
 			}
-			drawPlayhead(playheadTime);
+      checkCursor();
+      if (dragging === false) {
+        drawPlayhead(playheadTime);
+      }
+			else {
+        drawPlayhead(mouseX);
+      }
       text("Clip start: "+startTimeStr, startMarkPosX, startMarkPosY);
       text("Clip end: "+endTimeStr, endMarkPosX, endMarkPosY);
       text("Clip length: "+clipDurStr, durMarkPosX, durMarkPosY);
+      text("Playhead x: "+ map(playheadTime, 0, soundFile.duration(), 0, width).toFixed(2) , durMarkPosX+100, durMarkPosY);
+      text("MouseX: "+ mouseX.toFixed(2), durMarkPosX+220, durMarkPosY);
 
       //draws boxes to show saved clips
       for (i = 0; i < drawBoxList.length; i++) {
-        fill('rgba(0,255,0, 0.25)')
-        eval(drawBoxList[i])
-        fill(0)
+        fill('rgba(0,255,0, 0.25)');
+        eval(drawBoxList[i]);
+        fill(0);
       }
     }
 
@@ -109,6 +119,37 @@
       // make generator function to give new colors for clip boxes?
       // fix save audio
       // work positioning of waveform and dynamic sizing
+      function checkCursor() {
+        playHeadX = map(playheadTime, 0, soundFile.duration(), 0, width);
+        if (mouseX > playHeadX-3 && mouseX < playHeadX+3 && mouseY > 0 && mouseY < height) {
+          cursor(HAND);
+        } else {
+          cursor(ARROW);
+        }
+      }
+      function mousePressed() {
+      // Did I click on the playhead?
+      if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
+        dragging = true;
+        // If so, keep track of relative location of click to corner of rectangle
+        //offsetX = x-mouseX;
+       // offsetY = y-mouseY;
+
+        // prevent default behavior
+        return false;
+      }
+    }
+
+    function mouseReleased() {
+      // Quit dragging
+      if (dragging === true) {
+        dragging = false;
+        playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
+        soundFile.play(0,1,.5,playheadTime,soundFile.duration());
+      }
+      // prevent default behavior
+      return false;
+    }
 
       // makeBox builds a string that will draw a box when called with eval in draw()
       function makeBox() {
@@ -119,11 +160,9 @@
         fill(clipBoxColor)
         rect(boxXstart, 0, boxWidth, height);
         fill(0)
-        tempString = "rect(" + boxXstart.toString() + ", 0, " + boxWidth.toString() + ", " +height.toString() + ");"
+        let tempString = "rect(" + boxXstart.toString() + ", 0, " + boxWidth.toString() + ", " +height.toString() + ");"
         console.log(tempString)
         drawBoxList.push(tempString)
-
-
       }
 
       function setStartTime() {
@@ -215,8 +254,10 @@
       //Keep this code
       console.log(clipState);
       console.log(recorderState);
+      // If we have a valid clip, makeBox() will add a clipBox to draw on the waveform
+      // to indicate it has been saved
       if (clipState === myE.DONE) {
-        //clipState = myE.SAVED;
+        //clipState = myE.SAVED;  // not sure where to put this yet
         makeBox()
         
       }
@@ -266,7 +307,7 @@
     #trim_audio_container {
     min-width: 700px;
     min-height: 200px;
-    background-color: #5e001d;  //Go griz!
+    background-color: #5e001d;  /*  Go griz!  */
     }
   </style>
   <title>Trim Audio</title>
@@ -328,7 +369,7 @@
       <br>
       <div class="w3-bar">
         <div class="w3-btn">
-          <!--- spacing on these buttons is wierd. Leaving it since we may move to dynamic resizing -->
+          <!--- spacing on these buttons is wierd. Leaving it for now since we may move to dynamic resizing -->
           <i class="fa fa-play-circle-o fa-3x" aria-hidden="true" onclick="play()"></i>
           <h4 id="fancyText">Play</h4>
         </div>
