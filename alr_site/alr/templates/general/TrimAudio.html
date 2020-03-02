@@ -26,9 +26,10 @@
         possible to run in instance mode to mitigate this, if necessary (see p5 website)  -->
         
   <script >
+    //*************************  variables **********************************
     console.log('START');
     var soundFile, peaks;
-    let state = 0; // state 0: nothing, state 1: recording,  state 2: audio recorded, state 3: overwrite warning  --> change to enum?
+    let recorderState = 0; // state 0: nothing, state 1: recording,  state 2: audio recorded, state 3: overwrite warning  --> change to enum?
     let audio_message, secondStr, tenthsStr, startTimeStr, endTimeStr, clipDurStr;
     audio_message = secondStr = tenthsStr = startTimeStr = endTimeStr = clipDurStr = " ";
     // myE is short for clipStateEnum.  JS doesn't have real enums, but this works.  If speed is an issue, change strings to 1,2,3,4,5 for faster comparison
@@ -45,20 +46,25 @@
     let durMarkPosX = 220;
     let durMarkPosY = 160;
     let startTime, endTime;
+    let canvasHeight = 180;
+    let canvasWidth = 650;
+    let drawBox = 0;
+
+    //********************** main p5 functions **********************************
 
     // PRELOAD everything in here finishes before setup and draw run
     function preload() {
       //getAudioContext().resume();
       soundFile = loadSound("{% static '/sounds/french_1.wav'%}");
       console.log('PRELOAD');
-      state=2;  //ready to play clip
+      recorderState=2;  //ready to play clip
     }
     // SETUP Run starts before draw, but not guaranteed to finish before draw
     function setup() {
       getAudioContext().resume(); //in the console there is an error that pop up that alerts you to add this 
       console.log('setup1');  // for debugging
       recording_time = 0;  //remnant from upload audio.  turn this into soundFile length?
-      var canvas = createCanvas(650, 180);
+      var canvas = createCanvas(canvasWidth, canvasHeight);
       canvas.parent('trim_audio_container');
       canvas.style("visibility", "visible");
       background(audio_background_color);
@@ -84,6 +90,12 @@
       text("Clip start: "+startTimeStr, startMarkPosX, startMarkPosY);
       text("Clip end: "+endTimeStr, endMarkPosX, endMarkPosY);
       text("Clip length: "+clipDurStr, durMarkPosX, durMarkPosY);
+      if (drawBox === 1) {
+        // to do multiple boxes, need to add this box to a list of boxes that is always drawn 
+        drawClipBox();
+        //add this line if using list of boxes
+        //drawBox = 0;
+      }
     }
 
 //***********************  Helper Functions ****************************************************************\
@@ -93,6 +105,16 @@
       // draw semi-transparent boxes on saved clip area
       // fix save audio
       // work positioning of waveform and dynamic sizing
+
+      function drawClipBox() {
+        boxXstart = map(startTime, 0, soundFile.duration(), 0, width);
+        boxXend = map(endTime, 0, soundFile.duration(), 0, width);
+        boxWidth = boxXend - boxXstart;
+        // height is automagic p5 var from canvas height
+        fill('rgba(0,255,0, 0.25)')
+        rect(boxXstart, 0, boxWidth, height);
+        fill(0)
+      }
 
       function setStartTime() {
         startTime = playheadTime.toFixed(2);
@@ -125,9 +147,11 @@
           else {
             clipState = myE.INVALID;
             clipDurStr = "End time must be after start time."
+            clipDur = -1;
           }
           // Do I need a flag for saved?
         }
+        console.log(clipState);
       } 
 
 
@@ -140,6 +164,8 @@
       function drawPlayhead(playheadTime) {
         noStroke();  // necessary?
         fill(255,0,0);
+        // apparently width, height are p5 automagically created variables descripting canvas.
+        // may need to replace with canvasWidth/ canvasHeight at some point
         rect(map(playheadTime, 0, soundFile.duration(), 0, width), 0, 2, height);
         fill(0,0,0);
       }
@@ -147,18 +173,18 @@
 		// runs when play button is clicked
     function play() {
       getAudioContext().resume();
-      console.log(state);  // for debugging
-      if (state === 0) {
-        audio_message = 'Nothing to play.  Record audio first.';
-      } else if (state === 1) {  // this state is a remnant from upload audio
+      console.log(recorderState);  // for debugging
+      if (recorderState === 0) {  // remnant from upload audio
+        audio_message = 'Nothing to play.  Record audio first.';  
+      } else if (recorderState === 1) {  // this recorderState is a remnant from upload audio
         audio_message = 'Currently recording.  Press the recording icon to stop.';
-      } else if (state === 2 || state ===3) {
+      } else if (recorderState === 2 || recorderState ===3) {
         audio_background_color = myGrey;
         audio_message = 'Playing.';
         soundFile.play();
         soundFile.playMode("restart")
         soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})  
-        state = 2;       
+        recorderState = 2;       
       }
     }
 		
@@ -176,7 +202,15 @@
     // This function just has some code I copied from p5.  No clue if it is even a 
     // good starting point
     function save_audio() {
-      console.log(state);
+      //Keep this code
+      console.log(clipState);
+      console.log(recorderState);
+      if (clipState === myE.DONE) {
+        //clipState = myE.SAVED;
+        drawBox = 1;
+        
+      }
+      // p5 copied code
       try {
         let soundBlob = soundFile.getBlob();
         let serverUrl = 'http://jsonplaceholder.typicode.com/posts';
