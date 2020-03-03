@@ -10,10 +10,12 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
-
+from alr.models import BigAudio
 from alr.models import AudioTrim
 from alr.models import User as alr_user
 from . import alr
+
+import datetime
 
 # Create your views here.
 
@@ -188,6 +190,7 @@ def ajax_postUploadAudio(request):
 
 @csrf_exempt
 def ajax_createUser(request):
+    print(request)
     # try authenticating the user
     user = authenticate(request=None, username=request.POST['email'], password=request.POST['password'])
 
@@ -263,46 +266,37 @@ def ajax_logoutUser(request):
     active_messages['home'] = 'You are logged out'
     return redirect('/home/')
 
-
+# this is not even close to being done
 @csrf_exempt
 def ajax_postUploadAudio(request):
+    pass
     # try authenticating the user
-    user = authenticate(request=None, username=request.POST['email'], password=request.POST['password'])
+    # user = authenticate(request=None, username=request.POST['email'], password=request.POST['password'])
 
-    # if None then user DNE
-    try:
-        if user is None:
-            first = request.POST['firstname']
-            last = request.POST['lastname']
-            email = request.POST['email']
-            password = request.POST['password']
-            user_type = request.POST['user_type']
+    
+    # try:
+    #     owner_id = request.user # .id?  only works in admin view? , user.id? user.username?
+    #     speaker_id = request.POST['speaker_id']
+    #     upload_date = datetime.datetime.now()
+    #     sound_file = request.POST['sound_file']
+    #     length = request.POST['length']
 
-            # create django user
-            user_acc = User.objects.create_user(email, email, password, first_name=first, last_name=last) #, groups=Group.)
-            user_acc.save()
-            # create alr user
-            u = alr_user(id=user_acc, type=user_type)
-            u.save()
+    #     # create django user
+    #     bigA = User.objects.create_user(email, email, password, first_name=first, last_name=last) #, groups=Group.)
+    #     user_acc.save()
+    #     # create alr user
+    #     u = alr_user(id=user_acc, type=user_type)
+    #     u.save()
 
-            user = authenticate(request, username=email, password=password)
-            # login new user
-            if user is not None:
-                login(request, user)
-                active_messages['home'] = 'You have successfully logged in'
-                return redirect('/home/')
-            else:
-                active_messages['signup'] = 'Your account was not created for some reason'
-                return redirect('/signUp/')
-        else:
-            active_messages['signup'] = 'That email is already used.'
-            return redirect('/signUp/')
-    except Exception as e:
-        if str(e) == 'UNIQUE constraint failed: auth_user.username':
-            active_messages['signup'] = 'That email is already used.'
-        else:
-            active_messages['signup'] = e
-        return redirect('/signUp/')
+    #     user = authenticate(request, username=email, password=password)
+
+
+    # except Exception as e:
+    #     if str(e) == 'UNIQUE constraint failed: auth_user.username':
+    #         active_messages['signup'] = 'That email is already used.'
+    #     else:
+    #         active_messages['signup'] = e
+    #     return redirect('/signUp/')  //trimAudio
 
 # end of ajax calls
 
