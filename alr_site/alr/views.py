@@ -16,6 +16,7 @@ from alr.models import User as alr_user
 from . import alr
 
 import datetime
+import logging
 
 # Create your views here.
 
@@ -190,7 +191,12 @@ def ajax_postUploadAudio(request):
 
 @csrf_exempt
 def ajax_createUser(request):
-    print(request)
+    logger.debug("**********************************************\n\n")
+    logger.debug(request)
+    logger.debug("**********************************************\n\n")
+    logger.error("this is an error message!!")
+    logger.debug("**********************************************\n\n")
+
     # try authenticating the user
     user = authenticate(request=None, username=request.POST['email'], password=request.POST['password'])
 
@@ -255,6 +261,11 @@ def ajax_loginEvalUser(request):
 
 @csrf_exempt
 def ajax_loginUser(request):
+    logger.debug("**********************************************\n\n")
+    logger.debug(request)
+    logger.debug("**********************************************\n\n")
+    logger.error("this is an error message!!")
+    logger.debug("**********************************************\n\n")
     username = request.POST['username']
     password = request.POST['password']
     user = authenticate(request, username=username, password=password)
@@ -268,6 +279,12 @@ def ajax_loginUser(request):
 
 @csrf_exempt
 def ajax_logoutUser(request):
+    logger.debug("**********************************************\n\n")
+    logger.debug(request)
+    logger.debug("**********************************************\n\n")
+    logger.error("this is an error message!!")
+    logger.debug("**********************************************\n\n")
+
     logout(request)
     active_messages['home'] = 'You are logged out'
     return redirect('/home/')
@@ -313,5 +330,13 @@ def set_password(user, newPass):
         u = User.objects.get(username=user)
         u.set_password(newPass)
         u.save()
+        
+# testing logging functions
+logger = logging.getLogger(__name__)
 
+def myTestfunction():
+	logger.debug("this is a debug message!")
+
+def myotherTestfunction():
+	logger.error("this is an error message!!")
 # end of other functions
