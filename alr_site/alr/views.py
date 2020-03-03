@@ -206,8 +206,13 @@ def ajax_createUser(request):
             # create django user
             user_acc = User.objects.create_user(email, email, password, first_name=first, last_name=last) #, groups=Group.)
             user_acc.save()
-            user_acc.groups.add(name='auth_user')
-            user_acc.groups.add(name=str(user_type))
+            # TODO: Make better @Cody Hill-Boss
+            group = Group.objects.filter(name='auth_user')
+            group1 = Group.objects.filter(name=user_type)
+            # print(group)
+            # print(group1)
+            user_acc.groups.add(group[0])
+            user_acc.groups.add(group1[0])
             user_acc.save()
 
             # create alr user
@@ -227,6 +232,7 @@ def ajax_createUser(request):
             active_messages['signup'] = 'That email is already used.'
             return redirect('/signUp/')
     except Exception as e:
+        print(e)
         if str(e) == 'UNIQUE constraint failed: auth_user.username':
             active_messages['signup'] = 'That email is already used.'
         else:
@@ -273,7 +279,7 @@ def ajax_postUploadAudio(request):
     # try authenticating the user
     # user = authenticate(request=None, username=request.POST['email'], password=request.POST['password'])
 
-    
+
     # try:
     #     owner_id = request.user # .id?  only works in admin view? , user.id? user.username?
     #     speaker_id = request.POST['speaker_id']
