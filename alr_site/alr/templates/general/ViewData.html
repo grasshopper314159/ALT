@@ -25,23 +25,27 @@
      }
   </style>
   <title>View Data</title>
-	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script>
-	// $(document).ready(function() {
-  //           $("#myInput").on("keyup", function() {
-  //               var value = $(this)
-  //                   .val()
-  //                   .toLowerCase();
-  //               $("#myTable2 tr").filter(function() {
-  //                   $(this).toggle(
-  //                       $(this)
-  //                           .text()
-  //                           .toLowerCase()
-  //                           .indexOf(value) > -1
-  //                   );
-  //               });
-  //           });
-  //       });
+	$(document).ready(function() {
+            $("#myInput").on("keyup", function() {
+              console.log("var this: ", this)
+                var value = $(this)
+                    .val()
+                    .toLowerCase();
+                    console.log("var value:", value)
+                $("#myTable2 tr").filter(function() {
+                    console.log("table filter this:", this)
+                    $(this).toggle(
+                        $(this)
+                            .text()
+                            .toLowerCase()
+                            .indexOf(value) > -1
+                    );
+                    console.log("$(this): ", $(this))
+                });
+            });
+        });
 	
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -230,7 +234,7 @@ function sortTable(n) {
     </div> <!-- close main body container -->
   </div>
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <script type="text/javascript" src="{% static '/js/ajax_getAllAudioTrims.js' %}"></script>
 
 </html>
