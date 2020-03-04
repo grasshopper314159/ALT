@@ -213,14 +213,14 @@
         <br>
         <input class="w3-bar-item" type="file" name="fileToUpload" id="fileToUpload" style="margin-left:0;"></input>
         <br><br>
-        <label style="text-align: center;">Speaker</label>
-        <br>
-        <!-- <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>  -->
-        <!-- // must be in the speaker table, how do we validate? -->
-        <!-- make a parseSpeakerInput function, drop down? can we make foreign key optional??-->
-        <!-- try Cody, Hill-->
-        <input type="text" placeholder="Enter Speaker" name="speaker" required>
-        
+        <!-- <label style="text-align: center;">Speaker</label> -->
+        <!-- <br> -->
+        <label>Speaker First Name</label><br>
+        <input name="fileSpeakerFirst" style="vertical-align: middle;" rows="3" cols="70"></input>
+        <br><br>
+        <label>Speaker Last Name</label><br>
+        <input name="fileSpeakerLast" style="vertical-align: middle;" rows="3" cols="70"></input>
+        <br><br>
         <br><br>
         <label>Text (Original)</label><br>
         <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
@@ -231,12 +231,12 @@
         <label>Language</label><br>
         <!-- <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>  -->
         <!-- make dropdown?  try English or 1-->
-        <input type="text" placeholder="Enter Language" name="language" required>
+        <input type="text" placeholder="Enter Language" name="fileLanguageId" required></input>
         
         <br><br>
-        <input type="radio" name="private" value="private" style="margin-left:0">
+        <input type="radio" name="private" value="private" style="margin-left:0"></input>
         <label for="private">Private</label><br>
-        <input type="radio" name="not_private" value="not_private" style="margin-left:0">
+        <input type="radio" name="not_private" value="not_private" style="margin-left:0"></input>
         <label for="not_private">Not Private</label><br>
         <br>
         <button type="submit" class="w3-btn w3-green">Upload</button>

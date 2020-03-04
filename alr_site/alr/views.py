@@ -21,6 +21,11 @@ import logging
 logger = logging.getLogger(__name__)
 # Create your views here.
 
+def get_data(self, column):
+    query = UserData.objects.get(Username="Stack")
+    return getattr(query, column)
+
+
 # Start of page views
 # This is to display a message to the user
 active_messages = {'home': '',
@@ -286,75 +291,54 @@ def ajax_logoutUser(request):
 # this is not even close to being done
 @csrf_exempt
 def ajax_postUploadAudio(request):
-    # try authenticating the user
-    # user = authenticate(request=None, username=request.POST['email'], password=request.POST['password'])
-
-
-    # try:
-    #     owner_id = request.user # .id?  only works in admin view? , user.id? user.username?
-    #     speaker_id = request.POST['speaker_id']
-    #     upload_date = datetime.datetime.now()
-    #     sound_file = request.POST['sound_file']
-    #     length = request.POST['length']
-
-    #     # create django user
-    #     bigA = User.objects.create_user(email, email, password, first_name=first, last_name=last) #, groups=Group.)
-    #     user_acc.save()
-    #     # create alr user
-    #     u = alr_user(id=user_acc, type=user_type)
-    #     u.save()
-
-    #     user = authenticate(request, username=email, password=password)
-
-
-    # except Exception as e:
-    #     if str(e) == 'UNIQUE constraint failed: auth_user.username':
-    #         active_messages['signup'] = 'That email is already used.'
-    #     else:
-    #         active_messages['signup'] = e
-    #     return redirect('/signUp/')  //trimAudio
-    # myuser = alr_user.objects.filter(id=2)
-    #
-    # thisSoundFile = request.POST['fileToUpload']
-    # thisLength = '00:01:02'
-    # thisOwnerId = alr_user.objects.get(user=request.user)
-    # #thisOwnerId = 'chb@alr.hs.umt.edu'
-    # #change these:
-    # thisSpeakerId = request.user
-    # thisLanguageId= 1
 
 
     fileOwner = request.user
     fileFile = request.POST['fileToUpload']
-    fileLength = request.POST['fileLength']
+    #fileLength = request.POST['fileLength']
+    fileLength = "00:01:03"
     fileSpeakerFirst = request.POST['fileSpeakerFirst']
     fileSpeakerLast = request.POST['fileSpeakerLast']
-    fileSpeakerFirst = request.POST['fileSpeakerFirst']
     fileSpeakerId = None
     # TODO: Add langauge if new language given
-    fileLanguageId = Language.objects.filter(id=request.POST['fileLanguageId']).id
-
+    #fileLanguageId = Language.objects.filter(id=request.POST['fileLanguageId']).id
+    fileLanguageId = Language.objects.filter(name=request.POST['fileLanguageId'])[0].id
+    #print(fileLanguageId)
     try:
+        print("********")
         # if speaker in db already
-        fileSpeakerId = Speaker.objects.filter(first_name=fileSpeakerFirst, last_name=fileSpeakerLast).id
+        fileSpeakerId = Speaker.objects.filter(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)[0].id
+        #fileSpeakerId = Speaker.objects.filter(first_name='Cody').get_data('User id')
+        print(fileSpeakerId)
+        print("Here")
+        print(Speaker.objects.filter(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)[0].id)
+# def get_data(self, column):
+#     query = UserData.objects.get(Username="Stack")
+#     return getattr(query, column)
+
+
     except Exception as e:
         pass
+        print("Failed to get speaker")
+        print(e)
     else:
         # add speaker to DB
         try:
-            # if new speaker is already a user
-            newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=User.objects.filter(first_name=fileSpeakerFirst, last_name=fileSpeakerLast).id)
-            newSpeaker.save()
-            fileSpeakerId = newSpeaker.id
+            pass
+        # if new speaker is already a user
+            #newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=alr_user.objects.filter(id=User.objects.filter(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)[0].id)[0])
+            #newSpeaker.save()
+            #fileSpeakerId = newSpeaker.id
         except Exception as e:
             raise
         else:
-            newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=None)
-            newSpeaker.save()
-            fileSpeakerId = newSpeaker.id
-
-
-    big_audio = BigAudio(sound_file=fileFile, length = filelength, owner_id=fileSpeakerId, language_id=fileLanguageId)
+            pass
+            # newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=None)
+            # newSpeaker.save()
+            # fileSpeakerId = newSpeaker[0].id
+    print("---------------")
+    print(fileSpeakerId)
+    big_audio = BigAudio(sound_file=fileFile, length = fileLength, owner_id=fileOwner, speaker_id=fileSpeakerId, language_id=fileLanguageId)
     big_audio.save()
 
 
