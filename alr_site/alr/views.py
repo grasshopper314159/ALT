@@ -317,7 +317,8 @@ def ajax_postUploadAudio(request):
 
     thisSoundFile = request.POST['fileToUpload']
     thisLength = '00:01:02'
-    thisOwnerId = 'chb@alr.hs.umt.edu'
+    thisOwnerId = alr_user.objects.get(user=request.user)
+    #thisOwnerId = 'chb@alr.hs.umt.edu'
     #change these:
     thisSpeakerId = request.user
     thisLanguageId= 1
