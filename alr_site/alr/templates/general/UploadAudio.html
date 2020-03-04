@@ -101,7 +101,7 @@
         state = 3;         // save file
       }
       else if (state === 3) {
-        try { soundfile.stop() } // in case it is still playing
+        try { soundFile.stop() } // in case it is still playing
         catch(err) {}
         recorder.record(soundFile);
         audio_background_color = 'red';
@@ -204,11 +204,11 @@
       </div>
     </div>
 
-    <!-- form -- NOT AT ALL DONE -->
+    <!-- onsubmit="return validatePage()" form -- NOT AT ALL DONE -->
     <!-- add a hidden field to grab fileToUpload or soundFile (soundFile blob?)  -->
     <br><br><br><br><br><br><br><br>
     <div class="w3-half">
-      <form class="audioForm" style="float: left; margin-left: 5vh;">
+      <form class="audioForm" action="/ajax_postUploadAudio/"  method="post" style="float: left; margin-left: 5vh;">
         <label style="font-weight: bold">Choose a File to Upload:</label>
         <br>
         <input class="w3-bar-item" type="file" name="fileToUpload" id="fileToUpload" style="margin-left:0;"></input>
@@ -239,8 +239,8 @@
         <input type="radio" name="not_private" value="not_private" style="margin-left:0">
         <label for="not_private">Not Private</label><br>
         <br>
-        <!--<button type="submit" class="w3-btn w3-green">Upload</button>-->
-        <a href="/trimAudio/" class="w3-btn w3-green">Upload</a> <!-- Fake Upload button -->
+        <button type="submit" class="w3-btn w3-green">Upload</button>
+        <!--<a href="/trimAudio/" class="w3-btn w3-green">Upload</a> --><!-- Fake Upload button -->
         <br>
         <br>
       </form>

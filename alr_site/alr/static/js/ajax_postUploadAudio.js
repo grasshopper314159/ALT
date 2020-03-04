@@ -1,3 +1,5 @@
+// this is code I copied from  ajax_getAllAudioTrims, which is not a post....
+
 $(document).ready(function(){
 
   $.ajax(

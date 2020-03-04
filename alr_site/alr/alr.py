@@ -68,4 +68,4 @@ def updateRating(request):
     trim = AudioTrim.objects.filter(id=request.POST['trim_id'])
     trim.score = request.POST['score']
     trim.save()
-    #console.log(request)  I would like to see what these request look like
+

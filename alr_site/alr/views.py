@@ -17,7 +17,8 @@ from . import alr
 
 import datetime
 import logging
-
+# testing logging functions
+logger = logging.getLogger(__name__)
 # Create your views here.
 
 # Start of page views
@@ -170,12 +171,12 @@ def ajax_postRating(request):
         alr.updateRating(request)
         active_messages['rateData'] = 'Your changes have been saved'
         return redirect('/rateData/')
-
-@csrf_exempt
-@login_required(login_url='/home/')
-def ajax_postUploadAudio(request):
-    if request.method == 'POST':
-        return JsonResponse(None, safe=False)
+# ajax_postUploadAudio
+# @csrf_exempt
+# @login_required(login_url='/home/')
+# def ajax_postUploadAudio(request):
+#     if request.method == 'POST':
+#         return JsonResponse(None, safe=False)
 
 
 # TODO: This is would allow users to Publish a post for example, might be useful
@@ -191,12 +192,8 @@ def ajax_postUploadAudio(request):
 
 @csrf_exempt
 def ajax_createUser(request):
-    logger.debug("**********************************************\n\n")
-    logger.debug(request)
-    logger.debug("**********************************************\n\n")
-    logger.error("this is an error message!!")
-    logger.debug("**********************************************\n\n")
-
+    #for debugging
+    print(request.body)
     # try authenticating the user
     user = authenticate(request=None, username=request.POST['email'], password=request.POST['password'])
 
@@ -261,11 +258,11 @@ def ajax_loginEvalUser(request):
 
 @csrf_exempt
 def ajax_loginUser(request):
-    logger.debug("**********************************************\n\n")
-    logger.debug(request)
-    logger.debug("**********************************************\n\n")
-    logger.error("this is an error message!!")
-    logger.debug("**********************************************\n\n")
+    # for debugging: prints to server output
+    print(request)
+    print(request.body)
+    print(request.POST['username'])
+    ###############################
     username = request.POST['username']
     password = request.POST['password']
     user = authenticate(request, username=username, password=password)
@@ -279,12 +276,9 @@ def ajax_loginUser(request):
 
 @csrf_exempt
 def ajax_logoutUser(request):
-    logger.debug("**********************************************\n\n")
-    logger.debug(request)
-    logger.debug("**********************************************\n\n")
-    logger.error("this is an error message!!")
-    logger.debug("**********************************************\n\n")
 
+    print()
+    #print(request)
     logout(request)
     active_messages['home'] = 'You are logged out'
     return redirect('/home/')
@@ -292,7 +286,6 @@ def ajax_logoutUser(request):
 # this is not even close to being done
 @csrf_exempt
 def ajax_postUploadAudio(request):
-    pass
     # try authenticating the user
     # user = authenticate(request=None, username=request.POST['email'], password=request.POST['password'])
 
@@ -320,8 +313,24 @@ def ajax_postUploadAudio(request):
     #     else:
     #         active_messages['signup'] = e
     #     return redirect('/signUp/')  //trimAudio
+    myuser = alr_user.objects.filter(id=2)
+
+    thisSoundFile = request.POST['fileToUpload']
+    thisLength = '00:01:02'
+    thisOwnerId = 'chb@alr.hs.umt.edu'
+    #change these:
+    thisSpeakerId = request.user
+    thisLanguageId= 1
+            
+
+    # create big_audio record
+    #big_audio = BigAudio.objects.create_user(sound_file=thisSoundFile) #, groups=Group.)
+    big_audio = BigAudio(sound_file=thisSoundFile, length = thisLength, owner_id=thisOwnerId, language_id=thisLanguageId) 
+    big_audio.save()
+
 
 # end of ajax calls
+
 
 # start of other functions
 @csrf_exempt
@@ -331,12 +340,7 @@ def set_password(user, newPass):
         u.set_password(newPass)
         u.save()
         
-# testing logging functions
-logger = logging.getLogger(__name__)
 
-def myTestfunction():
-	logger.debug("this is a debug message!")
 
-def myotherTestfunction():
-	logger.error("this is an error message!!")
-# end of other functions
+
+
