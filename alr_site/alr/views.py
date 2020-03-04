@@ -10,9 +10,9 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
-from alr.models import BigAudio
-from alr.models import AudioTrim
-from alr.models import User as alr_user
+from .models import User as alr_user
+from .models import BigAudio, Speaker, Language, Review, AudioTrim, Comment, Measurements, Class, Assignment
+
 from . import alr
 
 import datetime
@@ -313,21 +313,59 @@ def ajax_postUploadAudio(request):
     #     else:
     #         active_messages['signup'] = e
     #     return redirect('/signUp/')  //trimAudio
-    myuser = alr_user.objects.filter(id=2)
+    # myuser = alr_user.objects.filter(id=2)
+    #
+    # thisSoundFile = request.POST['fileToUpload']
+    # thisLength = '00:01:02'
+    # thisOwnerId = alr_user.objects.get(user=request.user)
+    # #thisOwnerId = 'chb@alr.hs.umt.edu'
+    # #change these:
+    # thisSpeakerId = request.user
+    # thisLanguageId= 1
 
-    thisSoundFile = request.POST['fileToUpload']
-    thisLength = '00:01:02'
-    thisOwnerId = alr_user.objects.get(user=request.user)
-    #thisOwnerId = 'chb@alr.hs.umt.edu'
-    #change these:
-    thisSpeakerId = request.user
-    thisLanguageId= 1
-            
+
+    fileOwner = request.user
+    fileFile = request.POST['fileToUpload']
+    fileLength = request.POST['fileLength']
+    fileSpeakerFirst = request.POST['fileSpeakerFirst']
+    fileSpeakerLast = request.POST['fileSpeakerLast']
+    fileSpeakerFirst = request.POST['fileSpeakerFirst']
+    fileSpeakerId = None
+    # TODO: Add langauge if new language given
+    fileLanguageId = Language.objects.filter(id=request.POST['fileLanguageId']).id
+
+    try:
+        # if speaker in db already
+        fileSpeakerId = Speaker.objects.filter(first_name=fileSpeakerFirst, last_name=fileSpeakerLast).id
+    except Exception as e:
+        pass
+    else:
+        # add speaker to DB
+        try:
+            # if new speaker is already a user
+            newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=User.objects.filter(first_name=fileSpeakerFirst, last_name=fileSpeakerLast).id)
+            newSpeaker.save()
+            fileSpeakerId = newSpeaker.id
+        except Exception as e:
+            raise
+        else:
+            newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=None)
+            newSpeaker.save()
+            fileSpeakerId = newSpeaker.id
+
+
+    big_audio = BigAudio(sound_file=fileFile, length = filelength, owner_id=fileSpeakerId, language_id=fileLanguageId)
+    big_audio.save()
+
+
+    # filelength = request.POST['fileLength']
+
+
 
     # create big_audio record
     #big_audio = BigAudio.objects.create_user(sound_file=thisSoundFile) #, groups=Group.)
-    big_audio = BigAudio(sound_file=thisSoundFile, length = thisLength, owner_id=thisOwnerId, language_id=thisLanguageId) 
-    big_audio.save()
+    # big_audio = BigAudio(sound_file=thisSoundFile, length = thisLength, owner_id=thisOwnerId, language_id=thisLanguageId)
+    # big_audio.save()
 
 
 # end of ajax calls
@@ -340,8 +378,3 @@ def set_password(user, newPass):
         u = User.objects.get(username=user)
         u.set_password(newPass)
         u.save()
-        
-
-
-
-
