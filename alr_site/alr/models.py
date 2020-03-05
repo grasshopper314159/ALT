@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User as user_account
+import settings
 
 class User(models.Model):
     id = models.OneToOneField(user_account, primary_key=True, on_delete=models.CASCADE)
@@ -14,16 +15,24 @@ class User(models.Model):
     def __str__(self):
         return (self.id.first_name + ', ' + self.id.last_name)
 
+
+def file_directory_path(id):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return 'biAudioFiles/{0}'.format(id)
+
 class BigAudio(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
     upload_date = models.DateField(auto_now_add=True)
-    sound_file = models.FileField(upload_to="", default=None, blank=True, null=True)
+    sound_file = models.FileField(upload_to=file_directory_path, default=None, blank=True, null=True)
     length = models.TimeField()
     owner_id = models.ForeignKey("User", on_delete=models.CASCADE, default=None, blank=True, null=True) #Big audio and user 'owns' relationship
     speaker_id = models.ForeignKey("Speaker", on_delete=models.CASCADE, default=None) #Big audio and speaker 'spoken by' relationship
     language_id = models.ForeignKey("Language", on_delete=models.CASCADE, default=None) #Big and language 'spoken in' relationship
     reviews = models.ManyToManyField("User", through="Review", related_name="big_audio_reviews") #User and big audio 'can review' relationship
     private = models.BooleanField(default=True)
+
+    def getPath(self):
+        return str(self.id)
 
     def __str__(self):
         return ('Owner: ' + self.owner_id.id.first_name + ', ' + self.owner_id.id.last_name + ' id: ' + str(self.id))
