@@ -138,7 +138,9 @@
       // fix layout of buttons, canvas
       // make it so when the canvas is clicked it toggles play and pause
       // Make a list of the saved clips so one could be selected and edited
-      // or make boundaries of boxes draggable? or both?
+      //    or make boundaries of boxes draggable? or both?
+      // Decide whether clips are uploaded to database by form submit
+      //    button or save icon button
       
       //Changes the cursor to a hand when it's close to the playHead
       function checkCursor() {
@@ -272,6 +274,7 @@
 		}
 		
     // draws a clip box, saves trim into to  database
+    
     function save_audio() {
       //Keep this code
       console.log(clipState);
@@ -282,39 +285,8 @@
         //clipState = myE.SAVED;  // not sure where to put this yet
         makeBox()  //Really makeBox coordinaes.  Box is drawn in draw() (box corners are created in this function)        
       }
-      //****************************  FORM **************************************
-      <form class="audioTrimForm" action="/ajax_postTrimAudio/"  method="post" style="float: left; margin-left: 5vh;">
-        <label style="font-weight: bold">Choose a File to Upload:</label>
-        <br>
-        <input class="w3-bar-item" type="file" name="fileToUpload" id="fileToUpload" style="margin-left:0;"></input>
-        <br><br>
-        <!-- <label style="text-align: center;">Speaker</label> -->
-        <!-- <br> -->
-        <label>Speaker First Name</label><br>
-        <input name="fileSpeakerFirst" style="vertical-align: middle;" rows="3" cols="70"></input>
-        <br><br>
-        <label>Speaker Last Name</label><br>
-        <input name="fileSpeakerLast" style="vertical-align: middle;" rows="3" cols="70"></input>
-        <br><br>
-        <br><br>
-        <label>Text (Original)</label><br>
-        <textarea name="original_text" style="vertical-align: middle;" rows="3" cols="70"></textarea>
-        <br><br>
-        <label>Text (English)</label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
-        <br><br>
-        <label>Language</label><br>
-        <!-- <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>  -->
-        <!-- make dropdown?  try English or 1-->
-        <input type="text" placeholder="Enter Language" name="fileLanguageId" required></input>
-        
-        <br><br>
-        <input type="radio" name="private" value="private" style="margin-left:0"></input>
-        <label for="private">Private</label><br>
-        <input type="radio" name="not_private" value="not_private" style="margin-left:0"></input>
-        <label for="not_private">Not Private</label><br>
-        <br>
-        <button type="submit" class="w3-btn w3-green">Upload</button>
+      //javascript to click the submit button?
+      
 
     }
 
@@ -470,3 +442,38 @@
   </div>
 </body>
 </html>
+
+
+
+<form class="audioTrimForm" action="/ajax_postTrimAudio/"  method="post" style="float: left; margin-left: 5vh;">
+  <label style="font-weight: bold">Choose a File to Upload:</label>
+  <br>
+  <input class="w3-bar-item" type="file" name="fileToUpload" id="fileToUpload" style="margin-left:0;"></input>
+  <br><br>
+  <!-- <label style="text-align: center;">Speaker</label> -->
+  <!-- <br> -->
+  <label>Speaker First Name</label><br>
+  <input name="fileSpeakerFirst" style="vertical-align: middle;" rows="3" cols="70"></input>
+  <br><br>
+  <label>Speaker Last Name</label><br>
+  <input name="fileSpeakerLast" style="vertical-align: middle;" rows="3" cols="70"></input>
+  <br><br>
+  <br><br>
+  <label>Text (Original)</label><br>
+  <textarea name="original_text" style="vertical-align: middle;" rows="3" cols="70"></textarea>
+  <br><br>
+  <label>Text (English)</label><br>
+  <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
+  <br><br>
+  <label>Language</label><br>
+  <!-- <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>  -->
+  <!-- make dropdown?  try English or 1-->
+  <input type="text" placeholder="Enter Language" name="fileLanguageId" required></input>
+  
+  <br><br>
+  <input type="radio" name="private" value="private" style="margin-left:0"></input>
+  <label for="private">Private</label><br>
+  <input type="radio" name="not_private" value="not_private" style="margin-left:0"></input>
+  <label for="not_private">Not Private</label><br>
+  <br>
+  <button type="submit" class="w3-btn w3-green">Upload</button>
