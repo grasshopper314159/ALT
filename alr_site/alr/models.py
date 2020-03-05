@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User as user_account
-import settings
 
 class User(models.Model):
     id = models.OneToOneField(user_account, primary_key=True, on_delete=models.CASCADE)
@@ -16,9 +15,10 @@ class User(models.Model):
         return (self.id.first_name + ', ' + self.id.last_name)
 
 
-def file_directory_path(id):
+def file_directory_path(instance, filename):
+
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return 'biAudioFiles/{0}'.format(id)
+    return 'bigAudioFile_{0}/{1}'.format(instance.id, filename)
 
 class BigAudio(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
