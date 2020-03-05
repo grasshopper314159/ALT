@@ -283,7 +283,7 @@
         makeBox()  //Really makeBox coordinaes.  Box is drawn in draw() (box corners are created in this function)        
       }
       //****************************  FORM **************************************
-      <form class="audioTrimForm" action="/ajax_postUploadAudio/"  method="post" style="float: left; margin-left: 5vh;">
+      <form class="audioTrimForm" action="/ajax_postTrimAudio/"  method="post" style="float: left; margin-left: 5vh;">
         <label style="font-weight: bold">Choose a File to Upload:</label>
         <br>
         <input class="w3-bar-item" type="file" name="fileToUpload" id="fileToUpload" style="margin-left:0;"></input>
@@ -298,7 +298,7 @@
         <br><br>
         <br><br>
         <label>Text (Original)</label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
+        <textarea name="original_text" style="vertical-align: middle;" rows="3" cols="70"></textarea>
         <br><br>
         <label>Text (English)</label><br>
         <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>

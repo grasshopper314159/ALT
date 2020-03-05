@@ -189,6 +189,8 @@ def ajax_postRating(request):
         alr.updateRating(request)
         active_messages['rateData'] = 'Your changes have been saved'
         return redirect('/rateData/')
+
+# legacy? new ajax_postUploadAudio is below
 # ajax_postUploadAudio
 # @csrf_exempt
 # @login_required(login_url='/home/')
@@ -337,6 +339,10 @@ def ajax_postUploadAudio(request):
             #active_messages["audioTrim"] = str(big_audio.id) + ' ' + str('fileFile.name')
             active_messages["audioTrim"] = str(1) + ' ' + str('artica_0003.wav')
             return redirect("/trimAudio/")
+
+def ajax_postTrimAudio(request):
+    pass
+
 
 #end of ajax calls
 
