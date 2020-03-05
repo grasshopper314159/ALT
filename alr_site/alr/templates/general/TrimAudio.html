@@ -58,10 +58,22 @@
     // PRELOAD everything in here finishes before setup and draw run
     function preload() {
       //getAudioContext().resume();
-      soundFile = loadSound("{% static '/sounds/french_1.wav'%}");
+      // soundFile = loadSound("{% static '/sounds/french_1.wav'%}"); # 'ibaudiofiles/' lblb message.id rbrb '/' lblb message.filename rbrb # lb = { , rb = }
+      '{% if messages %}'
+      '{% for message in messages %}'
+      message = '{{ message }}'
+      message = message.split(' ')
+      console.log(message)
+      console.log(message[1])
+      console.log(typeof(message))
+      // prefix = "{% static '/bigAudioFiles/"'%}"   + message[0] + "/"
+      soundFile = loadSound("{% static '/sounds/'%}" + message[1]);
+      '{% endfor %}'
+      '{% endif %}'
       console.log('PRELOAD');
       recorderState=2;  //ready to play clip
     }
+
     // SETUP Run starts before draw, but not guaranteed to finish before draw
     function setup() {
       getAudioContext().resume(); //in the console there is an error that pop up that alerts you to add this 
