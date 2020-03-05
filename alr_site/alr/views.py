@@ -12,6 +12,7 @@ from django.views.decorators.http import require_http_methods
 
 from .models import User as alr_user
 from .models import BigAudio, Speaker, Language, Review, AudioTrim, Comment, Measurements, Class, Assignment
+#> from django.contrib.auth.models import User
 
 from . import alr
 
@@ -263,11 +264,6 @@ def ajax_loginEvalUser(request):
 
 @csrf_exempt
 def ajax_loginUser(request):
-    # for debugging: prints to server output
-    print(request)
-    print(request.body)
-    print(request.POST['username'])
-    ###############################
     username = request.POST['username']
     password = request.POST['password']
     user = authenticate(request, username=username, password=password)
@@ -281,9 +277,6 @@ def ajax_loginUser(request):
 
 @csrf_exempt
 def ajax_logoutUser(request):
-
-    print()
-    #print(request)
     logout(request)
     active_messages['home'] = 'You are logged out'
     return redirect('/home/')
@@ -291,9 +284,9 @@ def ajax_logoutUser(request):
 # this is not even close to being done
 @csrf_exempt
 def ajax_postUploadAudio(request):
+    fileOwner = alr_user.objects.get(id=User.objects.get(email=str(request.user)))
 
-
-    fileOwner = request.user
+    
     fileFile = request.POST['fileToUpload']
     #fileLength = request.POST['fileLength']
     fileLength = "00:01:03"
@@ -301,22 +294,11 @@ def ajax_postUploadAudio(request):
     fileSpeakerLast = request.POST['fileSpeakerLast']
     fileSpeakerId = None
     # TODO: Add langauge if new language given
-    #fileLanguageId = Language.objects.filter(id=request.POST['fileLanguageId']).id
-    fileLanguageId = Language.objects.filter(name=request.POST['fileLanguageId'])[0].id
-    #print(fileLanguageId)
+    fileLanguageId = Language.objects.filter(name=request.POST['fileLanguageId'])[0]
+
     try:
-        print("********")
         # if speaker in db already
-        fileSpeakerId = Speaker.objects.filter(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)[0].id
-        #fileSpeakerId = Speaker.objects.filter(first_name='Cody').get_data('User id')
-        print(fileSpeakerId)
-        print("Here")
-        print(Speaker.objects.filter(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)[0].id)
-# def get_data(self, column):
-#     query = UserData.objects.get(Username="Stack")
-#     return getattr(query, column)
-
-
+        fileSpeakerId = Speaker.objects.filter(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)[0]
     except Exception as e:
         pass
         print("Failed to get speaker")
@@ -336,23 +318,11 @@ def ajax_postUploadAudio(request):
             # newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=None)
             # newSpeaker.save()
             # fileSpeakerId = newSpeaker[0].id
-    print("---------------")
-    print(fileSpeakerId)
     big_audio = BigAudio(sound_file=fileFile, length = fileLength, owner_id=fileOwner, speaker_id=fileSpeakerId, language_id=fileLanguageId)
     big_audio.save()
+    return redirect("/trimAudio/")
 
-
-    # filelength = request.POST['fileLength']
-
-
-
-    # create big_audio record
-    #big_audio = BigAudio.objects.create_user(sound_file=thisSoundFile) #, groups=Group.)
-    # big_audio = BigAudio(sound_file=thisSoundFile, length = thisLength, owner_id=thisOwnerId, language_id=thisLanguageId)
-    # big_audio.save()
-
-
-# end of ajax calls
+#end of ajax calls
 
 
 # start of other functions
