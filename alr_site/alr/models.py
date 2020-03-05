@@ -14,11 +14,10 @@ class User(models.Model):
     def __str__(self):
         return (self.id.first_name + ', ' + self.id.last_name)
 
-
 def file_directory_path(instance, filename):
-
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     return 'bigAudioFile_{0}/{1}'.format(instance.id, filename)
+
 
 class BigAudio(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
@@ -30,9 +29,6 @@ class BigAudio(models.Model):
     language_id = models.ForeignKey("Language", on_delete=models.CASCADE, default=None) #Big and language 'spoken in' relationship
     reviews = models.ManyToManyField("User", through="Review", related_name="big_audio_reviews") #User and big audio 'can review' relationship
     private = models.BooleanField(default=True)
-
-    def getPath(self):
-        return str(self.id)
 
     def __str__(self):
         return ('Owner: ' + self.owner_id.id.first_name + ', ' + self.owner_id.id.last_name + ' id: ' + str(self.id))
