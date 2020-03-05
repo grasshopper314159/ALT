@@ -5,7 +5,7 @@
 	<script src="{% static '/js/p5.js'%}"></script>
 	<script src="{% static '/js/addons/p5.sound.js'%}"></script>
 	<script src="{% static '/js/addons/p5.dom.js'%}"></script>
-	  <!-- Load p5 library from CDN,  THIS WAS TOO SLOW  
+	  <!-- Load p5 library from CDN,  THIS WAS TOO SLOW
 	//<script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
   //<script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
   //<script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.sound.js"></script>
@@ -19,12 +19,12 @@
 
   <!-- localized stylesheets -->
   <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>
-  
+
   <!--  start of script *****************************************************************************
-        p5 will automatically call preload, setup and draw.  Draw is called ~50-60 times per second  
-        p5 may not play well with other javascript code.  It has a lot of global variables.  It is 
+        p5 will automatically call preload, setup and draw.  Draw is called ~50-60 times per second
+        p5 may not play well with other javascript code.  It has a lot of global variables.  It is
         possible to run in instance mode to mitigate this, if necessary (see p5 website)  -->
-        
+
   <script >
     //*************************  variables **********************************
     console.log('START');
@@ -62,12 +62,12 @@
       '{% if messages %}'
       '{% for message in messages %}'
       message = '{{ message }}'
-      message = message.split(' ')
+      // message = message.split(' ')
       console.log(message)
-      console.log(message[1])
+      // console.log(message[1])
       console.log(typeof(message))
       // prefix = "{% static '/bigAudioFiles/"'%}"   + message[0] + "/"
-      soundFile = loadSound("{% static '/sounds/'%}" + message[1]);
+      soundFile = loadSound("{% static '/sounds/'%}" + message);
       '{% endfor %}'
       '{% endif %}'
       console.log('PRELOAD');
@@ -76,7 +76,7 @@
 
     // SETUP Run starts before draw, but not guaranteed to finish before draw
     function setup() {
-      getAudioContext().resume(); //in the console there is an error that pop up that alerts you to add this 
+      getAudioContext().resume(); //in the console there is an error that pop up that alerts you to add this
       console.log('setup1');  // for debugging
       recording_time = 0;  //remnant from upload audio.  turn this into soundFile length?
       var canvas = createCanvas(canvasWidth, canvasHeight);
@@ -99,7 +99,7 @@
 				vertex(i, map(peaks[i], -1, 1, height, 0));
 			}
 			endShape();
-      // playHeadTime is needed to draw the playhead. Don't want to update 
+      // playHeadTime is needed to draw the playhead. Don't want to update
       // playHeadTime if song is paused or being dragged
 			if (soundFile.isPlaying() && dragging === false) {
 				playheadTime=soundFile.currentTime();
@@ -139,7 +139,7 @@
       // make it so when the canvas is clicked it toggles play and pause
       // Make a list of the saved clips so one could be selected and edited
       // or make boundaries of boxes draggable? or both?
-      
+
       //Changes the cursor to a hand when it's close to the playHead
       function checkCursor() {
         playHeadX = map(playheadTime, 0, soundFile.duration(), 0, width);
@@ -205,7 +205,7 @@
         if (!isNaN(parseInt(startTimeStr)) && isNaN(parseInt(endTimeStr))) {
           clipState = myE.STARTONLY;
           clipDurStr = " ";
-        } 
+        }
         else if (isNaN(parseInt(startTimeStr)) && !isNaN(parseInt(endTimeStr))) {
           clipState = myE.ENDONLY;
           clipDurStr = " ";
@@ -224,7 +224,7 @@
           // Do I need a flag for saved?
         }
         console.log(clipState);
-      } 
+      }
 
 
       // getPeaks returns a list of amplitude peaks.  Can take a paramter to make more
@@ -241,13 +241,13 @@
         rect(map(playheadTime, 0, soundFile.duration(), 0, width), 0, 2, height);
         fill(0,0,0);
       }
-		
+
 		// runs when play button is clicked
     function play() {
       getAudioContext().resume();
       console.log(recorderState);  // for debugging
       if (recorderState === 0) {  // remnant from upload audio
-        audio_message = 'Nothing to play.  Record audio first.';  
+        audio_message = 'Nothing to play.  Record audio first.';
       } else if (recorderState === 1) {  // this recorderState is a remnant from upload audio
         audio_message = 'Currently recording.  Press the recording icon to stop.';
       } else if (recorderState === 2 || recorderState ===3) {
@@ -255,11 +255,11 @@
         audio_message = 'Playing.';
         soundFile.play();
         soundFile.playMode("restart")
-        soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})  
-        recorderState = 2;       
+        soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})
+        recorderState = 2;
       }
     }
-		
+
     // runs when pause button is clicked
 		function pause() {
 			// getAudioContext().resume();  //probably won't need this
@@ -268,9 +268,9 @@
 			if (soundFile.isPlaying()) {
 				playheadTime=soundFile.currentTime();
 				soundFile.pause();
-			}	
+			}
 		}
-		
+
     // draws a clip box, saves trim into to  database
     function save_audio() {
       //Keep this code
@@ -280,41 +280,41 @@
       // to indicate it has been saved
       if (clipState === myE.DONE) {
         //clipState = myE.SAVED;  // not sure where to put this yet
-        makeBox()  //Really makeBox coordinaes.  Box is drawn in draw() (box corners are created in this function)        
+        makeBox()  //Really makeBox coordinaes.  Box is drawn in draw() (box corners are created in this function)
       }
       //****************************  FORM **************************************
-      <form class="audioTrimForm" action="/ajax_postUploadAudio/"  method="post" style="float: left; margin-left: 5vh;">
-        <label style="font-weight: bold">Choose a File to Upload:</label>
-        <br>
-        <input class="w3-bar-item" type="file" name="fileToUpload" id="fileToUpload" style="margin-left:0;"></input>
-        <br><br>
-        <!-- <label style="text-align: center;">Speaker</label> -->
-        <!-- <br> -->
-        <label>Speaker First Name</label><br>
-        <input name="fileSpeakerFirst" style="vertical-align: middle;" rows="3" cols="70"></input>
-        <br><br>
-        <label>Speaker Last Name</label><br>
-        <input name="fileSpeakerLast" style="vertical-align: middle;" rows="3" cols="70"></input>
-        <br><br>
-        <br><br>
-        <label>Text (Original)</label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
-        <br><br>
-        <label>Text (English)</label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
-        <br><br>
-        <label>Language</label><br>
-        <!-- <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>  -->
-        <!-- make dropdown?  try English or 1-->
-        <input type="text" placeholder="Enter Language" name="fileLanguageId" required></input>
-        
-        <br><br>
-        <input type="radio" name="private" value="private" style="margin-left:0"></input>
-        <label for="private">Private</label><br>
-        <input type="radio" name="not_private" value="not_private" style="margin-left:0"></input>
-        <label for="not_private">Not Private</label><br>
-        <br>
-        <button type="submit" class="w3-btn w3-green">Upload</button>
+      // <form class="audioTrimForm" action="/ajax_postUploadAudio/"  method="post" style="float: left; margin-left: 5vh;">
+      //   <label style="font-weight: bold">Choose a File to Upload:</label>
+      //   <br>
+      //   <input class="w3-bar-item" type="file" name="fileToUpload" id="fileToUpload" style="margin-left:0;"></input>
+      //   <br><br>
+      //   <!-- <label style="text-align: center;">Speaker</label> -->
+      //   <!-- <br> -->
+      //   <label>Speaker First Name</label><br>
+      //   <input name="fileSpeakerFirst" style="vertical-align: middle;" rows="3" cols="70"></input>
+      //   <br><br>
+      //   <label>Speaker Last Name</label><br>
+      //   <input name="fileSpeakerLast" style="vertical-align: middle;" rows="3" cols="70"></input>
+      //   <br><br>
+      //   <br><br>
+      //   <label>Text (Original)</label><br>
+      //   <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
+      //   <br><br>
+      //   <label>Text (English)</label><br>
+      //   <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
+      //   <br><br>
+      //   <label>Language</label><br>
+      //   <!-- <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>  -->
+      //   <!-- make dropdown?  try English or 1-->
+      //   <input type="text" placeholder="Enter Language" name="fileLanguageId" required></input>
+      //
+      //   <br><br>
+      //   <input type="radio" name="private" value="private" style="margin-left:0"></input>
+      //   <label for="private">Private</label><br>
+      //   <input type="radio" name="not_private" value="not_private" style="margin-left:0"></input>
+      //   <label for="not_private">Not Private</label><br>
+      //   <br>
+      //   <button type="submit" class="w3-btn w3-green">Upload</button>
 
     }
 
@@ -336,7 +336,7 @@
       //   console.log(err);
       // }
       // write to database here
-    
+
     // timeIt is a remnant from upload audio. May need it later
     function timeIt() {
       // 1 counter = 0.1 second
@@ -358,7 +358,7 @@
     #centering {
     display: flex;
     align-items: center;
-    justify-content: center; 		
+    justify-content: center;
 
     }
     #trim_audio_container {
@@ -407,7 +407,7 @@
     <!-- form -->
     <br><br><br><br><br><br><br><br>
     <div class="w3-half">
-      
+
     </div>
 
 
@@ -445,8 +445,8 @@
         <div class="w3-btn" style="margin-left: 10vh">
           <i class="fa fa-save fa-3x" aria-hidden="true" onclick="save_audio()"></i>
           <h4 id="fancyText">Save Audio Clip</h4>
-        </div>        
-      </div>     
+        </div>
+      </div>
     </div>
     <div class="w3-container">
       <div class="w3-half">

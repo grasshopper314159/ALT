@@ -90,7 +90,7 @@ def display_createEval(request):
 @login_required(login_url='/home/')
 def display_trimAudio(request):
     # TODO: remove active set
-    active_messages["trimAudio"] = str(1) + ' ' + str('a.wav')
+    # active_messages["trimAudio"] = str(1) + ' ' + str('a.wav')
     messages.success(request, active_messages["trimAudio"])
     # try:
     #     if type(parseInt(active_messages["trimAudio"])) == type(426):
@@ -335,10 +335,12 @@ def ajax_postUploadAudio(request):
                     # fileSpeakerId = newSpeaker
             big_audio = BigAudio(sound_file=fileFile, length = fileLength, owner_id=fileOwner, speaker_id=fileSpeakerId, language_id=fileLanguageId)
             big_audio.save()
+            # print(big_audio.sound_file.upload_to)
 
-            #active_messages["audioTrim"] = '' + str(big_audio.id) + ' ' + str('fileFile.name')
-            print(big_audio.filename)
-            active_messages["audioTrim"] = str(1) + ' ' + str('artica_0003.wav')
+            active_messages["audioTrim"] = 'media/bigAudioFile_' + str(big_audio.id) + '/' + str(fileFile)
+            print(active_messages["audioTrim"])
+            # print(big_audio.getPath)
+            # active_messages["audioTrim"] = str(1) + ' ' + str('artica_0003.wav')
             return redirect("/trimAudio/")
 
 #end of ajax calls
