@@ -99,7 +99,8 @@
 				vertex(i, map(peaks[i], -1, 1, height, 0));
 			}
 			endShape();
-      // this if is needed to draw the playhead. Don't want to move playhead if song is paused
+      // playHeadTime is needed to draw the playhead. Don't want to update 
+      // playHeadTime if song is paused or being dragged
 			if (soundFile.isPlaying() && dragging === false) {
 				playheadTime=soundFile.currentTime();
 			}
@@ -107,7 +108,7 @@
       if (dragging === false) {
         drawPlayhead(playheadTime);
       }
-			else {
+			else {  // moves playHeadTime to match the location of the mouse while dragging
         playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
         drawPlayhead(playheadTime);
       }
@@ -135,7 +136,11 @@
       // fix drag so it doesn't start playing immediately after drag
       // change to single play/pause button
       // fix layout of buttons, canvas
+      // make it so when the canvas is clicked it toggles play and pause
+      // Make a list of the saved clips so one could be selected and edited
+      // or make boundaries of boxes draggable? or both?
       
+      //Changes the cursor to a hand when it's close to the playHead
       function checkCursor() {
         playHeadX = map(playheadTime, 0, soundFile.duration(), 0, width);
         if (mouseX > playHeadX-3 && mouseX < playHeadX+3 && mouseY > 0 && mouseY < height) {
@@ -144,8 +149,9 @@
           cursor(ARROW);
         }
       }
+
       function mousePressed() {
-      // Did I click on the playhead?
+      // Did I click on the playhead? then set dragging to true
       playHeadX = map(playheadTime, 0, soundFile.duration(), 0, width);
       if (mouseX > playHeadX-3 && mouseX < playHeadX+3 && mouseY > 0 && mouseY < height) {
         dragging = true;
@@ -158,19 +164,20 @@
       // Quit dragging
       if (dragging === true) {
         dragging = false;
+        soundFile.stop(); //trying to stop the clip from playing immediately -test this
         playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
         console.log("playheadtime:  "+playheadTime);
-        if (playheadTime < 0) {playheadTime = 0;} 
+        if (playheadTime < 0) {playheadTime = 0;} // bound check
         else if (playheadTime > soundFile.duration()) {playheadTime = soundfile.duration()-0.2;}
         //soundFile.play(0,1,.5,playheadTime,soundFile.duration());
-        soundFile.stop();
+        soundFile.stop();  // jump doesn't work unless you stop it first
         soundFile.jump(playheadTime);
       }
       // prevent default behavior
       return false;
     }
 
-      // makeBox builds a string that will draw a box when called with eval in draw()
+      // makeBox finds the coordinates needed to draw a clip box in draw()
       function makeBox() {
         boxXstart = map(startTime, 0, soundFile.duration(), 0, width);
         boxXend = map(endTime, 0, soundFile.duration(), 0, width);
@@ -183,16 +190,17 @@
       function setStartTime() {
         startTime = playheadTime.toFixed(2);
         startTimeStr = startTime,toString()
-        setState();
+        setState();  // e.g. valid clip, invalid, beginning time only, end only
       }
 
       function setEndTime() {
         endTime = playheadTime.toFixed(2);
         endTimeStr = endTime.toString();
-        setState();
+        setState(); // e.g. valid clip, invalid, beginning time only, end only
       }
 
       // called whenever mark start, mark end, are called
+      // e.g. valid clip, invalid, beginning time only, end only
       function setState() {
         if (!isNaN(parseInt(startTimeStr)) && isNaN(parseInt(endTimeStr))) {
           clipState = myE.STARTONLY;
@@ -263,8 +271,7 @@
 			}	
 		}
 		
-    // This function just has some code I copied from p5.  No clue if it is even a 
-    // good starting point
+    // draws a clip box, saves trim into to  database
     function save_audio() {
       //Keep this code
       console.log(clipState);
@@ -273,28 +280,63 @@
       // to indicate it has been saved
       if (clipState === myE.DONE) {
         //clipState = myE.SAVED;  // not sure where to put this yet
-        makeBox()
+        makeBox()  //Really makeBox coordinaes.  Box is drawn in draw() (box corners are created in this function)        
+      }
+      //****************************  FORM **************************************
+      <form class="audioTrimForm" action="/ajax_postUploadAudio/"  method="post" style="float: left; margin-left: 5vh;">
+        <label style="font-weight: bold">Choose a File to Upload:</label>
+        <br>
+        <input class="w3-bar-item" type="file" name="fileToUpload" id="fileToUpload" style="margin-left:0;"></input>
+        <br><br>
+        <!-- <label style="text-align: center;">Speaker</label> -->
+        <!-- <br> -->
+        <label>Speaker First Name</label><br>
+        <input name="fileSpeakerFirst" style="vertical-align: middle;" rows="3" cols="70"></input>
+        <br><br>
+        <label>Speaker Last Name</label><br>
+        <input name="fileSpeakerLast" style="vertical-align: middle;" rows="3" cols="70"></input>
+        <br><br>
+        <br><br>
+        <label>Text (Original)</label><br>
+        <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
+        <br><br>
+        <label>Text (English)</label><br>
+        <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
+        <br><br>
+        <label>Language</label><br>
+        <!-- <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>  -->
+        <!-- make dropdown?  try English or 1-->
+        <input type="text" placeholder="Enter Language" name="fileLanguageId" required></input>
         
-      }
-      // p5 copied code
-      try {
-        let soundBlob = soundFile.getBlob();
-        let serverUrl = 'http://jsonplaceholder.typicode.com/posts';
-        let httpRequestOptions = {
-          method: 'POST',
-          body: new FormData().append('soundBlob', soundBlob),
-          headers: new Headers({
-            'Content-Type': 'multipart/form-data'
-          })
-        };
-        httpDo(serverUrl, httpRequestOptions);
+        <br><br>
+        <input type="radio" name="private" value="private" style="margin-left:0"></input>
+        <label for="private">Private</label><br>
+        <input type="radio" name="not_private" value="not_private" style="margin-left:0"></input>
+        <label for="not_private">Not Private</label><br>
+        <br>
+        <button type="submit" class="w3-btn w3-green">Upload</button>
 
-      }
-      catch(err) {
-        console.log(err);
-      }
-      // write to database here
     }
+
+      // p5 copied code not using now but may be useful in save_audio()
+      // try {
+      //   let soundBlob = soundFile.getBlob();
+      //   let serverUrl = 'http://jsonplaceholder.typicode.com/posts';
+      //   let httpRequestOptions = {
+      //     method: 'POST',
+      //     body: new FormData().append('soundBlob', soundBlob),
+      //     headers: new Headers({
+      //       'Content-Type': 'multipart/form-data'
+      //     })
+      //   };
+      //   httpDo(serverUrl, httpRequestOptions);
+
+      // }
+      // catch(err) {
+      //   console.log(err);
+      // }
+      // write to database here
+    
     // timeIt is a remnant from upload audio. May need it later
     function timeIt() {
       // 1 counter = 0.1 second

@@ -150,7 +150,8 @@
       }
       // write to database here
     }
-
+    // used to show a stopwatch while recording -probably not needed, 
+    // if responsiveness lags, try removing it and seeing if responsiveness is improved
     function timeIt() {
       // 1 counter = 0.1 second
       recording_time++;
@@ -204,8 +205,7 @@
       </div>
     </div>
 
-    <!-- onsubmit="return validatePage()" form -- NOT AT ALL DONE -->
-    <!-- add a hidden field to grab fileToUpload or soundFile (soundFile blob?)  -->
+    <!-- onsubmit="return validatePage()" form -- NOT DONE, so makes execution stop, took it out -->
     <br><br><br><br><br><br><br><br>
     <div class="w3-half">
       <form class="audioForm" action="/ajax_postUploadAudio/"  method="post" style="float: left; margin-left: 5vh;">
