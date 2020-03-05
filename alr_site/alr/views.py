@@ -18,9 +18,9 @@ from .models import BigAudio, Speaker, Language, Review, AudioTrim, Comment, Mea
 from . import alr
 
 import datetime
-import logging
+#import logging
 # testing logging functions
-logger = logging.getLogger(__name__)
+#logger = logging.getLogger(__name__)
 # Create your views here.
 
 def get_data(self, column):

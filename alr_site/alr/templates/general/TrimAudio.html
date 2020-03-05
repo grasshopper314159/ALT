@@ -52,6 +52,7 @@
     let drawBoxList = [];
     let clipBoxColor = 'rgba(0,255,0, 0.25)';
     let dragging = false;
+    let bigAudioId;
 
     //********************** main p5 functions **********************************
 
@@ -93,6 +94,14 @@
       fill(0,0,0);  //draws in black
       console.log('setup2'); // for debugging
       makePeaks(soundFile);
+      // cut and paste this in to prefill big_audio id for form submitting
+      // needs testing
+//      window.onload = function(){
+  console.log("bigAudioId:  ", bigAudioId)
+  console.log("bigAudioIdType:  ", typeof(bigAudioId))
+      document.getElementById('formBigAudioID').value = bigAudioId;
+//      };
+
     }
     // DRAW  Runs ~50 to 60 times per second
 		function draw() {
@@ -290,9 +299,11 @@
       // to indicate it has been saved
       if (clipState === myE.DONE) {
         //clipState = myE.SAVED;  // not sure where to put this yet
-        makeBox()  //Really makeBox coordinaes.  Box is drawn in draw() (box corners are created in this function)
+        makeBox()  //Really makeBox coordinaes.  Box is drawn in draw() (box corners are created in this function)        
+        //javascript to click the submit button?
       }
-      //javascript to click the submit button?
+      
+      
 
 
     }
@@ -320,8 +331,7 @@
     function timeIt() {
       // 1 counter = 0.1 second
       recording_time++;
-    }
-
+    } 
   </script>
   <!--  end of script *****************************************************************************-->
   <style>
@@ -429,21 +439,28 @@
     </div>
     <div class="w3-container">
       <div class="w3-half">
-        <br>
-        <label>Title</label>
-        <br>
-        <textarea style="vertical-align: middle;"></textarea>
+
+        <!-- <label>Hide me!  (Big-audio id for posting)</label><br> -->
+        <input type="hidden" id="formBigAudioID" name="big_audio_id" required></input>
         <br><br>
         <label style="padding: 13px;">Text (original)</label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="75"></textarea>
+        <textarea name="original_text" style="vertical-align: middle;" rows="3" cols="75"></textarea>
         <br><br>
         <label style="padding: 13px;">Text (English)</label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="75"></textarea>
+        <textarea name="english_text" style="vertical-align: middle;" rows="3" cols="75"></textarea>
+
         <br><br>
-        <label style="padding: 13px;">Language</label><br>
-        <textarea style="vertical-align: middle;"></textarea>
+        <label style="padding: 13px;">Score (optional)</label><br>
+        <input type="text" name="score" style="vertical-align: middle;"></input>
         <br><br>
-        <a href="/viewData/" class="w3-btn w3-green">Finish Editing</a>
+        <label style="padding: 13px;">Word Count</label><br>
+        <input type="text" name="word_count" style="vertical-align: middle;"></input>
+        <br><br>
+        <!-- TO DO: make this auto-filled  -->
+        <label style="padding: 13px;">Length</label><br>
+        <input type="text" name="length" style="vertical-align: middle;"></input>
+        <br><br>
+        <button type="submit" class="w3-btn w3-green" id="formUploadButton">Upload Audio Clip</button>
       </div>
     </div>
   </div>
@@ -451,36 +468,3 @@
 </html>
 
 
-
-<form class="audioTrimForm" action="/ajax_postTrimAudio/"  method="post" style="float: left; margin-left: 5vh;">
-  <label style="font-weight: bold">Choose a File to Upload:</label>
-  <br>
-  <input class="w3-bar-item" type="file" name="fileToUpload" id="fileToUpload" style="margin-left:0;"></input>
-  <br><br>
-  <!-- <label style="text-align: center;">Speaker</label> -->
-  <!-- <br> -->
-  <label>Speaker First Name</label><br>
-  <input name="fileSpeakerFirst" style="vertical-align: middle;" rows="3" cols="70"></input>
-  <br><br>
-  <label>Speaker Last Name</label><br>
-  <input name="fileSpeakerLast" style="vertical-align: middle;" rows="3" cols="70"></input>
-  <br><br>
-  <br><br>
-  <label>Text (Original)</label><br>
-  <textarea name="original_text" style="vertical-align: middle;" rows="3" cols="70"></textarea>
-  <br><br>
-  <label>Text (English)</label><br>
-  <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
-  <br><br>
-  <label>Language</label><br>
-  <!-- <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>  -->
-  <!-- make dropdown?  try English or 1-->
-  <input type="text" placeholder="Enter Language" name="fileLanguageId" required></input>
-
-  <br><br>
-  <input type="radio" name="private" value="private" style="margin-left:0"></input>
-  <label for="private">Private</label><br>
-  <input type="radio" name="not_private" value="not_private" style="margin-left:0"></input>
-  <label for="not_private">Not Private</label><br>
-  <br>
-  <button type="submit" class="w3-btn w3-green">Upload</button>

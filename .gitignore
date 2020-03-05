@@ -1,4 +1,9 @@
 
 *.pyc
+<<<<<<< HEAD
+*.log
+*.gitignore
+=======
 
 *.log
+>>>>>>> nate
