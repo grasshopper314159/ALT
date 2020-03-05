@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User as user_account
+from django.core.files import File
+from django.core.files.storage import default_storage
+import os
 
 class User(models.Model):
     id = models.OneToOneField(user_account, primary_key=True, on_delete=models.CASCADE)
@@ -16,7 +19,7 @@ class User(models.Model):
 
 def file_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return 'bigAudioFile_{0}/{1}'.format(instance.id, filename)
+    return 'user_{0}_big/{1}'.format(instance.owner_id.id.id, filename)
 
 
 class BigAudio(models.Model):

@@ -1,7 +1,7 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, permission_required
-
 from django.contrib.auth.models import User, Permission, Group
 from django.contrib.contenttypes.models import ContentType
 from django.core.serializers import serialize
@@ -9,6 +9,7 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+import os
 
 from .models import User as alr_user
 from .models import BigAudio, Speaker, Language, Review, AudioTrim, Comment, Measurements, Class, Assignment
@@ -61,8 +62,8 @@ def display_uploadAudio(request):
         return redirect_home(request)
 
 # @login_required(login_url='/home/')
-def display_trimAudio(request):
-    return render(request, 'general/TrimAudio.html')
+# def display_trimAudio(request):
+#     return render(request, 'general/TrimAudio.html')
 
 # @login_required(login_url='/home/')
 # for alr.hs.umt.edu/rateData/ as url
@@ -303,9 +304,20 @@ def ajax_postUploadAudio(request):
         if request.method == 'POST':
             fileOwner = alr_user.objects.get(id=User.objects.get(email=str(request.user)))
 
+            fileFile = request.FILES['fileToUpload']
+            # print(fileFile)
+            import wave as wv
+            import math
+            f = wv.open(fileFile)
+            secs = f.getnframes() / f.getframerate()
+            secs = math.ceil(secs)
+            l = '0' + str(datetime.timedelta(seconds=secs))
+            # print(l)
 
-            fileFile = request.POST['fileToUpload']
-            #fileLength = request.POST['fileLength']
+            # print(wv.open(fileFile).getnframes())
+
+            # print(fileFile)
+            # print(fileFile.duration)
             fileLength = "00:01:03"
             fileSpeakerFirst = request.POST['fileSpeakerFirst']
             fileSpeakerLast = request.POST['fileSpeakerLast']
@@ -321,6 +333,7 @@ def ajax_postUploadAudio(request):
                 print("Failed to get speaker")
                 print(e)
             else:
+                # TODO: Finish This
                 # add speaker to DB
                 try:
                     pass
@@ -335,15 +348,18 @@ def ajax_postUploadAudio(request):
                     # newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=None)
                     # newSpeaker.save()
                     # fileSpeakerId = newSpeaker
-            big_audio = BigAudio(sound_file=fileFile, length = fileLength, owner_id=fileOwner, speaker_id=fileSpeakerId, language_id=fileLanguageId)
-            big_audio.save()
-            # print(big_audio.sound_file.upload_to)
 
-            active_messages["audioTrim"] = 'media/bigAudioFile_' + str(big_audio.id) + '/' + str(fileFile)
-            print(active_messages["audioTrim"])
-            # print(big_audio.getPath)
-            # active_messages["audioTrim"] = str(1) + ' ' + str('artica_0003.wav')
-            return redirect("/trimAudio/")
+            if not os.path.isfile(settings.MEDIA_ROOT + 'user_' + str(request.user.id) + '_big/' + str(fileFile)):
+                big_audio = BigAudio(sound_file=fileFile, length = fileLength, owner_id=fileOwner, speaker_id=fileSpeakerId, language_id=fileLanguageId)
+                big_audio.save()
+                active_messages["trimAudio"] = 'user_' + str(request.user.id) + '_big/' + str(fileFile)
+            else:
+                active_messages["trimAudio"] = 'File with that name already exists'
+                return redirect('/uploadAudio/')
+            # print(settings.MEDIA_ROOT + 'user_' + str(request.user.id) + 'big/' + str(fileFile))
+            # print(active_messages["trimAudio"])
+            # print(settings.MEDIA_ROOT + active_messages["trimAudio"])
+            return redirect('/trimAudio/')
 
 def ajax_postTrimAudio(request):
     pass

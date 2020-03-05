@@ -13,10 +13,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   {% load static %}
   <!-- localized stylesheets -->
-  <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>  
+  <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>
   <!--  start of script *****************************************************************************
-    p5 will automatically call preload, setup and draw.  Draw is called ~50-60 times per second  
-    p5 may not play well with other javascript code.  It has a lot of global variables.  It is 
+    p5 will automatically call preload, setup and draw.  Draw is called ~50-60 times per second
+    p5 may not play well with other javascript code.  It has a lot of global variables.  It is
     possible to run in instance mode to mitigate this, if necessary (see p5 website)  -->
 
   <script >
@@ -61,13 +61,13 @@
       function draw() {
         getAudioContext().resume()
         background(audio_background_color);
-        
+
         text(audio_message, 20, 40);
         if (recording_time == 0) {
           second_str = 0;
           tenths_str = 0; }
-        else if (recording_time/10 < 0) { 
-          second_str = "  "; 
+        else if (recording_time/10 < 0) {
+          second_str = "  ";
           tenths_str = recording_time%10;}
         else {
           second_str = parseInt(recording_time/10);
@@ -123,12 +123,12 @@
         audio_message = 'Playing.';
         soundFile.play();
         soundFile.playMode("restart")
-        soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})  
-        state = 2;       
+        soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})
+        state = 2;
       }
     }
 
-    // This function just has some code I copied from p5.  No clue if it is even a 
+    // This function just has some code I copied from p5.  No clue if it is even a
     // good starting point
     function save_audio() {
       print(state);
@@ -150,7 +150,7 @@
       }
       // write to database here
     }
-    // used to show a stopwatch while recording -probably not needed, 
+    // used to show a stopwatch while recording -probably not needed,
     // if responsiveness lags, try removing it and seeing if responsiveness is improved
     function timeIt() {
       // 1 counter = 0.1 second
@@ -210,10 +210,10 @@
           -post textarea fields
           - make submission possible for recorded audio
     -->
-    
+
     <br><br><br><br><br><br><br><br>
     <div class="w3-half">
-      <form class="audioForm" action="/ajax_postUploadAudio/"  method="post" style="float: left; margin-left: 5vh;">
+      <form class="audioForm" action="/ajax_postUploadAudio/" enctype="multipart/form-data"  method="post" style="float: left; margin-left: 5vh;">
         <label style="font-weight: bold">Choose a File to Upload:</label>
         <br>
         <input class="w3-bar-item" type="file" name="fileToUpload" id="fileToUpload" style="margin-left:0;"></input>
@@ -237,7 +237,7 @@
         <!-- <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>  -->
         <!-- make dropdown?  try English or 1-->
         <input type="text" placeholder="Enter Language" name="fileLanguageId" required></input>
-        
+
         <br><br>
         <input type="radio" name="private" value="private" style="margin-left:0"></input>
         <label for="private">Private</label><br>
@@ -275,7 +275,7 @@
           <i class="fa fa-save fa-3x" aria-hidden="true" onclick="save_audio()"></i>
           <h4 id="fancyText">SAVE</h4>
         </div>
-      </div>     
+      </div>
     </div>
   </div>
 </body>

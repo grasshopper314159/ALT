@@ -127,9 +127,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = os.path.join(BASE_DIR, 'alr/static/')
-# Media URL connot be within static 
-# MEDIA_URL = os.path.join(STATIC_URL, 'media/')
-MEDIA_ROOT = os.path.join(STATIC_URL, 'media/')
+# Media URL connot be within static
+MEDIA_URL = os.path.join(BASE_DIR, 'alr/media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'alr/media/')
 
 
 LOGGING = {
