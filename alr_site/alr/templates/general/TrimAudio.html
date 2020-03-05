@@ -52,6 +52,7 @@
     let drawBoxList = [];
     let clipBoxColor = 'rgba(0,255,0, 0.25)';
     let dragging = false;
+    let bigAudioId;
 
     //********************** main p5 functions **********************************
 
@@ -66,6 +67,7 @@
       console.log(message)
       console.log(message[1])
       console.log(typeof(message))
+      bigAudioId = message[0]
       // prefix = "{% static '/bigAudioFiles/"'%}"   + message[0] + "/"
       soundFile = loadSound("{% static '/sounds/'%}" + message[1]);
       '{% endfor %}'
@@ -86,6 +88,14 @@
       fill(0,0,0);  //draws in black
       console.log('setup2'); // for debugging
       makePeaks(soundFile);
+      // cut and paste this in to prefill big_audio id for form submitting
+      // needs testing
+//      window.onload = function(){
+  console.log("bigAudioId:  ", bigAudioId)
+  console.log("bigAudioIdType:  ", typeof(bigAudioId))
+      document.getElementById('formBigAudioID').value = bigAudioId;
+//      };
+
     }
     // DRAW  Runs ~50 to 60 times per second
 		function draw() {
@@ -284,8 +294,9 @@
       if (clipState === myE.DONE) {
         //clipState = myE.SAVED;  // not sure where to put this yet
         makeBox()  //Really makeBox coordinaes.  Box is drawn in draw() (box corners are created in this function)        
+        //javascript to click the submit button?
       }
-      //javascript to click the submit button?
+      
       
 
     }
@@ -313,8 +324,7 @@
     function timeIt() {
       // 1 counter = 0.1 second
       recording_time++;
-    }
-
+    } 
   </script>
   <!--  end of script *****************************************************************************-->
   <style>
@@ -422,21 +432,28 @@
     </div>
     <div class="w3-container">
       <div class="w3-half">
-        <br>
-        <label>Title</label>
-        <br>
-        <textarea style="vertical-align: middle;"></textarea>
+
+        <!-- <label>Hide me!  (Big-audio id for posting)</label><br> -->
+        <input type="hidden" id="formBigAudioID" name="big_audio_id" required></input>
         <br><br>
         <label style="padding: 13px;">Text (original)</label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="75"></textarea>
+        <textarea name="original_text" style="vertical-align: middle;" rows="3" cols="75"></textarea>
         <br><br>
         <label style="padding: 13px;">Text (English)</label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="75"></textarea>
+        <textarea name="english_text" style="vertical-align: middle;" rows="3" cols="75"></textarea>
+
         <br><br>
-        <label style="padding: 13px;">Language</label><br>
-        <textarea style="vertical-align: middle;"></textarea>
+        <label style="padding: 13px;">Score (optional)</label><br>
+        <input type="text" name="score" style="vertical-align: middle;"></input>
         <br><br>
-        <a href="/viewData/" class="w3-btn w3-green">Finish Editing</a>
+        <label style="padding: 13px;">Word Count</label><br>
+        <input type="text" name="word_count" style="vertical-align: middle;"></input>
+        <br><br>
+        <!-- TO DO: make this auto-filled  -->
+        <label style="padding: 13px;">Length</label><br>
+        <input type="text" name="length" style="vertical-align: middle;"></input>
+        <br><br>
+        <button type="submit" class="w3-btn w3-green" id="formUploadButton">Upload Audio Clip</button>
       </div>
     </div>
   </div>
