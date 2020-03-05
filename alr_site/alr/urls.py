@@ -41,7 +41,7 @@ urlpatterns = [
     url(r'^ajax_postUploadAudio/$', views.ajax_postUploadAudio, name='ajax_postUploadAudio'),
 
     url(r'^ajax/postRating/$', views.ajax_postRating, name='ajax_postRating'),
-    url(r'^ajax/postUploadAudio/$', views.ajax_postUploadAudio, name='ajax_postUploadAudio'),
+    url(r'^ajax/postTrimAudio/$', views.ajax_postTrimAudio, name='ajax_postTrimAudio'),
     url(r'^ajax/createEval/$', views.ajax_createEval, name='ajax_createEval'),
 
     # url(r'^ajax/registerUser/$', views.ajax_CreateUser, name='display_create_user'),
