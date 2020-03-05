@@ -323,20 +323,23 @@ def ajax_postUploadAudio(request):
             else:
                 # add speaker to DB
                 try:
+                    pass
                     # if new speaker is already a user
-                    newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=alr_user.objects.get(id=User.objects.get(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)))
-                    newSpeaker.save()
-                    fileSpeakerId = newSpeaker
+                    # newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=alr_user.objects.get(id=User.objects.get(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)))
+                    # newSpeaker.save()
+                    # fileSpeakerId = newSpeaker
                 except Exception as e:
                     raise
                 else:
-                    newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=None)
-                    newSpeaker.save()
-                    fileSpeakerId = newSpeaker
+                    pass
+                    # newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=None)
+                    # newSpeaker.save()
+                    # fileSpeakerId = newSpeaker
             big_audio = BigAudio(sound_file=fileFile, length = fileLength, owner_id=fileOwner, speaker_id=fileSpeakerId, language_id=fileLanguageId)
             big_audio.save()
 
-            #active_messages["audioTrim"] = str(big_audio.id) + ' ' + str('fileFile.name')
+            #active_messages["audioTrim"] = '' + str(big_audio.id) + ' ' + str('fileFile.name')
+            print(big_audio.filename)
             active_messages["audioTrim"] = str(1) + ' ' + str('artica_0003.wav')
             return redirect("/trimAudio/")
 
