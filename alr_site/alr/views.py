@@ -360,6 +360,11 @@ def ajax_postUploadAudio(request):
             # print(active_messages["trimAudio"])
             # print(settings.MEDIA_ROOT + active_messages["trimAudio"])
             return redirect('/trimAudio/')
+        else:
+            redirect('/uploadAudio/')
+    else:
+        redirect('/uploadAudio/')
+
 
 def ajax_postTrimAudio(request):
     pass
