@@ -305,7 +305,7 @@ def ajax_postUploadAudio(request):
             fileOwner = alr_user.objects.get(id=User.objects.get(email=str(request.user)))
 
             fileFile = request.FILES['fileToUpload']
-            # print(fileFile)
+            print(fileFile)
             import wave as wv
             import math
             f = wv.open(fileFile)
@@ -355,7 +355,7 @@ def ajax_postUploadAudio(request):
                 active_messages["trimAudio"] = 'user_' + str(request.user.id) + '_big/' + str(fileFile)
             else:
                 active_messages["trimAudio"] = 'File with that name already exists'
-                return redirect('/uploadAudio/')
+                #return redirect('/uploadAudio/')
             # print(settings.MEDIA_ROOT + 'user_' + str(request.user.id) + 'big/' + str(fileFile))
             # print(active_messages["trimAudio"])
             # print(settings.MEDIA_ROOT + active_messages["trimAudio"])
