@@ -164,11 +164,11 @@
       if ((state === 1 || state === 2) && mic.enabled) {
         $(element).toggleClass('far fa-stop-circle');
         var record_text = document.getElementById('record_text');
-        if (record_text.innerHTML === "RECORD") {
-          record_text.innerHTML = "STOP";
+        if (record_text.innerHTML === "Record") {
+          record_text.innerHTML = "Stop";
         }
         else {
-          record_text.innerHTML = "RECORD";
+          record_text.innerHTML = "Record";
         }
       }
     }
@@ -254,9 +254,9 @@
         <input type="text" placeholder="Enter Language" name="fileLanguageId" required></input>
 
         <br><br>
-        <input type="radio" name="private" value="private" style="margin-left:0"></input>
+        <input type="radio" name="privacy" value="private" style="margin-left:0"></input>
         <label for="private">Private</label><br>
-        <input type="radio" name="not_private" value="not_private" style="margin-left:0"></input>
+        <input type="radio" name="privacy" value="not_private" style="margin-left:0"></input>
         <label for="not_private">Not Private</label><br>
         <br>
         <button type="submit" class="w3-btn w3-green">Upload</button>
@@ -280,15 +280,15 @@
       <div class="w3-bar">
         <div class="w3-btn" style="margin-left: 10vh">
           <i id="record" class="fa fa-microphone fa-3x" aria-hidden="true" onclick="record(); toggleStop(this)"></i>
-          <h4 id="record_text" class="fancyText">RECORD</h4>
+          <h4 id="record_text" class="fancyText">Record</h4>
         </div>
         <div class="w3-btn" style="text-align:center;">
           <i class="fa fa-play-circle-o fa-3x fancyText" aria-hidden="true" onclick="play()"></i>
-          <h4 class="fancyText">PLAY</h4>
+          <h4 class="fancyText">Play</h4>
         </div>
         <div class="w3-btn" style="margin-right: 10vh">
           <i class="fa fa-save fa-3x fancyText" aria-hidden="true" onclick="save_audio()"></i>
-          <h4 class="fancyText">SAVE</h4>
+          <h4 class="fancyText">Save</h4>
         </div>
       </div>
     </div>
