@@ -296,7 +296,7 @@ def ajax_logoutUser(request):
     active_messages['home'] = 'You are logged out'
     return redirect('/home/')
 
-# this is not even close to being done
+# For uploading files
 @csrf_exempt
 @login_required(login_url='/home/')
 def ajax_postUploadAudio(request):
@@ -370,6 +370,77 @@ def ajax_postUploadAudio(request):
 def ajax_postTrimAudio(request):
     pass
 
+#/ajax/postRecordedAudio
+#*******************************************   FOr uploading recordings (same as uploading files) ************************
+
+@csrf_exempt
+@login_required(login_url='/home/')
+def ajax_postRecordedAudio(request):
+    if is_user_type(request, ['ADMIN','research_user'], OR=True):
+        if request.method == 'POST':
+            fileOwner = alr_user.objects.get(id=User.objects.get(email=str(request.user)))
+
+            fileFile = request.FILES['recordingToUpload']
+            print(fileFile)
+            import wave as wv
+            import math
+            f = wv.open(fileFile)
+            secs = f.getnframes() / f.getframerate()
+            secs = math.ceil(secs)
+            l = '0' + str(datetime.timedelta(seconds=secs))
+            # print(l)
+
+            # print(wv.open(fileFile).getnframes())
+
+            # print(fileFile)
+            # print(fileFile.duration)
+            fileLength = "00:01:03"
+            fileSpeakerFirst = request.POST['fileSpeakerFirst']
+            fileSpeakerLast = request.POST['fileSpeakerLast']
+            fileSpeakerId = None
+            # TODO: Add langauge if new language given
+            fileLanguageId = Language.objects.get(name=request.POST['fileLanguageId'])
+
+            try:
+                # if speaker in db already
+                fileSpeakerId = Speaker.objects.get(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)
+            except Exception as e:
+                pass
+                print("Failed to get speaker")
+                print(e)
+            else:
+                # TODO: Finish This
+                # add speaker to DB
+                try:
+                    pass
+                    # if new speaker is already a user
+                    # newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=alr_user.objects.get(id=User.objects.get(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)))
+                    # newSpeaker.save()
+                    # fileSpeakerId = newSpeaker
+                except Exception as e:
+                    raise
+                else:
+                    pass
+                    # newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=None)
+                    # newSpeaker.save()
+                    # fileSpeakerId = newSpeaker
+
+            if not os.path.isfile(settings.MEDIA_ROOT + 'user_' + str(request.user.id) + '_big/' + str(fileFile)):
+                big_audio = BigAudio(sound_file=fileFile, length = fileLength, owner_id=fileOwner, speaker_id=fileSpeakerId, language_id=fileLanguageId)
+                big_audio.save()
+                active_messages["trimAudio"] = 'user_' + str(request.user.id) + '_big/' + str(fileFile)
+            else:
+                active_messages["trimAudio"] = 'File with that name already exists'
+                #return redirect('/uploadAudio/')
+            # print(settings.MEDIA_ROOT + 'user_' + str(request.user.id) + 'big/' + str(fileFile))
+            # print(active_messages["trimAudio"])
+            # print(settings.MEDIA_ROOT + active_messages["trimAudio"])
+            active_messages["trimAudio"] = 'File succesfully uploaded'
+            return redirect('/trimAudio/')
+        else:
+            redirect('/uploadAudio/')
+    else:
+        redirect('/uploadAudio/')
 
 #end of ajax calls
 
