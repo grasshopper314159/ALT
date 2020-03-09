@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-  <!-- Load p5 library from CDN,  -->
+  {% load static %}
+	<script src="{% static '/js/p5.js'%}"></script>
+	<script src="{% static '/js/addons/p5.sound.js'%}"></script>
+	<script src="{% static '/js/addons/p5.dom.js'%}"></script>
+  <!-- Load p5 library from CDN, 
   <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.sound.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.sound.js"></script> -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,7 +16,6 @@
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  {% load static %}
   <!-- localized stylesheets -->
   <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>
   <!--  start of script *****************************************************************************
@@ -132,8 +135,11 @@
     // This function just has some code I copied from p5.  No clue if it is even a
     // good starting point  Called by the icon with a disk
     function save_audio() {
-      console.log("save_audio()")
-      print(state);
+      console.log("save_audio()");
+      console.log(typeof(soundFile));
+      //getMethods = (obj) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function')
+      getMethods = (obj) => Object.getOwnPropertyNames(obj);
+      console.log(getMethods(soundFile));
       try {
         let soundBlob = soundFile.getBlob();
         // let serverUrl = 'http://jsonplaceholder.typicode.com/posts';
@@ -145,11 +151,16 @@
         //   })
         // };
         // httpDo(serverUrl, httpRequestOptions);
+        // This command always gives me: DOMException: Failed to set the 'value' property on 'HTMLInputElement': This input 
+        // element accepts a filename, which may only be programmatically set to the empty string.
+        // I think we will have to build off of the above code to submit the form and not rely on the http submit
         document.getElementById('recordingToUpload').value = soundBlob;
 
       }
       catch(err) {
-        print(err)
+        console.log(err);
+        console.log(soundFile);
+        console.log("Error in save_audio()");
       }
       // write to database here
     }
@@ -316,7 +327,7 @@
           <br>
           <br><br>
           <!-- <label style="text-align: center;">Speaker</label> -->
-          <input class="w3-bar-item" type="hidden" name="recordingToUpload" id="recordingToUpload" style="margin-left:0;"></input>
+          <input class="w3-bar-item" type="file" name="recordingToUpload" id="recordingToUpload" style="margin-left:0;"></input>
           <!-- <input type="hidden" id="formBigAudioID" name="big_audio_id" required></input> -->
           <!-- <br> -->
           <label>Speaker First Name</label><br>
