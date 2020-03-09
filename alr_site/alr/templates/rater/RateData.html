@@ -39,6 +39,16 @@
        overflow-y: scroll;
        height: 100%;
      }
+     #ratingTable {
+       width: 99%;
+     }
+     #submitRatings {
+       float: right;
+       margin-right: 1.5vh;
+     }
+     #ratingContainer {
+       border-radius: 25px;
+     }
      #ratingBox {
        display: inline-block;
        padding: 0;
@@ -47,10 +57,19 @@
        border-radius: 25px;
        border: solid 1px grey;
      }
+     #ratings {
+       text-align: center;
+       width: 95%;
+     }
      #uploadButton {
        margin-bottom: 1em;
        border: 2px solid black;
        border-radius: 4px;
+     }
+     
+     /*Reduce space between text elements*/
+     p {
+       margin: 0;
      }
   </style>
 </head>
@@ -69,8 +88,8 @@
           {% if user.is_authenticated %}
           <a href="/viewData/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
           <a href="/uploadAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
-          <a href="/userManagement/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">User Management</a>
-          <a href="/rateData/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Rate Data</a>
+          <a href="/shareAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Share Audio</a>
+          <a href="/rateData/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge" id="currentButton">Rate Data</a>
           <!--Need this here for UI testing. Will change later.-->
           {% endif %}
           <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
@@ -91,22 +110,22 @@
       </div>
     </div>
 
-    <div class="w3-container">
+    <div class="w3-container"  style="margin-top: 18vh;">
       <!-- container to enclose the rest of the body, to add margins -->
       <br>
       <div class="w3-col" style="width:150px">
-        <label style="padding:5px">Search</label>
+        <label>Search</label>
         <input class="w3-input w3-border w3-animate-input" type="text">
       </div>
       <!--close search area-->
       <div class="w3-rest w3-center">
-        <h2>Rate Data</h2>
+        <h2 id="simpleHeader">Rate Data</h2>
       </div>
       <!--close heading-->
 
-      <div class="w3-responsive" style="padding: 5px; margin-top: 10vh;">
+      <div class="w3-responsive">
         <div class="w3-twothird">
-          <table class="w3-table-all" style="width: 99%">
+          <table class="w3-table-all" id="ratingTable">
             <thead>
               <tr>
                 <th class='w3-center'>Speaker</th>
@@ -130,33 +149,36 @@
               </tr>
             </tbody>
           </table>
-          <button class="w3-button w3-med w3-white w3-border w3-round" style="margin-left:50vw;" onclick="fake_messsage()">Submit Changes</button>
+          <button class="w3-button w3-med w3-white w3-border w3-round" id="submitRatings" onclick="fake_messsage()">Submit Changes</button>
 
         </div>
         <!--close table three quarter-->
-        <div id="ratingContainer" class="w3-third w3-white hide" style="border-radius: 25px;">
+        <div id="ratingContainer" class="w3-third w3-white hide">
           <div class="w3-container" id="ratingBox">
             <!-- <form class="" action="ajax/postRating/" method="POST"> -->
-            <div id="Rate_0" class="hide" style="padding: 0px; width: 100%;">
-              <h6 style="text-align: center">
+            <div id="Rate_0" class="hide">
+              <h6>
                 <b class="w3-third">Speaker</b>
-                <b class="w3-third">|</b>
-                <b class="w3-third">Researcher</b>
+                <b class="w3-third" style="float: right">Researcher</b>
               </h6>
-              <h6 style="text-align: center">
+              <br>
+              <h6>
                 <b class="w3-third">Speaker-Name</b>
-                <b class="w3-third">|</b>
-                <b class="w3-third">Researcher-Name</b>
+                <b class="w3-third" style="float: right">Researcher-Name</b>
               </h6>
-              <div>
-                <p class="w3-third">1 <br> Not native-like</p>
-                <p class="w3-third">4 <br> Moderately native-like</p>
-                <p class="w3-third">7 <br> Native-like</p>
-              </div>
+              <br>
+              <hr class="w3-border">
+              <p class="w3-third">Not native-like</p>
+              <p class="w3-third">Moderately native-like</p>
+              <p class="w3-third">Native-like</p>
+              <p class="w3-third">1</p>
+              <p class="w3-third">4</p>
+              <p class="w3-third">7</p>
               <!--close input (play button) div-->
               <div>
                 <div class="w3-bar">
-                  <table>
+                  <hr class="w3-border">
+                  <table id="ratings">
                     <thead>
                       <tr>
                         <th><b style="margin-left:2em">1</b></th>

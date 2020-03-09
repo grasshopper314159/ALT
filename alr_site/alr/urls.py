@@ -17,7 +17,7 @@ urlpatterns = [
     # researcher URLs
     url(r'^viewData/$', views.display_viewData, name='display_viewData'),
     url(r'^uploadAudio/$', views.display_uploadAudio, name='display_uploadAudio'),
-    url(r'^userManagement/$', views.display_userManagement, name='display_userManagement'),
+    url(r'^shareAudio/$', views.display_shareAudio, name='display_shareAudio'),
     url(r'^trimAudio/$', views.display_trimAudio, name='display_trimAudio'),
     url(r'^createEval/$', views.display_createEval, name='display_createEval'),
 

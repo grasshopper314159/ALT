@@ -1,10 +1,5 @@
 <!DOCTYPE html>
-
-
-
-
 <html lang="en" dir="ltr">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -111,9 +106,9 @@ function sortTable(n) {
         <div class="w3-bar w3-card w3-center" id="navigationButtons">
           <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
           {% if user.is_authenticated %}
-          <a href="/viewData/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
+          <a href="/viewData/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge" id="currentButton">View Data</a>
           <a href="/uploadAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
-          <a href="/userManagement/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">User Management</a>
+          <a href="/shareAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Share Audio</a>
           <a href="/rateData/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Rate Data</a> <!--Need this here for UI testing. Will change later.-->
           {% endif %}
           <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
@@ -143,7 +138,7 @@ function sortTable(n) {
       </div>
       <!--close search area-->
       <div class="w3-rest w3-center">
-        <h2>Student Audio Recordings</h2>
+        <h2 id="simpleHeader">Student Audio Recordings</h2>
       </div>
       <!--close heading-->
       <div class="w3-responsive">
@@ -152,7 +147,7 @@ function sortTable(n) {
             <thead>
               <tr class="w3-light-grey">
                 <th class='text-center'> </th>
-                <th class='text-center' onclick="sortTable(1)">Owner</th>
+                <th class='text-center' onclick="sortTable(1)">File Owner</th>
                 <th class='text-center' onclick="sortTable(2)">Speaker</th>
                 <th class='text-center' onclick="sortTable(3)">Word (Orig)</th>
                 <th class='text-center' onclick="sortTable(4)">Word (Eng)</th>

@@ -38,7 +38,7 @@ active_messages = {'home': '',
                    'rateData': '',
                    'uploadAudio': '',
                    'trimAudio': '',
-                   'userManagement': '',
+                   'shareAudio': '',
                    'createEval': '',
                    }
 
@@ -71,12 +71,12 @@ def display_rateData(request):
     request = check_message(request, 'rateData')
     return render(request, 'rater/RateData.html')
 
-# for alr.hs.umt.edu/userManagement/ as url
+# for alr.hs.umt.edu/ShareAudio/ as url
 @login_required(login_url='/home/')
-def display_userManagement(request):
+def display_shareAudio(request):
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
-        request = check_message(request, 'userManagement')
-        return render(request, 'researcher/UserManagement.html')
+        request = check_message(request, 'shareAudio')
+        return render(request, 'researcher/ShareAudio.html')
     else:
         return redirect_home(request)
 

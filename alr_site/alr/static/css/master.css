@@ -66,6 +66,10 @@ td, th {
   border: 1px solid black;
 }
 
+#currentButton {
+  background-color: #B22222;
+}
+
 /*Forms*/
 /*Login*/
 .loginForm {

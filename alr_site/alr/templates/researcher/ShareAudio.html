@@ -33,7 +33,7 @@
           {% if user.is_authenticated %}
           <a href="/viewData/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
           <a href="/uploadAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
-          <a href="/userManagement/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">User Management</a>
+          <a href="/shareAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge" id="currentButton">Share Audio</a>
           <a href="/rateData/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Rate Data</a> <!--Need this here for UI testing. Will change later.-->
           {% endif %}
           <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
@@ -57,14 +57,16 @@
     <div style="max-height:100%; margin-top:21vh">
       <div class="w3-container">
         <div class="w3-container">
-          <h3>Share Files with a New User</h3>
+          <h3 id="simpleHeader">Share Recordings with a Colleague</h3>
           <hr>
           <label for="idSearch">Search Users</label>
           <br>
           <input type="text" name="idSearch" value="id">
           <a href="#" class="w3-btn w3-light-green">Add</a>
         </div>
-        <br>
+        <div class="w3-rest w3-center">
+          <h2 id="simpleHeader">Added Colleagues</h2>
+        </div>
         <div>
           <table class="w3-table-all">
             <thead>
