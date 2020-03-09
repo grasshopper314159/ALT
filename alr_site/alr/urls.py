@@ -15,14 +15,14 @@ urlpatterns = [
     url(r'^home/settings$', views.display_settings, name='display_settings'),
 
     # researcher URLs
-    url(r'^viewData/$', views.display_viewData, name='display_viewData'),
+    url(r'^viewAudio/$', views.display_viewAudio, name='display_viewAudio'),
     url(r'^uploadAudio/$', views.display_uploadAudio, name='display_uploadAudio'),
     url(r'^shareAudio/$', views.display_shareAudio, name='display_shareAudio'),
     url(r'^trimAudio/$', views.display_trimAudio, name='display_trimAudio'),
     url(r'^createEval/$', views.display_createEval, name='display_createEval'),
 
     # evaluator URLs
-    url(r'^rateData/$', views.display_rateData, name='display_rateData'),
+    url(r'^rateAudio/$', views.display_rateAudio, name='display_rateAudio'),
     # for Evaluator login a simpler process
     url(r'^eval/login/$', views.display_evalLogin, name='display_evalLogin'),
 

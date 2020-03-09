@@ -19,18 +19,9 @@
         font-size: 70px;
     }
 
-    .checkboxgroup {
-        display: inline-block;
-        text-align: center;
-    }
-
-    .checkboxgroup label {
-        display: block;
-    }
-
-    .checkboxgroup input {
-      width: 13px;
-      height: 13px;
+    .radioButtons input {
+      width: 25px;
+      height: 25px;
     }
 
     #background {
@@ -79,22 +70,19 @@
     <div class="home-background">
       <div class="w3-top" id="navigationBar">
         <a href="/"><img src="{% static '/imgs/alr_example_logo.jpg'%}" class="w3-col w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" style="width:5em" alt="ALT Logo"></a>
-        <a href="/" style="text-decoration: none">
-          <h2 class="w3-rest" id="mainHeader"> Applied Language Resources </h2>
-        </a>
+        <a href="/" style="text-decoration: none"><h2 class="w3-rest" id="mainHeader"> Applied Language Resources </h2></a>
         <br>
         <div class="w3-bar w3-card w3-center" id="navigationButtons">
           <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
           {% if user.is_authenticated %}
-          <a href="/viewData/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
+          <a href="/viewAudio/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Audio</a>
           <a href="/uploadAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
           <a href="/shareAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Share Audio</a>
-          <a href="/rateData/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge" id="currentButton">Rate Data</a>
-          <!--Need this here for UI testing. Will change later.-->
+          <a href="/rateAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Rate Audio</a> <!--Need this here for UI testing. Will change later.-->
           {% endif %}
-          <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
           {% if user.is_anonymous %}
           <a href="/signUp/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Sign Up</a>
+          <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
           {% endif %}
           <div class="w3-dropdown-hover w3-hide-small w3-right  w3-xlarge">
             <button class="w3-round w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
@@ -134,7 +122,7 @@
                 <th class='w3-center'>Date</th>
                 <th class='w3-center'>Score</th>
                 <th class='w3-center'>Select to rate</th>
-                <th class='w3-center'>Submit checked <br> <input id="submit_check_all" class="w3-check" onclick="toggle_all()" type="checkbox"></th>
+                <th class='w3-center'>Ready to submit <br> <input id="submit_check_all" class="w3-check" onclick="toggle_all()" type="checkbox"></th>
               </tr>
             </thead>
             <tbody>
@@ -167,7 +155,10 @@
                 <b class="w3-third" style="float: right">Researcher-Name</b>
               </h6>
               <br>
-              <hr class="w3-border">
+              <div class="" style="border: solid 1px grey; border-radius: 5px; padding: 2px; margin: 2vh;">
+                <!-- Audio Controls -->
+                <!--Audio Controls will be here-->
+              </div>
               <p class="w3-third">Not native-like</p>
               <p class="w3-third">Moderately native-like</p>
               <p class="w3-third">Native-like</p>
@@ -177,7 +168,7 @@
               <!--close input (play button) div-->
               <div>
                 <div class="w3-bar">
-                  <hr class="w3-border">
+                  <hr class="w3-border" style="margin: 2vh;">
                   <table id="ratings">
                     <thead>
                       <tr>
@@ -190,7 +181,7 @@
                         <th><b style="margin-left:2em">7</b></th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="radioButtons">
                       <tr>
                         <td><input id="radio_0_1" type="radio" name="radiorating" value="1"></td>
                         <td><input id="radio_0_2" type="radio" name="radiorating" value="2"></td>
@@ -237,13 +228,9 @@
                       </div> -->
                 </div><!-- close radio button bar -->
               </div>
-              <div class="" style="border: solid 1px grey; border-radius: 5px; padding: 2px">
-                <!-- Audio Controls -->
-                <!--Audio Controls will be here-->
-              </div>
               <div>
                 <h3>Comments</h3>
-                <textarea rows="2" cols="30" style="border: solid 1px grey; padding: 3px; width: 90%;" placeholder="Great job!"></textarea>
+                <textarea rows="2" cols="30" style="border: solid 1px grey; padding: 3px; width: 90%;"></textarea>
               </div>
               <input type="submit" class="w3-btn w3-green" id="uploadButton" value="Save" onclick="add_rating('0')"></input>
             </div>

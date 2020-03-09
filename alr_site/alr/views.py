@@ -34,8 +34,8 @@ active_messages = {'home': '',
                    'settings':'',
                    'signup': '',
                    'evalLogin':'',
-                   'viewData': '',
-                   'rateData': '',
+                   'viewAudio': '',
+                   'rateAudio': '',
                    'uploadAudio': '',
                    'trimAudio': '',
                    'shareAudio': '',
@@ -43,12 +43,12 @@ active_messages = {'home': '',
                    }
 
 
-# for alr.hs.umt.edu/viewData/ as url
+# for alr.hs.umt.edu/viewAudio/ as url
 @login_required(login_url='/home/')
-def display_viewData(request):
+def display_viewAudio(request):
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
-        request = check_message(request, 'viewData')
-        return render(request, 'general/ViewData.html')
+        request = check_message(request, 'viewAudio')
+        return render(request, 'general/viewAudio.html')
     else:
         return redirect_home(request)
 
@@ -66,10 +66,10 @@ def display_uploadAudio(request):
 #     return render(request, 'general/TrimAudio.html')
 
 # @login_required(login_url='/home/')
-# for alr.hs.umt.edu/rateData/ as url
-def display_rateData(request):
-    request = check_message(request, 'rateData')
-    return render(request, 'rater/RateData.html')
+# for alr.hs.umt.edu/RateAudio/ as url
+def display_rateAudio(request):
+    request = check_message(request, 'rateAudio')
+    return render(request, 'rater/RateAudio.html')
 
 # for alr.hs.umt.edu/ShareAudio/ as url
 @login_required(login_url='/home/')
@@ -188,8 +188,8 @@ def ajax_createEval(request):
 def ajax_postRating(request):
     if request.method == 'POST':
         alr.updateRating(request)
-        active_messages['rateData'] = 'Your changes have been saved'
-        return redirect('/rateData/')
+        active_messages['rateAudio'] = 'Your changes have been saved'
+        return redirect('/rateAudio/')
 
 # legacy? new ajax_postUploadAudio is below
 # ajax_postUploadAudio
@@ -271,7 +271,7 @@ def ajax_loginEvalUser(request):
     if user is not None:
         login(request, user)
         active_messages['evalLogin'] = 'You have successfully logged in'
-        return redirect('/eval/RateData/')
+        return redirect('/eval/RateAudio/')
     else:
         active_messages['evalLogin'] = 'Your account was not found or Your Pin was incorrect'
         return redirect('/eval/login/')
@@ -359,6 +359,7 @@ def ajax_postUploadAudio(request):
             # print(settings.MEDIA_ROOT + 'user_' + str(request.user.id) + 'big/' + str(fileFile))
             # print(active_messages["trimAudio"])
             # print(settings.MEDIA_ROOT + active_messages["trimAudio"])
+            active_messages["trimAudio"] = 'File succesfully uploaded'
             return redirect('/trimAudio/')
         else:
             redirect('/uploadAudio/')
