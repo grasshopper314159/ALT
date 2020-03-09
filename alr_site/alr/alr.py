@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 # import all db tables
 from .models import User, BigAudio, Speaker, Language, Review, AudioTrim, Comment, Measurements, Class, Assignment
 
-
+# TODO all_trims should only retrieve trims accessible by current user.
 def GetAllAudioTrim(request):
     all_trims = AudioTrim.objects.all()
 
@@ -25,6 +25,7 @@ def GetAllAudioTrim(request):
             obj['english_text'] = (key.english_text)
             obj['score'] = (key.score)
             obj['date'] = (key.last_listened_date)
+            # key.id is the primary key for a given audio trim
             response[key.id] = obj
 
     return response

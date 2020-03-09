@@ -23,9 +23,10 @@ import datetime
 #logger = logging.getLogger(__name__)
 # Create your views here.
 
-def get_data(self, column):
-    query = UserData.objects.get(Username="Stack")
-    return getattr(query, column)
+# from nate, will remove when I remmeber why I wanted it
+# def get_data(self, column):
+#     query = UserData.objects.get(Username="Stack")
+#     return getattr(query, column)
 
 
 # Start of page views
@@ -43,7 +44,9 @@ active_messages = {'home': '',
                    }
 
 
-# for alr.hs.umt.edu/viewAudio/ as url
+# for alr.hs.umt.edu/viewAudio/ as URL
+# If you are not logged in, and not an admin or researcher, it will redirect to login_url
+# Called whenever the URL is accessed
 @login_required(login_url='/home/')
 def display_viewAudio(request):
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
@@ -52,7 +55,9 @@ def display_viewAudio(request):
     else:
         return redirect_home(request)
 
-# for alr.hs.umt.edu/uploadAudio/ as url
+# for alr.hs.umt.edu/uploadAudio/ as URL
+# If you are not logged in, and not an admin or researcher, it will redirect to home page
+# Called whenever the URL is accessed
 @login_required(login_url='/home/')
 def display_uploadAudio(request):
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
@@ -65,21 +70,27 @@ def display_uploadAudio(request):
 # def display_trimAudio(request):
 #     return render(request, 'general/TrimAudio.html')
 
-# @login_required(login_url='/home/')
+
 # for alr.hs.umt.edu/RateAudio/ as url
+@login_required(login_url='/home/')
 def display_rateAudio(request):
-    request = check_message(request, 'rateAudio')
-    return render(request, 'rater/RateAudio.html')
+    if is_user_type(request, ['ADMIN','eval_user'], OR=True):
+        request = check_message(request, 'rateAudio')
+        return render(request, 'rater/RateAudio.html')
+    else:
+        return redirect_home(request)
 
 # for alr.hs.umt.edu/ShareAudio/ as url
 @login_required(login_url='/home/')
 def display_shareAudio(request):
+    #TODO Add evaluators to permissions?
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
         request = check_message(request, 'shareAudio')
         return render(request, 'researcher/ShareAudio.html')
     else:
         return redirect_home(request)
 
+#For researchers to create accounts for evaluators 
 @login_required(login_url='/home/')
 def display_createEval(request):
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
@@ -105,6 +116,7 @@ def display_trimAudio(request):
 
     return render(request, 'general/TrimAudio.html')
 
+# A simplified login view for evaluator accounts made by researchers
 def display_evalLogin(request):
     request = check_message(request, 'evalLogin')
     return render(request, 'rater/RaterLink.html')
@@ -117,15 +129,16 @@ def redirect_home(request):
 # for alr.hs.umt.edu/home/ as url
 def display_home(request):
     request = check_message(request, 'home')
-    return render(request, 'public/index.html') ## TODO: change to index.html
+    return render(request, 'public/index.html') 
 
 # for alr.hs.umt.edu/home/settings as url
 @login_required(login_url='/home/')
 def display_settings(request):
     request = check_message(request, 'settings')
-    return render(request, 'general/AccountSettings.html') ## TODO: change to index.html
+    return render(request, 'general/AccountSettings.html')
 
 # for alr.hs.umt.edu/signUp/ as url
+# log_out required?
 def display_signUp(request):
     request = check_message(request, 'signup')
     return render(request, 'public/SignUp.html')
@@ -135,10 +148,12 @@ def display_aboutUs(request):
     return render(request, 'public/AboutUs.html')
 
 # not permanent
+# TODO remove when no longer used
 def display_taskBar(request):
     return render(request, 'general/TaskBar.html')
 
 # for displaying a meesage to the user
+# Attaches messages to the request from the active_messages dict
 def check_message(request, page):
     if active_messages[page] != '':
         messages.info(request, active_messages[page])
@@ -146,7 +161,13 @@ def check_message(request, page):
     return request
 # end of page views
 
-# start of permission functions # TODO: put in seperate file
+# start of permission functions # TODO: put in seperate file?
+# some accounts are have multiple roles.  OR and AND handle those cases
+# OR and AND are flags, For example, set OR to true if you want the function to return true if
+# the request comes from a user who has any of the roles given in input
+# The OR and AND flags cannot be both true  or it returns false
+
+# input can be a string or and array of strings (e.g. "ADMIN" or ["ADMIN", "researcher_user"])
 def is_user_type(request, input, OR=False, AND=False):
     if type(input) == type(''):
         return request.user.groups.filter(name=type).exists()
@@ -159,6 +180,7 @@ def is_user_type(request, input, OR=False, AND=False):
         if AND and (False not in bool):
             return True
         return False
+    return False
 
 
 # end of permission functions
@@ -296,14 +318,14 @@ def ajax_logoutUser(request):
     active_messages['home'] = 'You are logged out'
     return redirect('/home/')
 
-# For uploading files
+# For uploading files (found in uploadAudio page)
 @csrf_exempt
 @login_required(login_url='/home/')
 def ajax_postUploadAudio(request):
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
         if request.method == 'POST':
+            #compare to request.user  #nate TODO change request.files in upload recording to request.blob 
             fileOwner = alr_user.objects.get(id=User.objects.get(email=str(request.user)))
-
             fileFile = request.FILES['fileToUpload']
             print(fileFile)
             import wave as wv
@@ -348,7 +370,7 @@ def ajax_postUploadAudio(request):
                     # newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=None)
                     # newSpeaker.save()
                     # fileSpeakerId = newSpeaker
-
+            #
             if not os.path.isfile(settings.MEDIA_ROOT + 'user_' + str(request.user.id) + '_big/' + str(fileFile)):
                 big_audio = BigAudio(sound_file=fileFile, length = fileLength, owner_id=fileOwner, speaker_id=fileSpeakerId, language_id=fileLanguageId)
                 big_audio.save()
