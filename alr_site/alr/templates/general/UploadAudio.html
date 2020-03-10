@@ -267,15 +267,10 @@
         <label>Language</label><br>
         <!-- <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>  -->
         <!-- make dropdown?  try English or 1-->
-        <select type="dropdown" name="fileLanguageId" required>
-          <option value="English">English</option>
-          <option value="Blackfoot">Blackfoot</option>
-          <option value="Japanese">Japanese</option>
-          <option value="Spanish">Spanish</option>
-          <option value="French">French</option>
-          <option value="German">German</option>
-          <option value="Chinese">Chinese</option>
+        <select id="Languages" class="js-basic-single" name="Language" style="width:30vw;">
+          <option value="NULL">Select a Language</option>
         </select>
+        <input type="text" placeholder="Enter Language" name="fileLanguageId" required></input>
 
         <br><br>
         <input type="radio" name="privacy" value="private" style="margin-left:0"></input>
@@ -391,5 +386,13 @@
   '{% if messages %}'
   document.getElementById('success').style.display = 'block';
   '{% endif %}'
+</script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+<script src="{% static '/js/getAllLanguages.js' %}">  </script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $(".js-basic-single").select2();
+  });
 </script>
 </html>
