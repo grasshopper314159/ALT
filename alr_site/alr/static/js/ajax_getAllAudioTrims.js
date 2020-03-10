@@ -3,19 +3,12 @@ $(document).ready(function(){
   $.ajax(
     {
       type: 'GET',
-      url: '/ajax/getAllAudioTrim/',
+      url: '/ajax/getAllAudioTrims/',
 
       success: function(response)
       {
+        // ViewAudio.html table body has id='data'
         data = document.getElementById('data');
-        // // test data
-        // owner = 'Me';
-        // speaker = 'you';
-        // text_original = 'Hello';
-        // text_english = 'Hello';
-        // score = '7';
-        // date = '02/07/2020';
-
 
         for (var key in response) {
           if (response[key]['score'] == null) {

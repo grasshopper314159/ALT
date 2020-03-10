@@ -5,7 +5,7 @@
 	<script src="{% static '/js/p5.js'%}"></script>
 	<script src="{% static '/js/addons/p5.sound.js'%}"></script>
 	<script src="{% static '/js/addons/p5.dom.js'%}"></script>
-  <!-- Load p5 library from CDN, 
+  <!-- Load p5 library from CDN,
   <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.sound.js"></script> -->
@@ -151,7 +151,7 @@
         //   })
         // };
         // httpDo(serverUrl, httpRequestOptions);
-        // This command always gives me: DOMException: Failed to set the 'value' property on 'HTMLInputElement': This input 
+        // This command always gives me: DOMException: Failed to set the 'value' property on 'HTMLInputElement': This input
         // element accepts a filename, which may only be programmatically set to the empty string.
         // I think we will have to build off of the above code to submit the form and not rely on the http submit
         document.getElementById('recordingToUpload').value = soundBlob;
@@ -195,7 +195,7 @@
        background-size: cover;
        overflow-y: scroll;
        height: 100%;
-     } 
+     }
   </style>
   <title>Upload Audio</title>
 </head>
@@ -267,10 +267,11 @@
         <label>Language</label><br>
         <!-- <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>  -->
         <!-- make dropdown?  try English or 1-->
-        <select id="Languages" class="js-basic-single" name="Language" style="width:30vw;">
+        <!-- class below js-basic-single TODO: change-->
+        <select id="Languages" class="" name="fileLanguageId" style="width:30vw;">
           <option value="NULL">Select a Language</option>
         </select>
-        <input type="text" placeholder="Enter Language" name="fileLanguageId" required></input>
+        <!-- <input type="text" placeholder="Enter Language" name="fileLanguageId" required></input> -->
 
         <br><br>
         <input type="radio" name="privacy" value="private" style="margin-left:0"></input>
@@ -350,7 +351,7 @@
             <option value="German">German</option>
             <option value="Chinese">Chinese</option>
           </select>
-  
+
           <br><br>
           <input type="radio" name="privacy" value="private" style="margin-left:0"></input>
           <label for="private">Private</label><br>
@@ -364,11 +365,7 @@
         </form>
       </div>
 
-     </div> 
-
-
-
-
+     </div>
   </div>
   <!-- display a message -->
   {% if messages %}
@@ -389,7 +386,7 @@
 </script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
-<script src="{% static '/js/getAllLanguages.js' %}">  </script>
+<script src="{% static '/js/ajax_getAllLanguages.js' %}">  </script>
 <script type="text/javascript">
   $(document).ready(function(){
     $(".js-basic-single").select2();

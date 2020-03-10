@@ -1,3 +1,4 @@
+# **************************************************************************** #
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -18,6 +19,8 @@ from .models import BigAudio, Speaker, Language, Review, AudioTrim, Comment, Mea
 from . import alr
 
 import datetime
+# **************************************************************************** #
+
 #import logging
 # testing logging functions
 #logger = logging.getLogger(__name__)
@@ -29,7 +32,8 @@ import datetime
 #     return getattr(query, column)
 
 
-# Start of page views
+#                           Global variables
+# **************************************************************************** #
 # This is to display a message to the user
 active_messages = {'home': '',
                    'settings':'',
@@ -43,6 +47,10 @@ active_messages = {'home': '',
                    'createEval': '',
                    }
 
+# **************************************************************************** #
+
+#                           Start of page views
+# **************************************************************************** #
 
 # for alr.hs.umt.edu/viewAudio/ as URL
 # If you are not logged in, and not an admin or researcher, it will redirect to login_url
@@ -66,11 +74,6 @@ def display_uploadAudio(request):
     else:
         return redirect_home(request)
 
-# @login_required(login_url='/home/')
-# def display_trimAudio(request):
-#     return render(request, 'general/TrimAudio.html')
-
-
 # for alr.hs.umt.edu/RateAudio/ as url
 @login_required(login_url='/home/')
 def display_rateAudio(request):
@@ -90,7 +93,7 @@ def display_shareAudio(request):
     else:
         return redirect_home(request)
 
-#For researchers to create accounts for evaluators 
+#For researchers to create accounts for evaluators
 @login_required(login_url='/home/')
 def display_createEval(request):
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
@@ -121,6 +124,8 @@ def display_evalLogin(request):
     request = check_message(request, 'evalLogin')
     return render(request, 'rater/RaterLink.html')
 
+# TODO: rearange functions
+# **************************************************************************** #
 
 # for alr.hs.umt.edu as url
 def redirect_home(request):
@@ -129,7 +134,7 @@ def redirect_home(request):
 # for alr.hs.umt.edu/home/ as url
 def display_home(request):
     request = check_message(request, 'home')
-    return render(request, 'public/index.html') 
+    return render(request, 'public/index.html')
 
 # for alr.hs.umt.edu/home/settings as url
 @login_required(login_url='/home/')
@@ -159,7 +164,9 @@ def check_message(request, page):
         messages.info(request, active_messages[page])
         active_messages[page] = ''
     return request
-# end of page views
+
+#                           end of page views
+# **************************************************************************** #
 
 # start of permission functions # TODO: put in seperate file?
 # some accounts are have multiple roles.  OR and AND handle those cases
@@ -169,9 +176,9 @@ def check_message(request, page):
 
 # input can be a string or and array of strings (e.g. "ADMIN" or ["ADMIN", "researcher_user"])
 def is_user_type(request, input, OR=False, AND=False):
-    if type(input) == type(''):
+    if type(input) == type(str()):
         return request.user.groups.filter(name=type).exists()
-    elif type(input) == type([]) and ((OR and not AND) or (not OR and AND)):
+    elif type(input) == type(list()) and ((OR and not AND) or (not OR and AND)):
         bool = []
         for i in range(len(input)):
             bool.append(request.user.groups.filter(name=input[i]).exists())
@@ -182,17 +189,27 @@ def is_user_type(request, input, OR=False, AND=False):
         return False
     return False
 
+#                       end of permission functions
+# **************************************************************************** #
 
-# end of permission functions
+#                           start of ajax calls
+# **************************************************************************** #
 
-# start of ajax calls
-# @permission_required(, login_url='/home/')
 @csrf_exempt
 @login_required(login_url='/home/')
 def ajax_getAllAudioTrims(request):
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
         if request.method == 'GET':
-            return JsonResponse(alr.GetAllAudioTrim(request), safe=False)
+            return JsonResponse(alr.getAllAudioTrim(request), safe=False)
+    else:
+        return redirect_home(request)
+
+@csrf_exempt
+@login_required(login_url='/home/')
+def ajax_getAllLanguages(request):
+    if is_user_type(request, ['ADMIN','research_user'], OR=True):
+        if request.method == 'GET':
+            return JsonResponse(alr.getAllLanguages(request), safe=False)
     else:
         return redirect_home(request)
 
@@ -324,7 +341,7 @@ def ajax_logoutUser(request):
 def ajax_postUploadAudio(request):
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
         if request.method == 'POST':
-            #compare to request.user  #nate TODO change request.files in upload recording to request.blob 
+            #compare to request.user  #nate TODO change request.files in upload recording to request.blob
             fileOwner = alr_user.objects.get(id=User.objects.get(email=str(request.user)))
             fileFile = request.FILES['fileToUpload']
             print(fileFile)

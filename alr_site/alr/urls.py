@@ -30,20 +30,24 @@ urlpatterns = [
     url(r'^taskBar/$', views.display_taskBar, name='display_taskBar'),
 
 
-    # ajax URLs
+    # ajax misc. URLs
     url(r'^ajax/createUser/$', views.ajax_createUser, name='ajax_createUser'),
     url(r'^ajax/loginUser/$', views.ajax_loginUser, name='ajax_loginUser'),
     url(r'^ajax/loginEvalUser/$', views.ajax_loginEvalUser, name='ajax_loginEvalUser'),
 
     url(r'^ajax/logoutUser/$', views.ajax_logoutUser, name='ajax_logoutUser'),
+    url(r'^ajax/createEval/$', views.ajax_createEval, name='ajax_createEval'),
 
-    url(r'^ajax/getAllAudioTrim/$', views.ajax_getAllAudioTrims, name='ajax_getAllAudioTrims'),
+    # ajax get
+    url(r'^ajax/getAllAudioTrims/$', views.ajax_getAllAudioTrims, name='ajax_getAllAudioTrims'),
+    url(r'^ajax/getAllLanguages/$', views.ajax_getAllLanguages, name='ajax_getAllLanguages'),
+
+    # ajax post
     url(r'^ajax/postUploadAudio/$', views.ajax_postUploadAudio, name='ajax_postUploadAudio'),
     url(r'^ajax/postRecordedAudio/$', views.ajax_postRecordedAudio, name='ajax_postRecordedAudio'),
 
     url(r'^ajax/postRating/$', views.ajax_postRating, name='ajax_postRating'),
     url(r'^ajax/postTrimAudio/$', views.ajax_postTrimAudio, name='ajax_postTrimAudio'),
-    url(r'^ajax/createEval/$', views.ajax_createEval, name='ajax_createEval'),
 
     # url(r'^ajax/registerUser/$', views.ajax_CreateUser, name='display_create_user'),
 

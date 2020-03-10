@@ -7,16 +7,13 @@ $(document).ready(function(){
 
       success: function(response)
       {
+        // id of the select is Languages
         Options = document.getElementById('Languages')
-        select = Options.innerHTML;
+        options = Options.innerHTML;
         for (var key in response) {
-          language = response[key];
-          option = '<option value=\"' + langauge + '\">' + language + '</option>';
-
-          select += option;
-          select += '</optgroup>';
+          options += '<option value=\"' + response[key] + '\">' + response[key] + '</option>';
         }
-        Options.innerHTML = select;
+        Options.innerHTML = options;
       },
 
       failure: function()
