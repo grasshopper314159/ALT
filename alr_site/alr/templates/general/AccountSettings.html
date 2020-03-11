@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link ref="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   {% load static %}
   <!-- localized stylesheets -->
   <link rel="stylesheet" href="{% static '/css/master.css' %}">
@@ -17,6 +18,10 @@
     #background {
        background-image: url('{% static '/imgs/neutralBackground.jpg' %}');
        background-size: cover;
+     }
+     #account, #privacy, #language, #accessibility, #terms
+     {
+       display: none;
      }
   </style>
   <title>Account Settings</title>
@@ -67,26 +72,127 @@
             <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayTerms()">Terms and Conditions</button>
           </div>
         </div>
-        <div id="mainContent" class="w3-twothird w3-panel w3-leftbar w3-border-blue w3-pale-blue" style="margin-top: 8vh">
-          <p></p>
+        <div id="mainContent" class="w3-twothird w3-panel w3-leftbar" style="margin-top: 8vh">
+          <!--Accessibility Settings-->
+          <div id="accessibility">
+            <label id="simpleHeader">Font Size</label>
+            <button class="w3-btn w3-white">+</button>
+            <button class="w3-btn w3-white">-</button>
+          </div>
+          <!--Account Settings-->
+          <div id="account">
+            <input type="text" id="simpleHeader">Username</label>
+            <br>
+            <input type="text" id="simpleHeader">Password</label>
+            <br>
+            <input type="text" id="simpleHeader">Email</label>
+            <br>
+            <input type="text" id="simpleHeader">First Name</label>
+            <br>
+            <input type="text" id="simpleHeader">Last Name</label>
+          </div>
+          <!--Privacy Settings-->
+          <div id="privacy">
+            <button class="w3-btn w3-white">Public</button>
+            <br>
+            <button class="w3-btn w3-white">Private</button>
+          </div>
+          <!--Language Settings-->
+          <div id="language">
+            <select name="language">
+              <option value="English">English</option>
+              <option value="Japanese">Japanese</option>
+            </select>
+          </div>
+          <!--Terms and Conditions Settings-->
+          <div id="terms">
+            <p> Terms and Conditions go here.</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </body>
 <script>
-  var large_font = false;
+  //The following javascript controls which settings category are currently selected.
+  var accessibility = document.getElementById("accessibility");
+  var account = document.getElementById("account");
+  var privacy = document.getElementById("privacy");
+  var language = document.getElementById("language");
+  var terms = document.getElementById("terms");
+  
+  function displayAccessibility()
+  {
+    if(window.getComputedStyle(accessibility).display === "none")
+    {
+      account.style.display = "none";
+      accessibility.style.display = "block";
+      privacy.style.display = "none";
+      language.style.display = "none";
+      terms.style.display = "none";
+    }
+  }
+  
+  function displayAccount()
+  {
+    if(window.getComputedStyle(account).display === "none")
+    {
+      account.style.display = "block";
+      accessibility.style.display = "none";
+      privacy.style.display = "none";
+      language.style.display = "none";
+      terms.style.display = "none";
+    }
+  }
+  
+  function displayPrivacy()
+  {
+    if(window.getComputedStyle(privacy).display === "none")
+    {
+      account.style.display = "none";
+      accessibility.style.display = "none";
+      privacy.style.display = "block";
+      language.style.display = "none";
+      terms.style.display = "none";
+    }
+  }
+  
+  function displayLanguage()
+  {
+    if(window.getComputedStyle(language).display === "none")
+    {
+      account.style.display = "none";
+      accessibility.style.display = "none";
+      privacy.style.display = "none";
+      language.style.display = "block";
+      terms.style.display = "none";
+    }
+  }
+  
+  function displayTerms()
+  {
+    if(window.getComputedStyle(terms).display === "none")
+    {
+      account.style.display = "none";
+      accessibility.style.display = "none";
+      privacy.style.display = "none";
+      language.style.display = "none";
+      terms.style.display = "block";
+    }
+  }
+  
+  //TODO Extend this function to change external styles.
   function changeFontSize()
   {
-    var account_settings_font = document.getElementById('accountSettings');
+    var large_font = false;
     if(!large_font)
     {
-      account_settings_font.style.fontSize = "300%";
+      //external_selector.style.fontSize = "300%";
       large_font = true;
     }
     else
     {
-      account_settings_font.style.fontSize = "100%";
+      //external_selector.style.fontSize = "100%";
       large_font = false;
     }
   }
