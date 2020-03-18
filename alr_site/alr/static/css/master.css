@@ -72,8 +72,8 @@ td, th {
   border: 1px solid black;
 }
 
-#currentButton {
-  background-color: #B22222;
+.currentButton {
+  background-color: #b93838;
 }
 
 /*Forms*/
