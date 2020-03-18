@@ -15,13 +15,28 @@
     .h1 {
       font-size: 70px;
     }
+    
     #background {
        background-image: url('{% static '/imgs/neutralBackground.jpg' %}');
        background-size: cover;
      }
+     
      #account, #privacy, #language, #accessibility, #terms
      {
        display: none;
+     }
+     
+     #displayArea {
+       margin-top: 8vh;
+     }     
+     
+     .accountButton {
+       background-color: #5e001d;
+       color: white;
+     }
+     
+     .menuButtons {
+       padding: 2%;
      }
   </style>
   <title>Account Settings</title>
@@ -61,49 +76,78 @@
     </div>
     
     <div class="w3-container">
-      <div class="w3-container" style="margin-top:19vh">
+      <div class="w3-container w3-white w3-round-xlarge" style="margin-top:23vh">
         <div class="w3-third">
-          <div>
-            <h3 id="simpleHeader" class="w3-center settings-header">Account Settings</h3>
-            <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayAccount()">Account</button>
-            <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayPrivacy()">Privacy</button>
-            <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayLanguage()">Language</button>
-            <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayAccessibility()">Accessibility</button>
-            <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayTerms()">Terms and Conditions</button>
+          <div class="menuButtons" id="navigationButtons">
+            <h1 class="w3-center settings-header simpleHeader">Account Settings</h1>
+            <button class="w3-round w3-block w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge accountButton" onclick="displayAccount()">Account</button>
+            <button class="w3-round w3-block w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge accountButton" onclick="displayPrivacy()">Privacy</button>
+            <button class="w3-round w3-block w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge accountButton" onclick="displayLanguage()">Language</button>
+            <button class="w3-round w3-block w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge accountButton" onclick="displayAccessibility()">Accessibility</button>
+            <button class="w3-round w3-block w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge accountButton" onclick="displayTerms()">Terms and Conditions</button>
+            <br>
           </div>
         </div>
-        <div id="mainContent" class="w3-twothird w3-panel w3-leftbar" style="margin-top: 8vh">
+        <div id="displayArea" class="w3-twothird w3-panel w3-leftbar">
           <!--Accessibility Settings-->
-          <div id="accessibility">
-            <label id="simpleHeader">Font Size</label>
+          <form id="accessibility" class="accountForm">
+            <label class="accountHeader">Font Size</label>
+            <br>
             <button class="w3-btn w3-white">+</button>
             <button class="w3-btn w3-white">-</button>
-          </div>
+            <br>
+            <br>
+            <button type="submit" class="w3-btn w3-green">Save Changes</button>
+          </form>
           <!--Account Settings-->
-          <div id="account">
-            <input type="text" id="simpleHeader">Username</label>
+          <form id="account" class="accountForm">
+            <label for="username">Username</label>
             <br>
-            <input type="text" id="simpleHeader">Password</label>
+            <input type="text" class="simpleHeader" name="username"></input>
             <br>
-            <input type="text" id="simpleHeader">Email</label>
+            <label for="password">Password</label>
             <br>
-            <input type="text" id="simpleHeader">First Name</label>
+            <input type="password" class="simpleHeader" name="password"></input>
             <br>
-            <input type="text" id="simpleHeader">Last Name</label>
-          </div>
+            <label for="password-repeat">Confirm Pasword</label>
+            <br>
+            <input type="password" class="simpleHeader" name="password-repeat"></input>
+            <br>
+            <label for="email">Email</label>
+            <br>
+            <input type="email" class="simpleHeader" name="email"></input>
+            <br>
+            <label for="firstname">First Name</label>
+            <br>
+            <input type="text" class="simpleHeader" name="firstname"></input>
+            <br>
+            <label for="lastname">Last Name</label>
+            <br>
+            <input type="text" class="simpleHeader" name="lastname"></input>
+            <br>
+            <br>
+            <button type="submit" class="w3-btn w3-green">Save Changes</button>
+          </form>
           <!--Privacy Settings-->
-          <div id="privacy">
+          <form id="privacy" class="accountForm">
             <button class="w3-btn w3-white">Public</button>
             <br>
+            <br>
             <button class="w3-btn w3-white">Private</button>
-          </div>
+            <br>
+            <br>
+            <button type="submit" class="w3-btn w3-green">Save Changes</button>
+          </form>
           <!--Language Settings-->
-          <div id="language">
+          <form id="language" class="accountForm">
             <select name="language">
               <option value="English">English</option>
               <option value="Japanese">Japanese</option>
             </select>
-          </div>
+            <br>
+            <br>
+            <button type="submit" class="w3-btn w3-green saveButton">Save Changes</button>
+          </form>
           <!--Terms and Conditions Settings-->
           <div id="terms">
             <p> Terms and Conditions go here.</p>

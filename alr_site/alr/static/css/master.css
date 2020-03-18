@@ -25,9 +25,15 @@ td, th {
  }
 
 /*Headers*/
-#simpleHeader {
+.simpleHeader {
   font-family: sans-serif;
   font-weight: bold;
+}
+
+.accountHeader {
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 125%;
 }
 
 #fancyHeader {
@@ -100,7 +106,12 @@ td, th {
   margin: 0 auto;
 }
 
-/*Sign-Up*/
+/*Forms*/
+.signUpForm button, .audioForm button, .accountForm button {
+  border: 2px solid black;
+  border-radius: 4px;
+}
+  
 #signUpForm {
   height: auto;
   margin-top: 20vh;
@@ -126,11 +137,4 @@ td, th {
 
 .signUpForm button {
   margin-bottom: 1em;
-  border: 2px solid black;
-  border-radius: 4px;
-}
-
-.audioForm button {
-  border: 2px solid black;
-  border-radius: 4px;
 }
