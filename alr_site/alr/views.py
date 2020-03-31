@@ -59,7 +59,7 @@ active_messages = {'home': '',
 def display_viewAudio(request):
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
         request = check_message(request, 'viewAudio')
-        return render(request, 'general/viewAudio.html')
+        return render(request, 'general/ViewAudio.html')
     else:
         return redirect_home(request)
 
