@@ -253,7 +253,7 @@ def ajax_postRating(request):
 @csrf_exempt
 def ajax_createUser(request):
     #for debugging
-    print(request.body)
+    # print(request.body)
     # try authenticating the user
     user = authenticate(request=None, username=request.POST['email'], password=request.POST['password'])
 
