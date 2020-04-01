@@ -68,7 +68,7 @@ def display_viewAudio(request):
 # Called whenever the URL is accessed
 @login_required(login_url='/home/')
 def display_uploadAudio(request):
-    if is_user_type(request, ['ADMIN','research_user'], OR=True):
+    if is_user_type(request, ['ADMIN','research_user', 'student_user'], OR=True):
         request = check_message(request, 'uploadAudio')
         return render(request, 'general/UploadAudio.html')
     else:
@@ -339,7 +339,7 @@ def ajax_logoutUser(request):
 @csrf_exempt
 @login_required(login_url='/home/')
 def ajax_postUploadAudio(request):
-    if is_user_type(request, ['ADMIN','research_user'], OR=True):
+    if is_user_type(request, ['ADMIN','research_user', 'student_user'], OR=True):
         if request.method == 'POST':
             #compare to request.user  #nate TODO change request.files in upload recording to request.blob
             fileOwner = alr_user.objects.get(id=User.objects.get(email=str(request.user)))
