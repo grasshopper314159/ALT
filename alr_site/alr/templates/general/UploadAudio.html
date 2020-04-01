@@ -316,16 +316,13 @@
       <br><br><br><br><br><br><br><br>
 
 <!-- *************************     New Form to upload a recording *******************************-->
-
+<!--
       <div class="w3-half">
         <form class="audioForm" action="/ajax/postRecordedAudio/" enctype="multipart/form-data"  method="post" style="float: left; margin-left: 5vh;">
           <label style="font-weight: bold">Recording Metadata</label>
           <br>
           <br><br>
-          <!-- <label style="text-align: center;">Speaker</label> -->
           <input class="w3-bar-item" type="file" name="recordingToUpload" id="recordingToUpload" style="margin-left:0;"></input>
-          <!-- <input type="hidden" id="formBigAudioID" name="big_audio_id" required></input> -->
-          <!-- <br> -->
           <label>Speaker First Name</label><br>
           <input name="fileSpeakerFirst" style="vertical-align: middle;" rows="3" cols="70"></input>
           <br><br>
@@ -340,8 +337,6 @@
           <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
           <br><br>
           <label>Language</label><br>
-          <!-- <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>  -->
-          <!-- make dropdown?  try English or 1-->
           <select type="dropdown" name="fileLanguageId" required>
             <option value="English">English</option>
             <option value="Blackfoot">Blackfoot</option>
@@ -359,7 +354,6 @@
           <label for="not_private">Not Private</label><br>
           <br>
           <button type="submit" class="w3-btn w3-green">Upload Recording</button>
-          <!--<a href="/trimAudio/" class="w3-btn w3-green">Upload</a> --><!-- Fake Upload button -->
           <br>
           <br>
         </form>
@@ -367,6 +361,8 @@
 
      </div>
   </div>
+-->
+  
   <!-- display a message -->
   {% if messages %}
   {% for message in messages %}

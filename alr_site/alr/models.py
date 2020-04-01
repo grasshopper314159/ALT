@@ -90,12 +90,12 @@ class Comment(models.Model):
     def __str__(self):
         return (self.user_id.id.first_name + ', ' + self.user_id.id.last_name + ', TrimAudio: ' + str(self.trim_audio_id.id))
 
-#Need input from Miyashita for this one:
 class Measurements(models.Model):
     audio_trim_id = models.ForeignKey("AudioTrim", on_delete=models.CASCADE, default=None)
     set_number = models.IntegerField(unique=True)
-    wavelength = models.IntegerField(default=None, blank=True, null=True)
-    frequency = models.IntegerField(default=None, blank=True, null=True)
+    #pitch = models.DecimalField(4, 2)
+    #amplitude = models.DecimalField(4, 2)
+    #duration = models.DecimalField(4, 2)
 
     class Meta:
         unique_together = (("audio_trim_id", "set_number")) #Measurements has a composite key.
