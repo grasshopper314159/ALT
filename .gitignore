@@ -1,9 +1,5 @@
 
 *.pyc
-<<<<<<< HEAD
 *.log
 *.gitignore
-=======
-
-*.log
->>>>>>> nate
+alr_site/sqlite3_default.db
