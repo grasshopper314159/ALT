@@ -125,3 +125,10 @@ class Assignment(models.Model):
 
     def __str__(self):
         return ('Class: ' + str(self.id) + ' With: ' + self.class_id.teacher_id.id.last_name)
+        
+class Permission(models.Model):
+    big_audio_id = models.ForeignKey("BigAudio", on_delete=models.CASCADE, default=None)
+    user_id = models.ForeignKey("User", on_delete=models.CASCADE, default=None)
+    
+    class Meta:
+        unique_together = (("big_audio_id", "user_id")) #composite key
