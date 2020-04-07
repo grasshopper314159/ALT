@@ -1,0 +1,5 @@
+TABLE -
+big audio file id
+user id
+
+many to many
