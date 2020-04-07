@@ -102,12 +102,20 @@
           <!--Account Settings-->
           <form id="account" class="accountForm">
             <label for="username">Username</label>
-	    <br>
-	    <input type="text" class="simpleHeader" name="username"  value="student"></input>
+            <br>
+<<<<<<< HEAD
+            <input type="text" class="simpleHeader" name="username"  value="student"</input>
             <br>
             <label for="password">Password</label>
             <br>
             <input type="password" class="simpleHeader" name="password"  value="123"></input>
+=======
+            <input type="text" class="simpleHeader" name="username" value="student"></input>
+            <br>
+            <label for="password">Password</label>
+            <br>
+            <input type="password" class="simpleHeader" name="password" value="123"></input>
+>>>>>>> refs/remotes/origin/nate
             <br>
             <label for="password-repeat">Confirm Pasword</label>
             <br>
@@ -115,7 +123,11 @@
             <br>
             <label for="email">Email</label>
             <br>
+<<<<<<< HEAD
             <input type="email" class="simpleHeader" name="email"  value="student@umt.edu"></input>
+=======
+            <input type="email" class="simpleHeader" name="email" value="student@umt.edu"></input>
+>>>>>>> refs/remotes/origin/nate
             <br>
             <label for="firstname">First Name</label>
             <br>

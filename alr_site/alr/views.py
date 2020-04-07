@@ -227,7 +227,7 @@ def ajax_createEval(request):
 def ajax_postRating(request):
     if is_user_type(request, ['ADMIN','eval_user'], OR=True):
         if request.method == 'POST':
-            # alr.updateRating(request)
+            #alr.updateRating(request)
             active_messages['rateAudio'] = 'Your changes have been saved'
             return redirect('/rateAudio/')
 

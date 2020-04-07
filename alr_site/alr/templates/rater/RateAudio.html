@@ -281,10 +281,10 @@ function sortTable(n) {
                 <h3>Comments</h3>
                 <textarea rows="2" cols="30" style="border: solid 1px grey; padding: 3px; width: 90%;"></textarea>
               </div>
-              <form class="" action="/ajax/postRating/" method="post">
-                  <input type="submit" class="w3-btn w3-green" id="uploadButton" value="Save" onclick="add_rating('0')"></input>
+	      <!-- <form class="" action="/ajax/postRating/" method="post"> -->
+                  <input type="submit" class="w3-btn w3-green" id="uploadButton" value="Save" onclick="toggle_rate('0');document.getElementById('ratingContainer').classList.toggle('hide');add_rating('0');"></input>
 
-              </form>
+	      <!-- </form> -->
             </div>
             <!-- TODO: make dynamic Rates -->
             <div id="Rate_1" class="hide">
