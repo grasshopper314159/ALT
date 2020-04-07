@@ -25,7 +25,6 @@ $(document).ready(function(){
           //   <td class="w3-center">7/20/20</td>
           //   <td id="score_0" class="w3-center">N/A</td>
           //   <td class="w3-center"><button class="w3-button w3-tiny w3-white w3-border w3-round" onclick="toggle_rate('0'); document.getElementById('ratingContainer').classList.toggle('hide');">Rate</button></td>
-          //   <td class="w3-center"><input id="submit_check_0" class="w3-check" type="checkbox"></td>
           // </tr>
 
           entry = '<tr><td>' +

@@ -28,10 +28,13 @@ $(document).ready(function(){
             '<td>' + response[key]['english_text'] + '</td>' +
             '<td>' + response[key]['score'] + '</td>' +
             '<td>' + response[key]['date'] + '</td>' +
-            '<td><button class="w3-btn w3-white w3-block w3-border w3-round">Show</button>' +
+            '<td><button class="w3-btn w3-white w3-block w3-border w3-round" onclick="showTrimDetails(\'id\');">Show</button>' +
             '</td></tr>';
           data.innerHTML += entry;
         }
+        // TODO: use localStorage to save reaponse for later?
+        // localStorage.setS
+
       },
 
       failure: function()
@@ -41,3 +44,7 @@ $(document).ready(function(){
     }
   );
 });
+
+function showTrimDetails(id) {
+
+}
