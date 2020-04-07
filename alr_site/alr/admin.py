@@ -10,6 +10,8 @@ admin.site.register(models.Speaker)
 admin.site.register(models.Language)
 admin.site.register(models.Review)
 
+admin.site.register(models.Permission)
+
 admin.site.register(models.AudioTrim)
 admin.site.register(models.Comment)
 admin.site.register(models.Measurements)
