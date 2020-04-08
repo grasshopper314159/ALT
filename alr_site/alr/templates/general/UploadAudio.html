@@ -24,7 +24,7 @@
     possible to run in instance mode to mitigate this, if necessary (see p5 website)  -->
 
   <script>
-    let mic, recorder, soundFile;
+    var mic, recorder, soundFile, soundBlob, blobFile;
 
     let state = 0; // state 0: nothing, state 1: recording;  state 2: audio recorded state 3: warned
     let audio_message, second_str = "", tenths_str="";
@@ -85,6 +85,9 @@
       // use the '.enabled' boolean to make sure user enabled the mic (otherwise we'd record silence)
       if (state === 0 && mic.enabled) {
         // Tell recorder to record to a p5.SoundFile which we will use for playback
+        // !! this doesn't seem to be  really creating a a p5.SoundFile type object-- 
+        // as demonstrated by console logging the methods on the object.   need to convert somehow to that type
+        // 
         recorder.record(soundFile);
         a_timer = setInterval(timeIt, 100);
         audio_background_color = 'red';
@@ -135,14 +138,18 @@
     // This function just has some code I copied from p5.  No clue if it is even a
     // good starting point  Called by the icon with a disk
     function save_audio() {
+      getAudioContext().resume()
       console.log("save_audio()");
       console.log(typeof(soundFile));
-      //getMethods = (obj) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function')
-      getMethods = (obj) => Object.getOwnPropertyNames(obj);
+      getMethods = (obj) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function')
+      //getMethods = (obj) => Object.getOwnPropertyNames(obj);
       console.log(getMethods(soundFile));
       try {
-        let soundBlob = soundFile.getBlob();
-        // let serverUrl = 'http://jsonplaceholder.typicode.com/posts';
+        soundBlob = soundFile.getBlob();
+        blobFile = blobToFile(soundBlob, "mySoundFile.wav");
+
+        //let serverUrl = 'https://alr.hs.umt.edu/ajax/postRecordedAudio';
+        let serverUrl = 'http://localhost:8000/ajax/postRecordedAudio';
         // let httpRequestOptions = {
         //   method: 'POST',
         //   body: new FormData().append('soundBlob', soundBlob),
@@ -151,24 +158,83 @@
         //   })
         // };
         // httpDo(serverUrl, httpRequestOptions);
-        // This command always gives me: DOMException: Failed to set the 'value' property on 'HTMLInputElement': This input
-        // element accepts a filename, which may only be programmatically set to the empty string.
-        // I think we will have to build off of the above code to submit the form and not rely on the http submit
-        document.getElementById('recordingToUpload').value = soundBlob;
+        //This command always gives me: DOMException: Failed to set the 'value' property on 'HTMLInputElement': This input
+        //element accepts a filename, which may only be programmatically set to the empty string.
+        //I think we will have to build off of the above code to submit the form and not rely on the http submit
+        //document.getElementById('recordingToUpload').value = blobFile.name;
+
+//************ from 
+      //   let formdata = new FormData() ; //create a from to of data to upload to the server
+      // formdata.append('soundBlob', soundBlob,  'myfiletosave.wav') ; // append the sound blob and the name of the file. third argument will show up on the server as req.file.originalname
+
+      //     // Now we can send the blob to a server...
+      // //var serverUrl = '/upload'; //we've made a POST endpoint on the server at /upload
+      // //build a HTTP POST request
+      // var httpRequestOptions = {
+      //   method: 'POST',
+      //   body: formdata , // with our form data packaged above
+      //   headers: new Headers({
+      //     'enctype': 'multipart/form-data' // the enctype is important to work with multer on the server
+      //   })
+      // };
+      // // console.log(httpRequestOptions);
+      // // use p5 to make the POST request at our URL and with our options
+      // httpDo(
+      //   serverUrl,
+      //   httpRequestOptions,
+      //   (successStatusCode)=>{ //if we were successful...
+      //     console.log("uploaded recording successfully: " + successStatusCode)
+      //   },
+      //   (error)=>{console.error(error);}
+      // )
+
+      //**********************  from https://stackoverflow.com/questions/60700389/real-time-audio-streaming-from-javascrit-to-python-django/60700473#60700473
+
+      
+
+      AjaxRequest();
+
+
 
       }
       catch(err) {
         console.log(err);
         console.log(soundFile);
+        console.log(soundBlob);
         console.log("Error in save_audio()");
       }
       // write to database here
     }
+    function AjaxRequest() {
+    var form = new FormData();
+    form.append("wavfile", soundFile.getBlob(), "file");
+
+      $.ajax({
+        url: "http://localhost:8000/ajax/postRecordedAudio",
+        method: "POST",
+        data: form, //here passing the wav file 
+        dataType: "json",
+        processData: false,
+        contentType:false,
+        success:function(data){
+             console.log(data.success)
+          },
+
+      });
+}
+
     // used to show a stopwatch while recording -probably not needed,
     // if responsiveness lags, try removing it and seeing if responsiveness is improved
     function timeIt() {
       // 1 counter = 0.1 second
       recording_time++;
+    }
+ 
+    function blobToFile(theBlob, fileName){
+      //A Blob() is almost a File() - it's just missing the two properties below which we will add
+      theBlob.lastModifiedDate = new Date();
+      theBlob.name = fileName;
+      return theBlob;
     }
   </script>
   <script>
@@ -319,7 +385,7 @@
       <br><br><br><br><br><br><br><br> -->
 
 <!-- *************************     New Form to upload a recording *******************************-->
-<!--
+
       <div class="w3-half">
         <form class="audioForm" action="/ajax/postRecordedAudio/" enctype="multipart/form-data"  method="post" style="float: left; margin-left: 5vh;">
           <label style="font-weight: bold">Recording Metadata</label>

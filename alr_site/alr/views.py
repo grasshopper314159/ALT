@@ -340,6 +340,7 @@ def ajax_logoutUser(request):
 @csrf_exempt
 @login_required(login_url='/home/')
 def ajax_postUploadAudio(request):
+    print("You have reached ajax_post uploaded audio in views.py")
     if is_user_type(request, ['ADMIN','research_user', 'student_user'], OR=True):
         if request.method == 'POST':
             #compare to request.user  #nate TODO change request.files in upload recording to request.blob
@@ -403,6 +404,7 @@ def ajax_postTrimAudio(request):
 @csrf_exempt
 @login_required(login_url='/home/')
 def ajax_postRecordedAudio(request):
+    print("You have reached ajax_post recoreded audio in views.py")
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
         if request.method == 'POST':
             fileOwner = alr_user.objects.get(id=User.objects.get(email=str(request.user)))
@@ -416,6 +418,7 @@ def ajax_postRecordedAudio(request):
             secs = math.ceil(secs)
             l = '0' + str(datetime.timedelta(seconds=secs))
             # print(l)
+            
 
             # print(wv.open(fileFile).getnframes())
 
