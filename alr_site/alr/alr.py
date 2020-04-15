@@ -26,6 +26,8 @@ def getAllAudioTrim(request, admin=False):
             obj['english_text'] = (key.english_text)
             obj['score'] = (key.score)
             obj['date'] = (key.last_listened_date)
+            obj['url'] = key.big_audio_id.sound_file.url
+
             # key.id is the primary key for a given audio trim
             response[key.id] = obj
         elif admin:
@@ -35,7 +37,8 @@ def getAllAudioTrim(request, admin=False):
             obj['english_text'] = (key.english_text)
             obj['score'] = (key.score)
             obj['date'] = (key.last_listened_date)
-            obj['big_audio_id'] = key.big_audio_id.id
+            obj['url'] = key.big_audio_id.sound_file.url
+
             # key.id is the primary key for a given audio trim
             response[key.id] = obj
     return response

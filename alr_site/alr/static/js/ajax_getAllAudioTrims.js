@@ -19,7 +19,7 @@ $(document).ready(function(){
 
           entry = '<tr><td>' +
             '<div class="w3-bar">' +
-            '<button class="w3-button w3-tiny w3-white w3-border w3-round" onclick="getAudio(' + response[key]['big_audio_id'] + ')">Edit</button>'+
+            '<button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>'+
             '<button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>'+
             '</div></td>' +
             '<td>' + response[key]['owner'] + '</td>' +
@@ -28,8 +28,10 @@ $(document).ready(function(){
             '<td>' + response[key]['english_text'] + '</td>' +
             '<td>' + response[key]['score'] + '</td>' +
             '<td>' + response[key]['date'] + '</td>' +
+            '<td><audio controls><source src="' + response[key]['url'] + '" type="audio/wav">Your browser does not support the audio element.</audio>' +
             '<td><button class="w3-btn w3-white w3-block w3-border w3-round" onclick="showTrimDetails(\'id\');">Show</button>' +
             '</td></tr>';
+            // getAudio(' + response[key]['big_audio_id'] + ')'</td></tr>';
           data.innerHTML += entry;
         }
         // TODO: use localStorage to save reaponse for later?
