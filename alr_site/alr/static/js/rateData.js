@@ -9,8 +9,8 @@ function add_rating(id) {
   for (i = 1; i <= 7; i++) {
     if (document.getElementById('radio_'+id+'_'+i).checked) {
       document.getElementById('score_'+id).innerHTML = document.getElementById('radio_'+id+'_'+i).value;
-      document.getElementById('submit_check_'+id).value = document.getElementById('radio_'+id+'_'+i).value;
-      document.getElementById('submit_check_'+id).checked = true;
+      //document.getElementById('submit_check_'+id).value = document.getElementById('radio_'+id+'_'+i).value;
+      //document.getElementById('submit_check_'+id).checked = true;
     }
   }
 }

@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link ref="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   {% load static %}
   <!-- localized stylesheets -->
   <link rel="stylesheet" href="{% static '/css/master.css' %}">
@@ -14,9 +15,28 @@
     .h1 {
       font-size: 70px;
     }
+    
     #background {
        background-image: url('{% static '/imgs/neutralBackground.jpg' %}');
        background-size: cover;
+     }
+     
+     #account, #privacy, #language, #accessibility, #terms
+     {
+       display: none;
+     }
+     
+     #displayArea {
+       margin-top: 8vh;
+     }     
+     
+     .accountButton {
+       background-color: #5e001d;
+       color: white;
+     }
+     
+     .menuButtons {
+       padding: 2%;
      }
   </style>
   <title>Account Settings</title>
@@ -32,14 +52,14 @@
         <div class="w3-bar w3-card w3-center" id="navigationButtons">
           <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
           {% if user.is_authenticated %}
-          <a href="/viewData/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
+          <a href="/viewAudio/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Audio</a>
           <a href="/uploadAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
-          <a href="/userManagement/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">User Management</a>
-          <a href="/rateData/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Rate Data</a> <!--Need this here for UI testing. Will change later.-->
+          <a href="/shareAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Share Audio</a>
+          <a href="/rateAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Rate Audio</a> <!--Need this here for UI testing. Will change later.-->
           {% endif %}
-          <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
           {% if user.is_anonymous %}
           <a href="/signUp/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Sign Up</a>
+          <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
           {% endif %}
           <div class="w3-dropdown-hover w3-hide-small w3-right  w3-xlarge">
             <button class="w3-round w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
@@ -56,37 +76,167 @@
     </div>
     
     <div class="w3-container">
-      <div class="w3-container" style="margin-top:19vh">
+      <div class="w3-container w3-white w3-round-xlarge" style="margin-top:23vh">
         <div class="w3-third">
-          <div>
-            <h3 id="simpleHeader" class="w3-center settings-header">Account Settings</h3>
-            <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayAccount()">Account</button>
-            <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayPrivacy()">Privacy</button>
-            <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayLanguage()">Language</button>
-            <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayAccessibility()">Accessibility</button>
-            <button class="w3-btn w3-white w3-block w3-leftbar w3-border-red w3-hover-border-green w3-round-xlarge" onclick="displayTerms()">Terms and Conditions</button>
+          <div class="menuButtons" id="navigationButtons">
+            <h1 class="w3-center settings-header simpleHeader">Account Settings</h1>
+            <button class="w3-round w3-block w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge accountButton" onclick="displayAccount()">Account</button>
+            <button class="w3-round w3-block w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge accountButton" onclick="displayPrivacy()">Privacy</button>
+            <button class="w3-round w3-block w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge accountButton" onclick="displayLanguage()">Language</button>
+            <button class="w3-round w3-block w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge accountButton" onclick="displayAccessibility()">Accessibility</button>
+            <button class="w3-round w3-block w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge accountButton" onclick="displayTerms()">Terms and Conditions</button>
+            <br>
           </div>
         </div>
-        <div id="mainContent" class="w3-twothird w3-panel w3-leftbar w3-border-blue w3-pale-blue" style="margin-top: 8vh">
-          <p></p>
+        <div id="displayArea" class="w3-twothird w3-panel w3-leftbar">
+          <!--Accessibility Settings-->
+          <form id="accessibility" class="accountForm">
+            <label class="accountHeader">Font Size</label>
+            <br>
+            <button class="w3-btn w3-white">+</button>
+            <button class="w3-btn w3-white">-</button>
+            <br>
+            <br>
+            <button type="submit" class="w3-btn w3-green">Save Changes</button>
+          </form>
+          <!--Account Settings-->
+          <form id="account" class="accountForm">
+            <label for="username">Username</label>
+	    <br>
+	    <input type="text" class="simpleHeader" name="username"  value="student"></input>
+            <br>
+            <label for="password">Password</label>
+            <br>
+            <input type="password" class="simpleHeader" name="password"  value="123"></input>
+            <br>
+            <label for="password-repeat">Confirm Pasword</label>
+            <br>
+            <input type="password" class="simpleHeader" name="password-repeat" value="123"></input>
+            <br>
+            <label for="email">Email</label>
+            <br>
+            <input type="email" class="simpleHeader" name="email"  value="student@umt.edu"></input>
+            <br>
+            <label for="firstname">First Name</label>
+            <br>
+            <input type="text" class="simpleHeader" name="firstname" value="John"></input>
+            <br>
+            <label for="lastname">Last Name</label>
+            <br>
+            <input type="text" class="simpleHeader" name="lastname" value="Doe"></input>
+            <br>
+            <br>
+            <button type="submit" class="w3-btn w3-green">Save Changes</button>
+          </form>
+          <!--Privacy Settings-->
+          <form id="privacy" class="accountForm">
+            <button class="w3-btn w3-white">Public</button>
+            <br>
+            <br>
+            <button class="w3-btn w3-white">Private</button>
+            <br>
+            <br>
+            <button type="submit" class="w3-btn w3-green">Save Changes</button>
+          </form>
+          <!--Language Settings-->
+          <form id="language" class="accountForm">
+            <select name="language">
+              <option value="English">English</option>
+              <option value="Japanese">Japanese</option>
+            </select>
+            <br>
+            <br>
+            <button type="submit" class="w3-btn w3-green saveButton">Save Changes</button>
+          </form>
+          <!--Terms and Conditions Settings-->
+          <div id="terms">
+            <p> Terms and Conditions go here.</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </body>
 <script>
-  var large_font = false;
+  //The following javascript controls which settings category are currently selected.
+  var accessibility = document.getElementById("accessibility");
+  var account = document.getElementById("account");
+  var privacy = document.getElementById("privacy");
+  var language = document.getElementById("language");
+  var terms = document.getElementById("terms");
+  
+  function displayAccessibility()
+  {
+    if(window.getComputedStyle(accessibility).display === "none")
+    {
+      account.style.display = "none";
+      accessibility.style.display = "block";
+      privacy.style.display = "none";
+      language.style.display = "none";
+      terms.style.display = "none";
+    }
+  }
+  
+  function displayAccount()
+  {
+    if(window.getComputedStyle(account).display === "none")
+    {
+      account.style.display = "block";
+      accessibility.style.display = "none";
+      privacy.style.display = "none";
+      language.style.display = "none";
+      terms.style.display = "none";
+    }
+  }
+  
+  function displayPrivacy()
+  {
+    if(window.getComputedStyle(privacy).display === "none")
+    {
+      account.style.display = "none";
+      accessibility.style.display = "none";
+      privacy.style.display = "block";
+      language.style.display = "none";
+      terms.style.display = "none";
+    }
+  }
+  
+  function displayLanguage()
+  {
+    if(window.getComputedStyle(language).display === "none")
+    {
+      account.style.display = "none";
+      accessibility.style.display = "none";
+      privacy.style.display = "none";
+      language.style.display = "block";
+      terms.style.display = "none";
+    }
+  }
+  
+  function displayTerms()
+  {
+    if(window.getComputedStyle(terms).display === "none")
+    {
+      account.style.display = "none";
+      accessibility.style.display = "none";
+      privacy.style.display = "none";
+      language.style.display = "none";
+      terms.style.display = "block";
+    }
+  }
+  
+  //TODO Extend this function to change external styles.
   function changeFontSize()
   {
-    var account_settings_font = document.getElementById('accountSettings');
+    var large_font = false;
     if(!large_font)
     {
-      account_settings_font.style.fontSize = "300%";
+      //external_selector.style.fontSize = "300%";
       large_font = true;
     }
     else
     {
-      account_settings_font.style.fontSize = "100%";
+      //external_selector.style.fontSize = "100%";
       large_font = false;
     }
   }

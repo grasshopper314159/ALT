@@ -5,6 +5,6 @@
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 find . -path "*/migrations/*.pyc"  -delete 
 rm sqlite3_default.db
-python manage.py makemigrations
-python manage.py migrate
-python manage.py loaddata fixtures/restore_db.json
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py loaddata fixtures/restore_db.json

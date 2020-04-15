@@ -5,7 +5,7 @@
 	<script src="{% static '/js/p5.js'%}"></script>
 	<script src="{% static '/js/addons/p5.sound.js'%}"></script>
 	<script src="{% static '/js/addons/p5.dom.js'%}"></script>
-	  <!-- Load p5 library from CDN,  THIS WAS TOO SLOW  
+	  <!-- Load p5 library from CDN,  THIS WAS TOO SLOW
 	//<script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
   //<script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
   //<script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.sound.js"></script>
@@ -19,12 +19,12 @@
 
   <!-- localized stylesheets -->
   <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>
-  
+
   <!--  start of script *****************************************************************************
-        p5 will automatically call preload, setup and draw.  Draw is called ~50-60 times per second  
-        p5 may not play well with other javascript code.  It has a lot of global variables.  It is 
+        p5 will automatically call preload, setup and draw.  Draw is called ~50-60 times per second
+        p5 may not play well with other javascript code.  It has a lot of global variables.  It is
         possible to run in instance mode to mitigate this, if necessary (see p5 website)  -->
-        
+
   <script >
     //*************************  variables **********************************
     console.log('START');
@@ -52,19 +52,42 @@
     let drawBoxList = [];
     let clipBoxColor = 'rgba(0,255,0, 0.25)';
     let dragging = false;
+    let bigAudioId;
 
     //********************** main p5 functions **********************************
 
     // PRELOAD everything in here finishes before setup and draw run
     function preload() {
       //getAudioContext().resume();
-      soundFile = loadSound("{% static '/sounds/french_1.wav'%}");
-      console.log('PRELOAD');  // For debugging
+      // '{% if me
+      //   ssages %}'
+      // '{% for
+      //    message in messages %}'
+      // message = '{{ mes
+      // sage }}'
+      // message = message.split(' ')
+      // console.log(message)
+      // console.log(message[1])
+      // console.log(typeof(message))
+      // message = 'user_12_gib/mySound_10.wav'
+      // prefix = "{% static '/bigAudioFiles/"'%}"   + message[0] + "/"
+      // soundFile = loadSound("{% static
+      // '/../media/'%}" + message);
+      // '{% en
+        // dfor %}'
+      // '{% end
+        // if %}'
+      soundFile = loadSound("{% static '/sounds/french_1.wav'%}"); //# 'ibaudiofiles/' lblb message.id rbrb '/' lblb message.filename rbrb # lb = { , rb = }
+      console.log('PRELOAD');
       recorderState=2;  //ready to play clip
+      // console.log(typeof(soundFile))
+      // getMethods = (obj) => Object.getOwnPropertyNames(obj);
+      // console.log(getMethods(soundFile));
     }
+
     // SETUP Run starts before draw, but not guaranteed to finish before draw
     function setup() {
-      getAudioContext().resume(); //in the console there is an error that pop up that alerts you to add this 
+      getAudioContext().resume(); //in the console there is an error that pop up that alerts you to add this
       console.log('setup1');  // for debugging
       recording_time = 0;  //remnant from upload audio.  turn this into soundFile length?
       var canvas = createCanvas(canvasWidth, canvasHeight);
@@ -74,6 +97,14 @@
       fill(0,0,0);  //draws in black
       console.log('setup2'); // for debugging
       makePeaks(soundFile);
+      // cut and paste this in to prefill big_audio id for form submitting
+      // needs testing
+//      window.onload = function(){
+  console.log("bigAudioId:  ", bigAudioId)
+  console.log("bigAudioIdType:  ", typeof(bigAudioId))
+      document.getElementById('formBigAudioID').value = bigAudioId;
+//      };
+
     }
     // DRAW  Runs ~50 to 60 times per second
 		function draw() {
@@ -87,7 +118,8 @@
 				vertex(i, map(peaks[i], -1, 1, height, 0));
 			}
 			endShape();
-      // this if is needed to draw the playhead. Don't want to move playhead if song is paused
+      // playHeadTime is needed to draw the playhead. Don't want to update
+      // playHeadTime if song is paused or being dragged
 			if (soundFile.isPlaying() && dragging === false) {
 				playheadTime=soundFile.currentTime();
 			}
@@ -95,21 +127,20 @@
       if (dragging === false) {
         drawPlayhead(playheadTime);
       }
-			else {
+			else {  // moves playHeadTime to match the location of the mouse while dragging
         playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
         drawPlayhead(playheadTime);
       }
       text("Clip start: "+startTimeStr, startMarkPosX, startMarkPosY);
       text("Clip end: "+endTimeStr, endMarkPosX, endMarkPosY);
       text("Clip length: "+clipDurStr, durMarkPosX, durMarkPosY);
-      // For debugging
       //text("Playhead x: "+ map(playheadTime, 0, soundFile.duration(), 0, width).toFixed(2) , durMarkPosX+100, durMarkPosY);
       //text("MouseX: "+ mouseX.toFixed(2), durMarkPosX+220, durMarkPosY);
 
       //draws boxes to show saved clips
       for (i = 0; i < drawBoxList.length; i++) {
         fill('rgba(0,255,0, 0.25)');
-        eval(drawBoxList[i]);
+        rect(drawBoxList[i][0], 0, drawBoxList[i][1], drawBoxList[i][2]);
         fill(0);
       }
     }
@@ -121,6 +152,16 @@
       // make generator function to give new colors for clip boxes--> only useful for overlapping clips?
       // fix save audio
       // work positioning of waveform and dynamic sizing
+      // fix drag so it doesn't start playing immediately after drag
+      // change to single play/pause button
+      // fix layout of buttons, canvas
+      // make it so when the canvas is clicked it toggles play and pause
+      // Make a list of the saved clips so one could be selected and edited
+      //    or make boundaries of boxes draggable? or both?
+      // Decide whether clips are uploaded to database by form submit
+      //    button or save icon button
+
+      //Changes the cursor to a hand when it's close to the playHead
       function checkCursor() {
         playHeadX = map(playheadTime, 0, soundFile.duration(), 0, width);
         if (mouseX > playHeadX-3 && mouseX < playHeadX+3 && mouseY > 0 && mouseY < height) {
@@ -129,8 +170,9 @@
           cursor(ARROW);
         }
       }
+
       function mousePressed() {
-      // Did I click on the playhead?
+      // Did I click on the playhead? then set dragging to true
       playHeadX = map(playheadTime, 0, soundFile.duration(), 0, width);
       if (mouseX > playHeadX-3 && mouseX < playHeadX+3 && mouseY > 0 && mouseY < height) {
         dragging = true;
@@ -143,50 +185,48 @@
       // Quit dragging
       if (dragging === true) {
         dragging = false;
+        soundFile.stop(); //trying to stop the clip from playing immediately -test this
         playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
         console.log("playheadtime:  "+playheadTime);
-        if (playheadTime < 0) {playheadTime = 0;} 
+        if (playheadTime < 0) {playheadTime = 0;} // bound check
         else if (playheadTime > soundFile.duration()) {playheadTime = soundfile.duration()-0.2;}
         //soundFile.play(0,1,.5,playheadTime,soundFile.duration());
-        soundFile.stop();
+        soundFile.stop();  // jump doesn't work unless you stop it first
         soundFile.jump(playheadTime);
       }
       // prevent default behavior
       return false;
     }
 
-      // makeBox builds a string that will draw a box when called with eval in draw()
+      // makeBox finds the coordinates needed to draw a clip box in draw()
       function makeBox() {
         boxXstart = map(startTime, 0, soundFile.duration(), 0, width);
         boxXend = map(endTime, 0, soundFile.duration(), 0, width);
         boxWidth = boxXend - boxXstart;
-        // height is automagic p5 var from canvas height
-        fill(clipBoxColor)
-        rect(boxXstart, 0, boxWidth, height);
-        fill(0)
-        let tempString = "rect(" + boxXstart.toString() + ", 0, " + boxWidth.toString() + ", " +height.toString() + ");"
-        console.log(tempString)
-        drawBoxList.push(tempString)
+        tempParams = [boxXstart, boxWidth, height]
+        console.log(tempParams)  //for debugging
+        drawBoxList.push(tempParams)
       }
 
       function setStartTime() {
         startTime = playheadTime.toFixed(2);
         startTimeStr = startTime,toString()
-        setState();
+        setState();  // e.g. valid clip, invalid, beginning time only, end only
       }
 
       function setEndTime() {
         endTime = playheadTime.toFixed(2);
         endTimeStr = endTime.toString();
-        setState();
+        setState(); // e.g. valid clip, invalid, beginning time only, end only
       }
 
       // called whenever mark start, mark end, are called
+      // e.g. valid clip, invalid, beginning time only, end only
       function setState() {
         if (!isNaN(parseInt(startTimeStr)) && isNaN(parseInt(endTimeStr))) {
           clipState = myE.STARTONLY;
           clipDurStr = " ";
-        } 
+        }
         else if (isNaN(parseInt(startTimeStr)) && !isNaN(parseInt(endTimeStr))) {
           clipState = myE.ENDONLY;
           clipDurStr = " ";
@@ -205,7 +245,7 @@
           // Do I need a flag for saved?
         }
         console.log(clipState);
-      } 
+      }
 
 
       // getPeaks returns a list of amplitude peaks.  Can take a paramter to make more
@@ -222,13 +262,13 @@
         rect(map(playheadTime, 0, soundFile.duration(), 0, width), 0, 2, height);
         fill(0,0,0);
       }
-		
+
 		// runs when play button is clicked
     function play() {
       getAudioContext().resume();
       console.log(recorderState);  // for debugging
       if (recorderState === 0) {  // remnant from upload audio
-        audio_message = 'Nothing to play.  Record audio first.';  
+        audio_message = 'Nothing to play.  Record audio first.';
       } else if (recorderState === 1) {  // this recorderState is a remnant from upload audio
         audio_message = 'Currently recording.  Press the recording icon to stop.';
       } else if (recorderState === 2 || recorderState ===3) {
@@ -236,11 +276,11 @@
         audio_message = 'Playing.';
         soundFile.play();
         soundFile.playMode("restart")
-        soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})  
-        recorderState = 2;       
+        soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})
+        recorderState = 2;
       }
     }
-		
+
     // runs when pause button is clicked
 		function pause() {
 			// getAudioContext().resume();  //probably won't need this
@@ -249,11 +289,11 @@
 			if (soundFile.isPlaying()) {
 				playheadTime=soundFile.currentTime();
 				soundFile.pause();
-			}	
+			}
 		}
-		
-    // This function just has some code I copied from p5.  No clue if it is even a 
-    // good starting point
+
+    // draws a clip box, saves trim into to  database
+
     function save_audio() {
       //Keep this code
       console.log(clipState);
@@ -262,34 +302,35 @@
       // to indicate it has been saved
       if (clipState === myE.DONE) {
         //clipState = myE.SAVED;  // not sure where to put this yet
-        makeBox()
-        
+        makeBox()  //Really makeBox coordinaes.  Box is drawn in draw() (box corners are created in this function)        
+        //javascript to click the submit button?
       }
-      // p5 copied code
-      try {
-        let soundBlob = soundFile.getBlob();
-        let serverUrl = 'http://jsonplaceholder.typicode.com/posts';
-        let httpRequestOptions = {
-          method: 'POST',
-          body: new FormData().append('soundBlob', soundBlob),
-          headers: new Headers({
-            'Content-Type': 'multipart/form-data'
-          })
-        };
-        httpDo(serverUrl, httpRequestOptions);
-
-      }
-      catch(err) {
-        console.log(err);
-      }
-      // write to database here
     }
+
+      // p5 copied code not using now but may be useful in save_audio()
+      // try {
+      //   let soundBlob = soundFile.getBlob();
+      //   let serverUrl = 'http://jsonplaceholder.typicode.com/posts';
+      //   let httpRequestOptions = {
+      //     method: 'POST',
+      //     body: new FormData().append('soundBlob', soundBlob),
+      //     headers: new Headers({
+      //       'Content-Type': 'multipart/form-data'
+      //     })
+      //   };
+      //   httpDo(serverUrl, httpRequestOptions);
+
+      // }
+      // catch(err) {
+      //   console.log(err);
+      // }
+      // write to database here
+
     // timeIt is a remnant from upload audio. May need it later
     function timeIt() {
       // 1 counter = 0.1 second
       recording_time++;
-    }
-
+    } 
   </script>
   <!--  end of script *****************************************************************************-->
   <style>
@@ -303,15 +344,17 @@
        height: 100%;
      }
     #centering {
-    display: flex;
-    align-items: center;
-    justify-content: center; 		
-
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     #trim_audio_container {
-    min-width: 700px;
-    min-height: 200px;
-    background-color: #5e001d;  /*  Go griz!  */
+      min-width: 700px;
+      min-height: 200px;
+      background-color: #5e001d;  /*  Go griz!  */
+    }
+    #buttons {
+      text-align: center;
     }
   </style>
   <title>Trim Audio</title>
@@ -327,14 +370,14 @@
         <div class="w3-bar w3-card w3-center" id="navigationButtons">
           <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
           {% if user.is_authenticated %}
-          <a href="/viewData/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
+          <a href="/viewAudio/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Audio</a>
           <a href="/uploadAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
-          <a href="/userManagement/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">User Management</a>
-          <a href="/rateData/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Rate Data</a> <!--Need this here for UI testing. Will change later.-->
+          <a href="/shareAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Share Audio</a>
+          <a href="/rateAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Rate Audio</a> <!--Need this here for UI testing. Will change later.-->
           {% endif %}
-          <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
           {% if user.is_anonymous %}
           <a href="/signUp/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Sign Up</a>
+          <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
           {% endif %}
           <div class="w3-dropdown-hover w3-hide-small w3-right  w3-xlarge">
             <button class="w3-round w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
@@ -348,21 +391,16 @@
           </div>
         </div>
       </div>
-
     </div>
 
     <!-- form -->
     <br><br><br><br><br><br><br><br>
-    <div class="w3-half">
-      
-    </div>
-
-
+    <div class="w3-half"></div>
 
     <div style="float: center; margin: auto; width: 70%">
       <div id="fancyHeader">
         <br><br>
-        <h1>Segment audio file</h2>
+        <h1>Segment Your Audio File</h2>
       </div>
       <br>
       <div id="centering">
@@ -371,49 +409,75 @@
         </div>
       </div>
       <br>
-      <div class="w3-bar">
+      <div class="w3-bar" id="buttons">
         <div class="w3-btn">
           <!--- spacing on these buttons is wierd. Leaving it for now since we may move to dynamic resizing -->
           <i class="fa fa-play-circle-o fa-3x" aria-hidden="true" onclick="play()"></i>
-          <h4 id="fancyText">Play</h4>
+          <h4 class="fancyText">Play</h4>
         </div>
         <div class="w3-btn" style="margin-left: 10vh" onclick="pause()">
           <i class="fa fa-pause-circle fa-3x" aria-hidden="true" onclick="pause()"></i>
-          <h4 id="fancyText">Pause</h4>
+          <h4 class="fancyText">Pause</h4>
         </div>
         <div class="w3-btn" style="margin-left: 10vh">
           <i class="fa fa-check-circle-o fa-3x" aria-hidden="true" onclick="setStartTime()"></i>
-          <h4 id="fancyText">Mark Start</h4>
+          <h4 class="fancyText">Mark Start</h4>
         </div>
         <div class="w3-btn" style="margin-left: 10vh">
           <i class="fa fa-window-close fa-3x" aria-hidden="true" onclick="setEndTime()"></i>
-          <h4 id="fancyText">Mark End</h4>
+          <h4 class="fancyText">Mark End</h4>
         </div>
         <div class="w3-btn" style="margin-left: 10vh">
           <i class="fa fa-save fa-3x" aria-hidden="true" onclick="save_audio()"></i>
-          <h4 id="fancyText">Save Audio Clip</h4>
-        </div>        
-      </div>     
+          <h4 class="fancyText">Save Audio Clip</h4>
+        </div>
+      </div>
     </div>
     <div class="w3-container">
       <div class="w3-half">
-        <br>
-        <label>Title</label>
-        <br>
-        <textarea style="vertical-align: middle;"></textarea>
-        <br><br>
-        <label style="padding: 13px;">Text (original)</label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="75"></textarea>
-        <br><br>
-        <label style="padding: 13px;">Text (English)</label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="75"></textarea>
-        <br><br>
-        <label style="padding: 13px;">Language</label><br>
-        <textarea style="vertical-align: middle;"></textarea>
-        <br><br>
-        <a href="/viewData/" class="w3-btn w3-green">Finish Editing</a>
+        <form class="audioForm">
+          <!-- <label>Hide me!  (Big-audio id for posting)</label><br> -->
+          <input type="hidden" id="formBigAudioID" name="big_audio_id" required></input>
+          <br><br>
+          <label style="padding: 13px;">Text (original)</label><br>
+          <textarea name="original_text" style="vertical-align: middle;" rows="3" cols="75"></textarea>
+          <br><br>
+          <label style="padding: 13px;">Text (English)</label><br>
+          <textarea name="english_text" style="vertical-align: middle;" rows="3" cols="75"></textarea>
+
+          <br><br>
+          <label style="padding: 13px;">Score (optional)</label><br>
+          <input type="text" name="score" style="vertical-align: middle;"></input>
+          <br><br>
+          <label style="padding: 13px;">Word Count</label><br>
+          <input type="text" name="word_count" style="vertical-align: middle;"></input>
+          <br><br>
+          <!-- TO DO: make this auto-filled  -->
+          <label style="padding: 13px;">Length</label><br>
+          <input type="text" name="length" style="vertical-align: middle;"></input>
+          <br><br>
+          <button type="submit" class="w3-btn w3-green" id="formUploadButton">Upload Audio Clip</button>
+        </form>
       </div>
     </div>
   </div>
+  <!-- display a message -->
+  {% if messages %}
+  {% for message in messages %}
+  <div id='success' class="hide max-w-50vw w3-bottom w3-left w3-light-blue">
+    <span onclick="this.parentElement.style.display='none'" class="w3-button w3-hover-red w3-large w3-display-topright">&times;</span>
+    <h3>Message!</h3>
+    <p>{{ message }}</p>
+  </div>
+  {% endfor %}
+  {% endif %}
+  <!--  -->
 </body>
+<script>
+  '{% if messages %}'
+  document.getElementById('success').style.display = 'block';
+  '{% endif %}'
+</script>
 </html>
+
+

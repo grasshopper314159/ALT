@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-  <!-- Load p5 library from CDN,  -->
+  {% load static %}
+	<script src="{% static '/js/p5.js'%}"></script>
+	<script src="{% static '/js/addons/p5.sound.js'%}"></script>
+	<script src="{% static '/js/addons/p5.dom.js'%}"></script>
+  <!-- Load p5 library from CDN,
   <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.sound.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.sound.js"></script> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  {% load static %}
   <!-- localized stylesheets -->
-  <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>  
+  <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>
   <!--  start of script *****************************************************************************
-    p5 will automatically call preload, setup and draw.  Draw is called ~50-60 times per second  
-    p5 may not play well with other javascript code.  It has a lot of global variables.  It is 
+    p5 will automatically call preload, setup and draw.  Draw is called ~50-60 times per second
+    p5 may not play well with other javascript code.  It has a lot of global variables.  It is
     possible to run in instance mode to mitigate this, if necessary (see p5 website)  -->
 
-  <script >
-    let mic, recorder, soundFile;
+  <script>
+    var mic, recorder, soundFile, soundBlob, blobFile;
 
     let state = 0; // state 0: nothing, state 1: recording;  state 2: audio recorded state 3: warned
     let audio_message, second_str = "", tenths_str="";
@@ -61,13 +65,13 @@
       function draw() {
         getAudioContext().resume()
         background(audio_background_color);
-        
+
         text(audio_message, 20, 40);
         if (recording_time == 0) {
           second_str = 0;
           tenths_str = 0; }
-        else if (recording_time/10 < 0) { 
-          second_str = "  "; 
+        else if (recording_time/10 < 0) {
+          second_str = "  ";
           tenths_str = recording_time%10;}
         else {
           second_str = parseInt(recording_time/10);
@@ -81,6 +85,9 @@
       // use the '.enabled' boolean to make sure user enabled the mic (otherwise we'd record silence)
       if (state === 0 && mic.enabled) {
         // Tell recorder to record to a p5.SoundFile which we will use for playback
+        // !! this doesn't seem to be  really creating a a p5.SoundFile type object-- 
+        // as demonstrated by console logging the methods on the object.   need to convert somehow to that type
+        // 
         recorder.record(soundFile);
         a_timer = setInterval(timeIt, 100);
         audio_background_color = 'red';
@@ -101,7 +108,7 @@
         state = 3;         // save file
       }
       else if (state === 3) {
-        try { soundfile.stop() } // in case it is still playing
+        try { soundFile.stop() } // in case it is still playing
         catch(err) {}
         recorder.record(soundFile);
         audio_background_color = 'red';
@@ -117,45 +124,133 @@
       if (state === 0) {
         audio_message = 'Nothing to play.  Record audio first.';
       } else if (state === 1) {
-        audio_message = 'Currently recording.  Press the recording icon to stop.';
-      } else if (state === 2 || state ===3) {
+        audio_message = 'Currently recording.  Press the stop icon to stop.';
+      } else if (state === 2 || state === 3) {
         audio_background_color = 'green';
         audio_message = 'Playing.';
         soundFile.play();
         soundFile.playMode("restart")
-        soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})  
-        state = 2;       
+        soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})
+        state = 2;
       }
     }
 
-    // This function just has some code I copied from p5.  No clue if it is even a 
-    // good starting point
+    // This function just has some code I copied from p5.  No clue if it is even a
+    // good starting point  Called by the icon with a disk
     function save_audio() {
-      print(state);
+      getAudioContext().resume()
+      console.log("save_audio()");
+      console.log(typeof(soundFile));
+      getMethods = (obj) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function')
+      //getMethods = (obj) => Object.getOwnPropertyNames(obj);
+      console.log(getMethods(soundFile));
       try {
-        let soundBlob = soundFile.getBlob();
-        let serverUrl = 'http://jsonplaceholder.typicode.com/posts';
-        let httpRequestOptions = {
-          method: 'POST',
-          body: new FormData().append('soundBlob', soundBlob),
-          headers: new Headers({
-            'Content-Type': 'multipart/form-data'
-          })
-        };
-        httpDo(serverUrl, httpRequestOptions);
+        soundBlob = soundFile.getBlob();
+        blobFile = blobToFile(soundBlob, "mySoundFile.wav");
+
+        //let serverUrl = 'https://alr.hs.umt.edu/ajax/postRecordedAudio';
+        let serverUrl = 'http://localhost:8000/ajax/postRecordedAudio';
+        // let httpRequestOptions = {
+        //   method: 'POST',
+        //   body: new FormData().append('soundBlob', soundBlob),
+        //   headers: new Headers({
+        //     'Content-Type': 'multipart/form-data'
+        //   })
+        // };
+        // httpDo(serverUrl, httpRequestOptions);
+        //This command always gives me: DOMException: Failed to set the 'value' property on 'HTMLInputElement': This input
+        //element accepts a filename, which may only be programmatically set to the empty string.
+        //I think we will have to build off of the above code to submit the form and not rely on the http submit
+        //document.getElementById('recordingToUpload').value = blobFile.name;
+
+//************ from 
+      //   let formdata = new FormData() ; //create a from to of data to upload to the server
+      // formdata.append('soundBlob', soundBlob,  'myfiletosave.wav') ; // append the sound blob and the name of the file. third argument will show up on the server as req.file.originalname
+
+      //     // Now we can send the blob to a server...
+      // //var serverUrl = '/upload'; //we've made a POST endpoint on the server at /upload
+      // //build a HTTP POST request
+      // var httpRequestOptions = {
+      //   method: 'POST',
+      //   body: formdata , // with our form data packaged above
+      //   headers: new Headers({
+      //     'enctype': 'multipart/form-data' // the enctype is important to work with multer on the server
+      //   })
+      // };
+      // // console.log(httpRequestOptions);
+      // // use p5 to make the POST request at our URL and with our options
+      // httpDo(
+      //   serverUrl,
+      //   httpRequestOptions,
+      //   (successStatusCode)=>{ //if we were successful...
+      //     console.log("uploaded recording successfully: " + successStatusCode)
+      //   },
+      //   (error)=>{console.error(error);}
+      // )
+
+      //**********************  from https://stackoverflow.com/questions/60700389/real-time-audio-streaming-from-javascrit-to-python-django/60700473#60700473
+
+      
+
+      AjaxRequest();
+
+
 
       }
       catch(err) {
-        print(err)
+        console.log(err);
+        console.log(soundFile);
+        console.log(soundBlob);
+        console.log("Error in save_audio()");
       }
       // write to database here
     }
+    function AjaxRequest() {
+    var form = new FormData();
+    form.append("wavfile", soundFile.getBlob(), "file");
 
+      $.ajax({
+        url: "http://localhost:8000/ajax/postRecordedAudio",
+        method: "POST",
+        data: form, //here passing the wav file 
+        dataType: "json",
+        processData: false,
+        contentType:false,
+        success:function(data){
+             console.log(data.success)
+          },
+
+      });
+}
+
+    // used to show a stopwatch while recording -probably not needed,
+    // if responsiveness lags, try removing it and seeing if responsiveness is improved
     function timeIt() {
       // 1 counter = 0.1 second
       recording_time++;
     }
-
+ 
+    function blobToFile(theBlob, fileName){
+      //A Blob() is almost a File() - it's just missing the two properties below which we will add
+      theBlob.lastModifiedDate = new Date();
+      theBlob.name = fileName;
+      return theBlob;
+    }
+  </script>
+  <script>
+  // functions to change icons on click.
+    function toggleStop(element) {
+      if ((state === 1 || state === 2) && mic.enabled) {
+        $(element).toggleClass('far fa-stop-circle');
+        var record_text = document.getElementById('record_text');
+        if (record_text.innerHTML === "Record") {
+          record_text.innerHTML = "Stop";
+        }
+        else {
+          record_text.innerHTML = "Record";
+        }
+      }
+    }
   </script>
   <style>
     .h1 {
@@ -181,14 +276,14 @@
         <div class="w3-bar w3-card w3-center" id="navigationButtons">
           <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
           {% if user.is_authenticated %}
-          <a href="/viewData/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Data</a>
-          <a href="/uploadAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
-          <a href="/userManagement/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">User Management</a>
-          <a href="/rateData/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Rate Data</a> <!--Need this here for UI testing. Will change later.-->
+          <a href="/viewAudio/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Audio</a>
+          <a href="/uploadAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge currentButton">Upload Audio</a>
+          <a href="/shareAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Share Audio</a>
+          <a href="/rateAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Rate Audio</a> <!--Need this here for UI testing. Will change later.-->
           {% endif %}
-          <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
           {% if user.is_anonymous %}
           <a href="/signUp/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Sign Up</a>
+          <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
           {% endif %}
           <div class="w3-dropdown-hover w3-hide-small w3-right  w3-xlarge">
             <button class="w3-round w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
@@ -204,17 +299,30 @@
       </div>
     </div>
 
-    <!-- form -->
+    <!-- onsubmit="return validatePage()" form -- NOT DONE, so makes execution stop, took it out -->
+    <!--  TO DO:
+          -post textarea fields
+          - make submission possible for recorded audio
+    -->
+
     <br><br><br><br><br><br><br><br>
     <div class="w3-half">
-      <form class="audioForm" style="float: left; margin-left: 5vh;">
+      <form class="audioForm" action="/ajax/postUploadAudio/" enctype="multipart/form-data"  method="post" style="float: left; margin-left: 5vh;">
         <label style="font-weight: bold">Choose a File to Upload:</label>
         <br>
         <input class="w3-bar-item" type="file" name="fileToUpload" id="fileToUpload" style="margin-left:0;"></input>
         <br><br>
-        <label style="text-align: center;">Speaker</label>
+        <!-- <label style="text-align: center;">Speaker</label> -->
         <br>
-        <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>
+        <label style="font-weight: bold">File Metadata</label>
+        <br> <br>
+        <!-- <br> -->
+        <label>Speaker First Name</label><br>
+        <input name="fileSpeakerFirst" style="vertical-align: middle;" rows="3" cols="70"></input>
+        <br><br>
+        <label>Speaker Last Name</label><br>
+        <input name="fileSpeakerLast" style="vertical-align: middle;" rows="3" cols="70"></input>
+        <br><br>
         <br><br>
         <label>Text (Original)</label><br>
         <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
@@ -223,15 +331,22 @@
         <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
         <br><br>
         <label>Language</label><br>
-        <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>
+        <!-- <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>  -->
+        <!-- make dropdown?  try English or 1-->
+        <!-- class below js-basic-single TODO: change-->
+        <select id="Languages" class="" name="fileLanguageId" style="width:30vw;">
+          <option value="NULL">Select a Language</option>
+        </select>
+        <!-- <input type="text" placeholder="Enter Language" name="fileLanguageId" required></input> -->
+
         <br><br>
-        <input type="radio" name="private" value="private" style="margin-left:0">
+        <input type="radio" name="privacy" value="private" style="margin-left:0"></input>
         <label for="private">Private</label><br>
-        <input type="radio" name="not_private" value="not_private" style="margin-left:0">
+        <input type="radio" name="privacy" value="not_private" style="margin-left:0"></input>
         <label for="not_private">Not Private</label><br>
         <br>
-        <!--<button type="submit" class="w3-btn w3-green">Upload</button>-->
-        <a href="/trimAudio/" class="w3-btn w3-green">Upload</a> <!-- Fake Upload button -->
+        <button type="submit" class="w3-btn w3-green">Upload File</button>
+        <!--<a href="/trimAudio/" class="w3-btn w3-green">Upload</a> --><!-- Fake Upload button -->
         <br>
         <br>
       </form>
@@ -241,7 +356,7 @@
 
     <div style="float: right; margin: auto; width: 40%">
       <div id="fancyHeader">
-        <h1>Record a New Audio File!!</h2>
+        <h1>Record a New Audio File</h2>
       </div>
             <br>
       <div id="record_audio_container">
@@ -250,19 +365,96 @@
       <br>
       <div class="w3-bar">
         <div class="w3-btn" style="margin-left: 10vh">
-          <i class="fa fa-microphone fa-3x" aria-hidden="true" onclick="record()"></i>
-          <h4 id="fancyText">RECORD</h4>
+          <i id="record" class="fa fa-microphone fa-3x" aria-hidden="true" onclick="record(); toggleStop(this)"></i>
+          <h4 id="record_text" class="fancyText">Record</h4>
         </div>
         <div class="w3-btn" style="text-align:center;">
-          <i class="fa fa-play-circle-o fa-3x" aria-hidden="true" onclick="play()"></i>
-          <h4 id="fancyText">PLAY</h4>
+          <i class="fa fa-play-circle-o fa-3x fancyText" aria-hidden="true" onclick="play()"></i>
+          <h4 class="fancyText">Play</h4>
         </div>
         <div class="w3-btn" style="margin-right: 10vh">
-          <i class="fa fa-save fa-3x" aria-hidden="true" onclick="save_audio()"></i>
-          <h4 id="fancyText">SAVE</h4>
+          <i class="fa fa-save fa-3x fancyText" aria-hidden="true" onclick="save_audio()"></i>
+          <h4 class="fancyText">Save Recording</h4>
         </div>
-      </div>     
+      </div>
     </div>
+    <div class="w3-btn w3-green">
+        <a href="/viewData">Submit Recording</a>
+    </div>
+     <!-- <div>
+      <br><br><br><br><br><br><br><br> -->
+
+<!-- *************************     New Form to upload a recording *******************************-->
+
+      <div class="w3-half">
+        <form class="audioForm" action="/ajax/postRecordedAudio/" enctype="multipart/form-data"  method="post" style="float: left; margin-left: 5vh;">
+          <label style="font-weight: bold">Recording Metadata</label>
+          <br>
+          <br><br>
+          <input class="w3-bar-item" type="file" name="recordingToUpload" id="recordingToUpload" style="margin-left:0;"></input>
+          <label>Speaker First Name</label><br>
+          <input name="fileSpeakerFirst" style="vertical-align: middle;" rows="3" cols="70"></input>
+          <br><br>
+          <label>Speaker Last Name</label><br>
+          <input name="fileSpeakerLast" style="vertical-align: middle;" rows="3" cols="70"></input>
+          <br><br>
+          <br><br>
+          <label>Text (Original)</label><br>
+          <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
+          <br><br>
+          <label>Text (English)</label><br>
+          <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
+          <br><br>
+          <label>Language</label><br>
+          <select type="dropdown" name="fileLanguageId" required>
+            <option value="English">English</option>
+            <option value="Blackfoot">Blackfoot</option>
+            <option value="Japanese">Japanese</option>
+            <option value="Spanish">Spanish</option>
+            <option value="French">French</option>
+            <option value="German">German</option>
+            <option value="Chinese">Chinese</option>
+          </select>
+
+          <br><br>
+          <input type="radio" name="privacy" value="private" style="margin-left:0"></input>
+          <label for="private">Private</label><br>
+          <input type="radio" name="privacy" value="not_private" style="margin-left:0"></input>
+          <label for="not_private">Not Private</label><br>
+          <br>
+          <button type="submit" class="w3-btn w3-green">Upload Recording</button>
+          <br>
+          <br>
+        </form>
+      </div>
+
+     </div>
   </div>
+-->
+
+  <!-- display a message -->
+  {% if messages %}
+  {% for message in messages %}
+  <div id='success' class="hide max-w-50vw w3-bottom w3-left w3-light-blue">
+    <span onclick="this.parentElement.style.display='none'" class="w3-button w3-hover-red w3-large w3-display-topright">&times;</span>
+    <h3>Message!</h3>
+    <p>{{ message }}</p>
+  </div>
+  {% endfor %}
+  {% endif %}
+  <!--  -->
 </body>
+<script>
+  '{% if messages %}'
+  document.getElementById('success').style.display = 'block';
+  '{% endif %}'
+</script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+<script src="{% static '/js/ajax_getAllLanguages.js' %}">  </script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $(".js-basic-single").select2();
+  });
+</script>
 </html>

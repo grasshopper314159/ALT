@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User as user_account
+from django.core.files import File
+from django.core.files.storage import default_storage
+import os
 
 class User(models.Model):
     id = models.OneToOneField(user_account, primary_key=True, on_delete=models.CASCADE)
@@ -14,10 +17,15 @@ class User(models.Model):
     def __str__(self):
         return (self.id.first_name + ', ' + self.id.last_name)
 
+def file_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return 'user_{0}_big/{1}'.format(instance.owner_id.id.id, filename)
+
+
 class BigAudio(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
     upload_date = models.DateField(auto_now_add=True)
-    sound_file = models.FileField(upload_to="", default=None, blank=True, null=True)
+    sound_file = models.FileField(upload_to=file_directory_path, default=None, blank=True, null=True)
     length = models.TimeField()
     owner_id = models.ForeignKey("User", on_delete=models.CASCADE, default=None, blank=True, null=True) #Big audio and user 'owns' relationship
     speaker_id = models.ForeignKey("Speaker", on_delete=models.CASCADE, default=None) #Big audio and speaker 'spoken by' relationship
@@ -82,12 +90,12 @@ class Comment(models.Model):
     def __str__(self):
         return (self.user_id.id.first_name + ', ' + self.user_id.id.last_name + ', TrimAudio: ' + str(self.trim_audio_id.id))
 
-#Need input from Miyashita for this one:
 class Measurements(models.Model):
     audio_trim_id = models.ForeignKey("AudioTrim", on_delete=models.CASCADE, default=None)
     set_number = models.IntegerField(unique=True)
-    wavelength = models.IntegerField(default=None, blank=True, null=True)
-    frequency = models.IntegerField(default=None, blank=True, null=True)
+    #pitch = models.DecimalField(4, 2)
+    #amplitude = models.DecimalField(4, 2)
+    #duration = models.DecimalField(4, 2)
 
     class Meta:
         unique_together = (("audio_trim_id", "set_number")) #Measurements has a composite key.
@@ -117,3 +125,10 @@ class Assignment(models.Model):
 
     def __str__(self):
         return ('Class: ' + str(self.id) + ' With: ' + self.class_id.teacher_id.id.last_name)
+        
+class Permission(models.Model):
+    big_audio_id = models.ForeignKey("BigAudio", on_delete=models.CASCADE, default=None)
+    user_id = models.ForeignKey("User", on_delete=models.CASCADE, default=None)
+    
+    class Meta:
+        unique_together = (("big_audio_id", "user_id")) #composite key
