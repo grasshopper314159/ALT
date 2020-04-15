@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User, Permission, Group
 from django.contrib.contenttypes.models import ContentType
 from django.core.serializers import serialize
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, FileResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -156,6 +156,8 @@ def display_aboutUs(request):
 # TODO remove when no longer used
 def display_taskBar(request):
     return render(request, 'general/TaskBar.html')
+def display_test(request):
+    return render(request, 'temp.html')
 
 # for displaying a meesage to the user
 # Attaches messages to the request from the active_messages dict
@@ -200,7 +202,10 @@ def is_user_type(request, input, OR=False, AND=False):
 def ajax_getAllAudioTrims(request):
     if is_user_type(request, ['ADMIN','research_user'], OR=True):
         if request.method == 'GET':
+            if is_user_type(request, ['ADMIN'], OR=True):
+                return JsonResponse(alr.getAllAudioTrim(request, True), safe=False)
             return JsonResponse(alr.getAllAudioTrim(request), safe=False)
+
     else:
         return redirect_home(request)
 
@@ -223,10 +228,12 @@ def ajax_createEval(request):
 
 @csrf_exempt
 @login_required(login_url='/home/')
-def ajax_getAudioByID(request):
+def ajax_getAudioFileById(request):
     if is_user_type(request, ['ADMIN','auth_user'], OR=True):
-        if request.method == 'POST':
-            return JsonResponse(alr.getAllAudioByID(request), safe=False)
+        if request.method == 'GET':
+            Audio = BigAudio.objects.get(id=request.GET['id'])
+            print(Audio.sound_file.url)
+            return FileResponse(Audio.sound_file.url)
     else:
         return redirect_home(request)
 

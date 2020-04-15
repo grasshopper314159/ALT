@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import User, BigAudio, Speaker, Language, Review, AudioTrim, Comment, Measurements, Class, Assignment
 
 # TODO all_trims should only retrieve trims accessible by current user.
-def getAllAudioTrim(request):
+def getAllAudioTrim(request, admin=False):
     all_trims = AudioTrim.objects.all()
 
     # This is linear to the number of total audio_trims (i.e. might get slow?)
@@ -18,7 +18,8 @@ def getAllAudioTrim(request):
     for key in all_trims:
         obj = {}
         # TODO: change so you can see data of other people who allow you access
-        if (key.big_audio_id.owner_id.id == request.user):
+        # TODO: add all fields from models.py
+        if not admin and key.big_audio_id.owner_id.id == request.user:
             obj['owner'] = key.big_audio_id.owner_id.id.first_name + ' ' + key.big_audio_id.owner_id.id.last_name
             obj['speaker'] = key.big_audio_id.speaker_id.first_name + ' ' + key.big_audio_id.speaker_id.last_name
             obj['original_text'] = (key.original_text)
@@ -27,7 +28,16 @@ def getAllAudioTrim(request):
             obj['date'] = (key.last_listened_date)
             # key.id is the primary key for a given audio trim
             response[key.id] = obj
-
+        elif admin:
+            obj['owner'] = key.big_audio_id.owner_id.id.first_name + ' ' + key.big_audio_id.owner_id.id.last_name
+            obj['speaker'] = key.big_audio_id.speaker_id.first_name + ' ' + key.big_audio_id.speaker_id.last_name
+            obj['original_text'] = (key.original_text)
+            obj['english_text'] = (key.english_text)
+            obj['score'] = (key.score)
+            obj['date'] = (key.last_listened_date)
+            obj['big_audio_id'] = key.big_audio_id.id
+            # key.id is the primary key for a given audio trim
+            response[key.id] = obj
     return response
 
 def getAllLanguages(request):
@@ -40,25 +50,24 @@ def getAllLanguages(request):
 
     return response
 
-def getAllAudioByID(request):
-    id = request.POST.data.id
-    Audio = BigAudio.objects.get(id=id)
-
-    # This is linear to the number of total audio_trims (i.e. might get slow?)
-    response = {}
-    response['id'] = Audio.id
-    response['upload_date'] = Audio.upload_date
-    response['sound_file'] = Audio.sound_file
-    response['length'] = Audio.length
-    response['owner_id'] = Audio.owner_id
-    response['speaker_id'] = Audio.speaker_id
-    response['language_id'] = Audio.language_id
-    response['reviews'] = Audio.reviews
-    response['private'] = Audio.private
-
-    return response
-
-getAllAudioByID
+# def getAllAudioByID(request):
+#     id = request.GET['id']
+#     Audio = BigAudio.objects.get(id=id)
+#     # This is linear to the number of total audio_trims (i.e. might get slow?)
+#     response = {}
+#     response['id'] = Audio.id
+#     response['upload_date'] = Audio.upload_date
+#     response['sound_file'] = Audio.sound_file.url
+#     print(Audio.sound_file.file)
+#     response['length'] = Audio.length
+#     response['owner_id'] = Audio.owner_id.id.first_name + ', ' + Audio.owner_id.id.last_name
+#     response['speaker_id'] = Audio.speaker_id.first_name + ', ' + Audio.speaker_id.last_name
+#     response['language_id'] = Audio.language_id.name
+#     response['reviews'] = Audio.reviews
+#     response['private'] = Audio.private
+#     print(response)
+#
+#     return response
 
 
 def getEval(request):

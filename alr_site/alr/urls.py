@@ -28,6 +28,7 @@ urlpatterns = [
 
     # For testing
     url(r'^taskBar/$', views.display_taskBar, name='display_taskBar'),
+    url(r'^test/$', views.display_test, name='display_test'),
 
 
     # ajax misc. URLs
@@ -41,7 +42,7 @@ urlpatterns = [
     # ajax get
     url(r'^ajax/getAllAudioTrims/$', views.ajax_getAllAudioTrims, name='ajax_getAllAudioTrims'),
     url(r'^ajax/getAllLanguages/$', views.ajax_getAllLanguages, name='ajax_getAllLanguages'),
-    url(r'^ajax/getAudioByID/$', views.ajax_getAudioByID, name='ajax_getAudioByID'),
+    url(r'^ajax/getAudioFileById/$', views.ajax_getAudioFileById, name='ajax_getAudioFileById'),
 
     # ajax post
     url(r'^ajax/postUploadAudio/$', views.ajax_postUploadAudio, name='ajax_postUploadAudio'),

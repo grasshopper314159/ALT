@@ -1,13 +1,15 @@
 function getAudio(id) {
-    $.ajax(
+  console.log(id);
+  $.ajax(
         {
-            type: 'POST',
+            type: 'GET',
             data: {'id': id},
-            url: '/ajax/getAudioByID/',
+            url: '/ajax/getAudioFileById/',
 
             success: function(response)
             {
-
+              soundFile = new p5.soundFile(response);
+              console.log(soundFile);
             },
 
             failure: function()
