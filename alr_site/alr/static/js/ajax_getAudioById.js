@@ -20,3 +20,30 @@ function getAudio(id) {
     );
 
 }
+
+function getAudioURL(id) {
+  var returnValue;
+  console.log(id);
+  $.ajax(
+        {
+            type: 'GET',
+            data: {'id': id},
+            url: '/ajax/getAudioFileById/',
+            async: false,
+
+            success: function(response)
+            {
+
+              console.log(response);
+              returnValue = response;
+            },
+
+            failure: function()
+            {
+                alert("AJAX FAILED!");
+            }
+        }
+    );
+     return returnValue;
+
+}
