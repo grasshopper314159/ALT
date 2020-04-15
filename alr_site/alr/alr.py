@@ -40,6 +40,27 @@ def getAllLanguages(request):
 
     return response
 
+def getAllAudioByID(request):
+    id = request.POST.data.id
+    Audio = BigAudio.objects.get(id=id)
+
+    # This is linear to the number of total audio_trims (i.e. might get slow?)
+    response = {}
+    response['id'] = Audio.id
+    response['upload_date'] = Audio.upload_date
+    response['sound_file'] = Audio.sound_file
+    response['length'] = Audio.length
+    response['owner_id'] = Audio.owner_id
+    response['speaker_id'] = Audio.speaker_id
+    response['language_id'] = Audio.language_id
+    response['reviews'] = Audio.reviews
+    response['private'] = Audio.private
+
+    return response
+
+getAllAudioByID
+
+
 def getEval(request):
     pass
 

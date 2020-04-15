@@ -221,6 +221,14 @@ def ajax_createEval(request):
             active_messages['createEval'] = alr.createEval(request)
             return redirect('researcher/createEval/')
 
+@csrf_exempt
+@login_required(login_url='/home/')
+def ajax_getAudioByID(request):
+    if is_user_type(request, ['ADMIN','auth_user'], OR=True):
+        if request.method == 'POST':
+            return JsonResponse(alr.getAllAudioByID(request), safe=False)
+    else:
+        return redirect_home(request)
 
 @csrf_exempt
 @login_required(login_url='/home/')
@@ -418,7 +426,7 @@ def ajax_postRecordedAudio(request):
             secs = math.ceil(secs)
             l = '0' + str(datetime.timedelta(seconds=secs))
             # print(l)
-            
+
 
             # print(wv.open(fileFile).getnframes())
 

@@ -41,6 +41,7 @@ urlpatterns = [
     # ajax get
     url(r'^ajax/getAllAudioTrims/$', views.ajax_getAllAudioTrims, name='ajax_getAllAudioTrims'),
     url(r'^ajax/getAllLanguages/$', views.ajax_getAllLanguages, name='ajax_getAllLanguages'),
+    url(r'^ajax/getAudioByID/$', views.ajax_getAudioByID, name='ajax_getAudioByID'),
 
     # ajax post
     url(r'^ajax/postUploadAudio/$', views.ajax_postUploadAudio, name='ajax_postUploadAudio'),
