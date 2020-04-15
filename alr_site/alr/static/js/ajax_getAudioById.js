@@ -8,8 +8,8 @@ function getAudio(id) {
 
             success: function(response)
             {
+              console.log(response);
               soundFile = new p5.soundFile(response);
-              console.log(soundFile);
             },
 
             failure: function()
