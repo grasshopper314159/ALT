@@ -19,7 +19,7 @@ $(document).ready(function(){
 
           entry = '<tr><td>' +
             '<div class="w3-bar">' +
-            '<button class="w3-button w3-tiny w3-white w3-border w3-round">Edit</button>'+
+            '<button class="w3-button w3-tiny w3-white w3-border w3-round" onclick="getAudio(' + response[key]['big_audio_id'] + ')">Edit</button>'+
             '<button class="w3-button w3-tiny w3-white w3-border w3-round">Del</button>'+
             '</div></td>' +
             '<td>' + response[key]['owner'] + '</td>' +
