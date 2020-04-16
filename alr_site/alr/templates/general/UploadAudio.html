@@ -5,10 +5,6 @@
 	<script src="{% static '/js/p5.js'%}"></script>
 	<script src="{% static '/js/addons/p5.sound.js'%}"></script>
 	<script src="{% static '/js/addons/p5.dom.js'%}"></script>
-  <!-- Load p5 library from CDN,
-  <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.sound.js"></script> -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,241 +14,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <!-- localized stylesheets -->
   <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>
-  <!--  start of script *****************************************************************************
-    p5 will automatically call preload, setup and draw.  Draw is called ~50-60 times per second
-    p5 may not play well with other javascript code.  It has a lot of global variables.  It is
-    possible to run in instance mode to mitigate this, if necessary (see p5 website)  -->
 
-  <script>
-    var mic, recorder, soundFile, soundBlob, blobFile;
-
-    let state = 0; // state 0: nothing, state 1: recording;  state 2: audio recorded state 3: warned
-    let audio_message, second_str = "", tenths_str="";
-    let audio_background_color = '#5e001d';  // Go Griz!
-    let recording_time, seconds = 0;
-    let p5TextSize = 18;
-  // SETUP This starts before draw, but not guaranteed to finish before draw.
-  // If you need something to finish, make a preload() function
-    function setup() {
-      recording_time = 0;
-      var canvas = createCanvas(500, 100);
-      canvas.parent('record_audio_container');
-      background(audio_background_color);
-      //fill(0);
-      fill('white')
-      textSize(p5TextSize)
-      // if text wrapping is needed, specify a bounding box like
-      // text("some long text"", 10, 10, 70, 80);
-      audio_message="Click the microphone icon to toggle recording."
-      // create an audio in
-      mic = new p5.AudioIn();
-
-      // users must manually enable their browser microphone for recording to work properly!
-      mic.start();
-
-      // create a sound recorder
-      recorder = new p5.SoundRecorder();
-
-      // connect the mic to the recorder
-      recorder.setInput(mic);
-
-      // create an empty sound file that we will use to playback the recording
-      soundFile = new p5.SoundFile();
-
-          //fft = new p5.FFT();
-        //fft.setInput(soundFile);
-    }
-      function draw() {
-        getAudioContext().resume()
-        background(audio_background_color);
-
-        text(audio_message, 20, 40);
-        if (recording_time == 0) {
-          second_str = 0;
-          tenths_str = 0; }
-        else if (recording_time/10 < 0) {
-          second_str = "  ";
-          tenths_str = recording_time%10;}
-        else {
-          second_str = parseInt(recording_time/10);
-          tenths_str = recording_time%10;}
-        text("Length of recording: "+ second_str + "."+tenths_str + " seconds", 20, 80);
-      }
-
-    function record() {
-      getAudioContext().resume()
-      print(state);
-      // use the '.enabled' boolean to make sure user enabled the mic (otherwise we'd record silence)
-      if (state === 0 && mic.enabled) {
-        // Tell recorder to record to a p5.SoundFile which we will use for playback
-        // !! this doesn't seem to be  really creating a a p5.SoundFile type object-- 
-        // as demonstrated by console logging the methods on the object.   need to convert somehow to that type
-        // 
-        recorder.record(soundFile);
-        a_timer = setInterval(timeIt, 100);
-        audio_background_color = 'red';
-        audio_message = 'Recording now! Click to stop.';
-        state = 1;
-      } else if (state === 0 && !mic.enabled) {
-        audio_background_color = 'orange';
-        audio_message = 'You must allow access to your mic';
-      } else if (state === 1) {
-        recorder.stop(); // stop recorder, and send the result to soundFile
-        clearInterval(a_timer)
-        audio_background_color = 'green';
-        audio_message = 'Press the Play icon to listen.';
-        state = 2;
-      } else if (state === 2) {
-        audio_message = 'You have a recording.  Press record again to re-record.';
-        audio_background_color = 'orange';
-        state = 3;         // save file
-      }
-      else if (state === 3) {
-        try { soundFile.stop() } // in case it is still playing
-        catch(err) {}
-        recorder.record(soundFile);
-        audio_background_color = 'red';
-        audio_message = 'Recording now! Click to stop.';
-        state = 1;
-        recording_time = 0;
-        a_timer = setInterval(timeIt, 100);
-      }
-    }
-    function play() {
-      getAudioContext().resume()
-      print(state);
-      if (state === 0) {
-        audio_message = 'Nothing to play.  Record audio first.';
-      } else if (state === 1) {
-        audio_message = 'Currently recording.  Press the stop icon to stop.';
-      } else if (state === 2 || state === 3) {
-        audio_background_color = 'green';
-        audio_message = 'Playing.';
-        soundFile.play();
-        soundFile.playMode("restart")
-        soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})
-        state = 2;
-      }
-    }
-
-    // This function just has some code I copied from p5.  No clue if it is even a
-    // good starting point  Called by the icon with a disk
-    function save_audio() {
-      getAudioContext().resume()
-      console.log("save_audio()");
-      console.log(typeof(soundFile));
-      getMethods = (obj) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function')
-      //getMethods = (obj) => Object.getOwnPropertyNames(obj);
-      console.log(getMethods(soundFile));
-      try {
-        soundBlob = soundFile.getBlob();
-        blobFile = blobToFile(soundBlob, "mySoundFile.wav");
-
-        //let serverUrl = 'https://alr.hs.umt.edu/ajax/postRecordedAudio';
-        let serverUrl = 'http://localhost:8000/ajax/postRecordedAudio';
-        // let httpRequestOptions = {
-        //   method: 'POST',
-        //   body: new FormData().append('soundBlob', soundBlob),
-        //   headers: new Headers({
-        //     'Content-Type': 'multipart/form-data'
-        //   })
-        // };
-        // httpDo(serverUrl, httpRequestOptions);
-        //This command always gives me: DOMException: Failed to set the 'value' property on 'HTMLInputElement': This input
-        //element accepts a filename, which may only be programmatically set to the empty string.
-        //I think we will have to build off of the above code to submit the form and not rely on the http submit
-        //document.getElementById('recordingToUpload').value = blobFile.name;
-
-//************ from 
-      //   let formdata = new FormData() ; //create a from to of data to upload to the server
-      // formdata.append('soundBlob', soundBlob,  'myfiletosave.wav') ; // append the sound blob and the name of the file. third argument will show up on the server as req.file.originalname
-
-      //     // Now we can send the blob to a server...
-      // //var serverUrl = '/upload'; //we've made a POST endpoint on the server at /upload
-      // //build a HTTP POST request
-      // var httpRequestOptions = {
-      //   method: 'POST',
-      //   body: formdata , // with our form data packaged above
-      //   headers: new Headers({
-      //     'enctype': 'multipart/form-data' // the enctype is important to work with multer on the server
-      //   })
-      // };
-      // // console.log(httpRequestOptions);
-      // // use p5 to make the POST request at our URL and with our options
-      // httpDo(
-      //   serverUrl,
-      //   httpRequestOptions,
-      //   (successStatusCode)=>{ //if we were successful...
-      //     console.log("uploaded recording successfully: " + successStatusCode)
-      //   },
-      //   (error)=>{console.error(error);}
-      // )
-
-      //**********************  from https://stackoverflow.com/questions/60700389/real-time-audio-streaming-from-javascrit-to-python-django/60700473#60700473
-
-      
-
-      AjaxRequest();
-
-
-
-      }
-      catch(err) {
-        console.log(err);
-        console.log(soundFile);
-        console.log(soundBlob);
-        console.log("Error in save_audio()");
-      }
-      // write to database here
-    }
-    function AjaxRequest() {
-    var form = new FormData();
-    form.append("wavfile", soundFile.getBlob(), "file");
-
-      $.ajax({
-        url: "http://localhost:8000/ajax/postRecordedAudio",
-        method: "POST",
-        data: form, //here passing the wav file 
-        dataType: "json",
-        processData: false,
-        contentType:false,
-        success:function(data){
-             console.log(data.success)
-          },
-
-      });
-}
-
-    // used to show a stopwatch while recording -probably not needed,
-    // if responsiveness lags, try removing it and seeing if responsiveness is improved
-    function timeIt() {
-      // 1 counter = 0.1 second
-      recording_time++;
-    }
- 
-    function blobToFile(theBlob, fileName){
-      //A Blob() is almost a File() - it's just missing the two properties below which we will add
-      theBlob.lastModifiedDate = new Date();
-      theBlob.name = fileName;
-      return theBlob;
-    }
-  </script>
-  <script>
-  // functions to change icons on click.
-    function toggleStop(element) {
-      if ((state === 1 || state === 2) && mic.enabled) {
-        $(element).toggleClass('far fa-stop-circle');
-        var record_text = document.getElementById('record_text');
-        if (record_text.innerHTML === "Record") {
-          record_text.innerHTML = "Stop";
-        }
-        else {
-          record_text.innerHTML = "Record";
-        }
-      }
-    }
-  </script>
-  <style>
+<style>
     .h1 {
       font-size: 70px;
     }
@@ -351,86 +114,7 @@
         <br>
       </form>
     </div>
-
-<!--Record Audio -->
-
-    <div style="float: right; margin: auto; width: 40%">
-      <div id="fancyHeader">
-        <h1>Record a New Audio File</h2>
-      </div>
-            <br>
-      <div id="record_audio_container">
-        <!-- p5 canvas is attached to this div here -->
-      </div>
-      <br>
-      <div class="w3-bar">
-        <div class="w3-btn" style="margin-left: 10vh">
-          <i id="record" class="fa fa-microphone fa-3x" aria-hidden="true" onclick="record(); toggleStop(this)"></i>
-          <h4 id="record_text" class="fancyText">Record</h4>
-        </div>
-        <div class="w3-btn" style="text-align:center;">
-          <i class="fa fa-play-circle-o fa-3x fancyText" aria-hidden="true" onclick="play()"></i>
-          <h4 class="fancyText">Play</h4>
-        </div>
-        <div class="w3-btn" style="margin-right: 10vh">
-          <i class="fa fa-save fa-3x fancyText" aria-hidden="true" onclick="save_audio()"></i>
-          <h4 class="fancyText">Save Recording</h4>
-        </div>
-      </div>
-    </div>
-    <div class="w3-btn w3-green">
-        <a href="/viewData">Submit Recording</a>
-    </div>
-     <!-- <div>
-      <br><br><br><br><br><br><br><br> -->
-
-<!-- *************************     New Form to upload a recording *******************************-->
-
-      <div class="w3-half">
-        <form class="audioForm" action="/ajax/postRecordedAudio/" enctype="multipart/form-data"  method="post" style="float: left; margin-left: 5vh;">
-          <label style="font-weight: bold">Recording Metadata</label>
-          <br>
-          <br><br>
-          <input class="w3-bar-item" type="file" name="recordingToUpload" id="recordingToUpload" style="margin-left:0;"></input>
-          <label>Speaker First Name</label><br>
-          <input name="fileSpeakerFirst" style="vertical-align: middle;" rows="3" cols="70"></input>
-          <br><br>
-          <label>Speaker Last Name</label><br>
-          <input name="fileSpeakerLast" style="vertical-align: middle;" rows="3" cols="70"></input>
-          <br><br>
-          <br><br>
-          <label>Text (Original)</label><br>
-          <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
-          <br><br>
-          <label>Text (English)</label><br>
-          <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
-          <br><br>
-          <label>Language</label><br>
-          <select type="dropdown" name="fileLanguageId" required>
-            <option value="English">English</option>
-            <option value="Blackfoot">Blackfoot</option>
-            <option value="Japanese">Japanese</option>
-            <option value="Spanish">Spanish</option>
-            <option value="French">French</option>
-            <option value="German">German</option>
-            <option value="Chinese">Chinese</option>
-          </select>
-
-          <br><br>
-          <input type="radio" name="privacy" value="private" style="margin-left:0"></input>
-          <label for="private">Private</label><br>
-          <input type="radio" name="privacy" value="not_private" style="margin-left:0"></input>
-          <label for="not_private">Not Private</label><br>
-          <br>
-          <button type="submit" class="w3-btn w3-green">Upload Recording</button>
-          <br>
-          <br>
-        </form>
-      </div>
-
-     </div>
   </div>
--->
 
   <!-- display a message -->
   {% if messages %}
@@ -444,6 +128,7 @@
   {% endif %}
   <!--  -->
 </body>
+
 <script>
   '{% if messages %}'
   document.getElementById('success').style.display = 'block';
@@ -457,4 +142,244 @@
     $(".js-basic-single").select2();
   });
 </script>
+
+  <!--  start of recording scripts *****************************************************************************
+    p5 will automatically call preload, setup and draw.  Draw is called ~50-60 times per second
+    p5 may not play well with other javascript code.  It has a lot of global variables.  It is
+    possible to run in instance mode to mitigate this, if necessary (see p5 website)  
+    Collapse the following commented block to hide these scripts                                                      -->
+
+<!-- 
+<script>
+  var mic, recorder, soundFile, soundBlob, blobFile;
+
+  let state = 0; // state 0: nothing, state 1: recording;  state 2: audio recorded state 3: warned
+  let audio_message, second_str = "", tenths_str="";
+  let audio_background_color = '#5e001d';  // Go Griz!
+  let recording_time, seconds = 0;
+  let p5TextSize = 18;
+// SETUP This starts before draw, but not guaranteed to finish before draw.
+// If you need something to finish, make a preload() function
+  function setup() {
+    recording_time = 0;
+    var canvas = createCanvas(500, 100);
+    //canvas.parent('record_audio_container');
+    background(audio_background_color);
+    //fill(0);
+    fill('white')
+    textSize(p5TextSize)
+    // if text wrapping is needed, specify a bounding box like
+    // text("some long text"", 10, 10, 70, 80);
+    audio_message="Click the microphone icon to toggle recording."
+    // create an audio in
+    mic = new p5.AudioIn();
+
+    // users must manually enable their browser microphone for recording to work properly!
+    mic.start();
+
+    // create a sound recorder
+    recorder = new p5.SoundRecorder();
+
+    // connect the mic to the recorder
+    recorder.setInput(mic);
+
+    // create an empty sound file that we will use to playback the recording
+    soundFile = new p5.SoundFile();
+
+        //fft = new p5.FFT();
+      //fft.setInput(soundFile);
+  }
+    function draw() {
+      getAudioContext().resume()
+      background(audio_background_color);
+
+      text(audio_message, 20, 40);
+      if (recording_time == 0) {
+        second_str = 0;
+        tenths_str = 0; }
+      else if (recording_time/10 < 0) {
+        second_str = "  ";
+        tenths_str = recording_time%10;}
+      else {
+        second_str = parseInt(recording_time/10);
+        tenths_str = recording_time%10;}
+      text("Length of recording: "+ second_str + "."+tenths_str + " seconds", 20, 80);
+    }
+
+  function record() {
+    getAudioContext().resume()
+    print(state);
+    // use the '.enabled' boolean to make sure user enabled the mic (otherwise we'd record silence)
+    if (state === 0 && mic.enabled) {
+      // Tell recorder to record to a p5.SoundFile which we will use for playback
+      // !! this doesn't seem to be  really creating a a p5.SoundFile type object-- 
+      // as demonstrated by console logging the methods on the object.   need to convert somehow to that type
+      // 
+      recorder.record(soundFile);
+      a_timer = setInterval(timeIt, 100);
+      audio_background_color = 'red';
+      audio_message = 'Recording now! Click to stop.';
+      state = 1;
+    } else if (state === 0 && !mic.enabled) {
+      audio_background_color = 'orange';
+      audio_message = 'You must allow access to your mic';
+    } else if (state === 1) {
+      recorder.stop(); // stop recorder, and send the result to soundFile
+      clearInterval(a_timer)
+      audio_background_color = 'green';
+      audio_message = 'Press the Play icon to listen.';
+      state = 2;
+    } else if (state === 2) {
+      audio_message = 'You have a recording.  Press record again to re-record.';
+      audio_background_color = 'orange';
+      state = 3;         // save file
+    }
+    else if (state === 3) {
+      try { soundFile.stop() } // in case it is still playing
+      catch(err) {}
+      recorder.record(soundFile);
+      audio_background_color = 'red';
+      audio_message = 'Recording now! Click to stop.';
+      state = 1;
+      recording_time = 0;
+      a_timer = setInterval(timeIt, 100);
+    }
+  }
+  function play() {
+    getAudioContext().resume()
+    print(state);
+    if (state === 0) {
+      audio_message = 'Nothing to play.  Record audio first.';
+    } else if (state === 1) {
+      audio_message = 'Currently recording.  Press the stop icon to stop.';
+    } else if (state === 2 || state === 3) {
+      audio_background_color = 'green';
+      audio_message = 'Playing.';
+      soundFile.play();
+      soundFile.playMode("restart")
+      soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})
+      state = 2;
+    }
+  }
+
+  // This function just has some code I copied from p5.  No clue if it is even a
+  // good starting point  Called by the icon with a disk
+  function save_audio() {
+    getAudioContext().resume()
+    console.log("save_audio()");
+    console.log(typeof(soundFile));
+    getMethods = (obj) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function')
+    //getMethods = (obj) => Object.getOwnPropertyNames(obj);
+    console.log(getMethods(soundFile));
+    try {
+      soundBlob = soundFile.getBlob();
+      blobFile = blobToFile(soundBlob, "mySoundFile.wav");
+
+      //let serverUrl = 'https://alr.hs.umt.edu/ajax/postRecordedAudio';
+      let serverUrl = 'http://localhost:8000/ajax/postRecordedAudio';
+      // let httpRequestOptions = {
+      //   method: 'POST',
+      //   body: new FormData().append('soundBlob', soundBlob),
+      //   headers: new Headers({
+      //     'Content-Type': 'multipart/form-data'
+      //   })
+      // };
+      // httpDo(serverUrl, httpRequestOptions);
+      //This command always gives me: DOMException: Failed to set the 'value' property on 'HTMLInputElement': This input
+      //element accepts a filename, which may only be programmatically set to the empty string.
+      //I think we will have to build off of the above code to submit the form and not rely on the http submit
+      //document.getElementById('recordingToUpload').value = blobFile.name;
+
+//************ from 
+    //   let formdata = new FormData() ; //create a from to of data to upload to the server
+    // formdata.append('soundBlob', soundBlob,  'myfiletosave.wav') ; // append the sound blob and the name of the file. third argument will show up on the server as req.file.originalname
+
+    //     // Now we can send the blob to a server...
+    // //var serverUrl = '/upload'; //we've made a POST endpoint on the server at /upload
+    // //build a HTTP POST request
+    // var httpRequestOptions = {
+    //   method: 'POST',
+    //   body: formdata , // with our form data packaged above
+    //   headers: new Headers({
+    //     'enctype': 'multipart/form-data' // the enctype is important to work with multer on the server
+    //   })
+    // };
+    // // console.log(httpRequestOptions);
+    // // use p5 to make the POST request at our URL and with our options
+    // httpDo(
+    //   serverUrl,
+    //   httpRequestOptions,
+    //   (successStatusCode)=>{ //if we were successful...
+    //     console.log("uploaded recording successfully: " + successStatusCode)
+    //   },
+    //   (error)=>{console.error(error);}
+    // )
+
+    //**********************  from https://stackoverflow.com/questions/60700389/real-time-audio-streaming-from-javascrit-to-python-django/60700473#60700473
+
+    
+
+    AjaxRequest();
+
+
+
+    }
+    catch(err) {
+      console.log(err);
+      console.log(soundFile);
+      console.log(soundBlob);
+      console.log("Error in save_audio()");
+    }
+    // write to database here
+  }
+  function AjaxRequest() {
+  var form = new FormData();
+  form.append("wavfile", soundFile.getBlob(), "file");
+
+    $.ajax({
+      url: "http://localhost:8000/ajax/postRecordedAudio",
+      method: "POST",
+      data: form, //here passing the wav file 
+      dataType: "json",
+      processData: false,
+      contentType:false,
+      success:function(data){
+           console.log(data.success)
+        },
+
+    });
+}
+
+  // used to show a stopwatch while recording -probably not needed,
+  // if responsiveness lags, try removing it and seeing if responsiveness is improved
+  function timeIt() {
+    // 1 counter = 0.1 second
+    recording_time++;
+  }
+
+  function blobToFile(theBlob, fileName){
+    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+    theBlob.lastModifiedDate = new Date();
+    theBlob.name = fileName;
+    return theBlob;
+  }
+</script> -->
+
+
+<script>
+  // functions to change icons on click.
+    function toggleStop(element) {
+      if ((state === 1 || state === 2) && mic.enabled) {
+        $(element).toggleClass('far fa-stop-circle');
+        var record_text = document.getElementById('record_text');
+        if (record_text.innerHTML === "Record") {
+          record_text.innerHTML = "Stop";
+        }
+        else {
+          record_text.innerHTML = "Record";
+        }
+      }
+    }
+  </script>
+
 </html>
