@@ -2,7 +2,7 @@
 //needed for
 // TODO: fix that it gets whole big_audio not just the trimmed section
 // or trim the big before adding to audio controls
-function getAudio(id) {
+function getAudioURL(id) {
   $.ajax(
         {
             type: 'GET',

@@ -9,7 +9,9 @@ from django.views.decorators.csrf import csrf_exempt
 # import all db tables
 from .models import User, BigAudio, Speaker, Language, Review, AudioTrim, Comment, Measurements, Class, Assignment
 
-# TODO Rate Data only needs trims that need ratings currently gets same as viewData.
+# TODO: add all fields from models.py
+
+# used by view audio and rate audio
 def getAllAudioTrim(request, admin=False):
     ratable = request.GET['ratable']
 
@@ -20,8 +22,9 @@ def getAllAudioTrim(request, admin=False):
     for key in all_trims:
         obj = {}
         # TODO: change so you can see data of other people who allow you access
-        # TODO: add all fields from models.py
-        if not admin and key.score == None and key.big_audio_id.owner_id.id == request.user:
+
+        # for view if not admin
+        if not admin and not ratable and key.big_audio_id.owner_id.id == request.user:
             obj['owner'] = key.big_audio_id.owner_id.id.first_name + ' ' + key.big_audio_id.owner_id.id.last_name
             obj['speaker'] = key.big_audio_id.speaker_id.first_name + ' ' + key.big_audio_id.speaker_id.last_name
             obj['original_text'] = (key.original_text)
@@ -29,10 +32,23 @@ def getAllAudioTrim(request, admin=False):
             obj['score'] = (key.score)
             obj['date'] = (key.last_listened_date)
             obj['url'] = key.big_audio_id.sound_file.url
-
-            # key.id is the primary key for a given audio trim
             response[key.id] = obj
-        elif admin: # admin gets to see all trims
+
+        # for rate audio if not admin
+        elif not admin and ratable:
+            if key.score == None:
+                obj['owner'] = key.big_audio_id.owner_id.id.first_name + ' ' + key.big_audio_id.owner_id.id.last_name
+                obj['speaker'] = key.big_audio_id.speaker_id.first_name + ' ' + key.big_audio_id.speaker_id.last_name
+                obj['original_text'] = (key.original_text)
+                obj['english_text'] = (key.english_text)
+                obj['score'] = (key.score)
+                obj['date'] = (key.last_listened_date)
+                obj['url'] = key.big_audio_id.sound_file.url
+                response[key.id] = obj
+
+
+        # admin gets to see all trims
+        elif admin:
             obj['owner'] = key.big_audio_id.owner_id.id.first_name + ' ' + key.big_audio_id.owner_id.id.last_name
             obj['speaker'] = key.big_audio_id.speaker_id.first_name + ' ' + key.big_audio_id.speaker_id.last_name
             obj['original_text'] = (key.original_text)
@@ -47,34 +63,13 @@ def getAllAudioTrim(request, admin=False):
 
 def getAllLanguages(request):
     all_Languages = Language.objects.all()
-
-    # This is linear to the number of total audio_trims (i.e. might get slow?)
     response = {}
     for key in all_Languages:
         response[key.id] = key.name
-
     return response
 
-# def getAllAudioByID(request):
-#     id = request.GET['id']
-#     Audio = BigAudio.objects.get(id=id)
-#     # This is linear to the number of total audio_trims (i.e. might get slow?)
-#     response = {}
-#     response['id'] = Audio.id
-#     response['upload_date'] = Audio.upload_date
-#     response['sound_file'] = Audio.sound_file.url
-#     print(Audio.sound_file.file)
-#     response['length'] = Audio.length
-#     response['owner_id'] = Audio.owner_id.id.first_name + ', ' + Audio.owner_id.id.last_name
-#     response['speaker_id'] = Audio.speaker_id.first_name + ', ' + Audio.speaker_id.last_name
-#     response['language_id'] = Audio.language_id.name
-#     response['reviews'] = Audio.reviews
-#     response['private'] = Audio.private
-#     print(response)
-#
-#     return response
-
 # TODO: This is for a simple signin where the reshearcher has created the account that the rater will use
+# TODO: the creation of these account is not yet implemented
 def createEval(request, active_messages):
     trims = request.POST['trims']
     firstname = request.POST['eval_firstname']
@@ -107,12 +102,8 @@ def createEval(request, active_messages):
         else:
             return e
 
+# TODO: currently only updates ratings should also update comments
 def updateRating(request):
-    print('*********************')
-    print(request.POST['trim_id'])
-    print(request.POST['value'])
-    print(request.POST['comments'])
-
     trim = AudioTrim.objects.get(id=int(request.POST['trim_id']))
     trim.score = request.POST['value']
     trim.save()
