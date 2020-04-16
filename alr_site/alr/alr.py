@@ -11,6 +11,8 @@ from .models import User, BigAudio, Speaker, Language, Review, AudioTrim, Commen
 
 # TODO Rate Data only needs trims that need ratings currently gets same as viewData.
 def getAllAudioTrim(request, admin=False):
+    ratable = request.GET['ratable']
+
     all_trims = AudioTrim.objects.all()
 
     # This is linear to the number of total audio_trims (i.e. might get slow?)
@@ -19,7 +21,7 @@ def getAllAudioTrim(request, admin=False):
         obj = {}
         # TODO: change so you can see data of other people who allow you access
         # TODO: add all fields from models.py
-        if not admin and key.big_audio_id.owner_id.id == request.user:
+        if not admin and key.score == None and key.big_audio_id.owner_id.id == request.user:
             obj['owner'] = key.big_audio_id.owner_id.id.first_name + ' ' + key.big_audio_id.owner_id.id.last_name
             obj['speaker'] = key.big_audio_id.speaker_id.first_name + ' ' + key.big_audio_id.speaker_id.last_name
             obj['original_text'] = (key.original_text)
@@ -72,10 +74,7 @@ def getAllLanguages(request):
 #
 #     return response
 
-
-def getEval(request):
-    pass
-
+# TODO: This is for a simple signin where the reshearcher has created the account that the rater will use
 def createEval(request, active_messages):
     trims = request.POST['trims']
     firstname = request.POST['eval_firstname']
@@ -109,6 +108,11 @@ def createEval(request, active_messages):
             return e
 
 def updateRating(request):
-    trim = AudioTrim.objects.filter(id=request.POST['trim_id'])
-    trim.score = request.POST['score']
+    print('*********************')
+    print(request.POST['trim_id'])
+    print(request.POST['value'])
+    print(request.POST['comments'])
+
+    trim = AudioTrim.objects.get(id=int(request.POST['trim_id']))
+    trim.score = request.POST['value']
     trim.save()

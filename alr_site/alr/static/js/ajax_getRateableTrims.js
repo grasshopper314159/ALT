@@ -3,6 +3,9 @@ $(document).ready(function(){
   $.ajax(
     {
       type: 'GET',
+      data: {
+        'ratable':true
+      },
       url: '/ajax/getAllAudioTrims/',
 
       success: function(response)
@@ -70,10 +73,8 @@ $(document).ready(function(){
             '</tbody></table></div></div><div><h3>Comments</h3>' +
             // TODO: upload comments with rating
             '<textarea rows="2" cols="30" style="border: solid 1px grey; padding: 3px; width: 90%;" name="comment_' + key + '"></textarea></div>' +
-            // TODO: don't use a form to upload rating use an ajax post?
-            '<form class="" action="/ajax/postRating/" method="post">' +
-                '<input type="submit" class="w3-btn w3-green" id="uploadButton" value="Save" onclick="add_rating(' + key + ')"></input>' +
-            '</form></div>';
+            '<div class="w3-btn w3-green" id="uploadButton" onclick="postRating(' + key + ',add_rating(' + key + '),\'\')"><a href="/testrate/">Save</a></div>' +
+            '</div>';
 
             rate_boxes.innerHTML += rate_box;
         }

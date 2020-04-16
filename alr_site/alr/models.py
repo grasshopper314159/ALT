@@ -69,7 +69,7 @@ class AudioTrim(models.Model):
     english_text = models.TextField()
     phonetic_text = models.TextField(default=None, blank=True, null=True)
     comments = models.ManyToManyField("User", through="Comment", related_name="big_audio_comments") # User and big audio 'can comment' relationship
-    last_listened_date = models.DateTimeField(default=None, blank=True, null=True)
+    last_listened_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     score = models.IntegerField(default=None, blank=True, null=True)
     word_count = models.IntegerField(default=None, blank=True, null=True)
     # Length should probably be required
@@ -125,10 +125,10 @@ class Assignment(models.Model):
 
     def __str__(self):
         return ('Class: ' + str(self.id) + ' With: ' + self.class_id.teacher_id.id.last_name)
-        
+
 class Permission(models.Model):
     big_audio_id = models.ForeignKey("BigAudio", on_delete=models.CASCADE, default=None)
     user_id = models.ForeignKey("User", on_delete=models.CASCADE, default=None)
-    
+
     class Meta:
         unique_together = (("big_audio_id", "user_id")) #composite key
