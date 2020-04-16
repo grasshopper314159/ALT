@@ -3,3 +3,5 @@
 *.log
 *.gitignore
 alr_site/sqlite3_default.db
+
+*.wav
