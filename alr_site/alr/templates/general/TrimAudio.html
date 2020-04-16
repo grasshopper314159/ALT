@@ -19,353 +19,370 @@
 
   <!-- localized stylesheets -->
   <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript">
+  //*************************  variables **********************************
+  console.log('START');
+  var soundFile, peaks;
+  let recorderState = 0; // state 0: nothing, state 1: recording,  state 2: audio recorded, state 3: overwrite warning  --> change to enum?
+  let audio_message, secondStr, tenthsStr, startTimeStr, endTimeStr, clipDurStr;
+  audio_message = secondStr = tenthsStr = startTimeStr = endTimeStr = clipDurStr = " ";
+  // myE is short for clipStateEnum.  JS doesn't have real enums, but this works.  If speed is an issue, change strings to 1,2,3,4,5 for faster comparison
+  let myE = {NOSTART: "no times yet", STARTONLY: "has start time", ENDONLY: "needs start time", DONE: "has start and end time", SAVED: "has been saved to DB", INVALID: "end time < start time"};
+  let clipState = myE.NOSTART;
+  let myGrey = (200,200,200);
+  let audio_background_color = myGrey;
+  let recording_time, seconds, ready, playheadTime = 0;
+  // These are the positions for the time text on the drawing canvas
+  let startMarkPosX = 20;
+  let startMarkPosY = 160;
+  let endMarkPosX = 120;
+  let endMarkPosY = 160;
+  let durMarkPosX = 220;
+  let durMarkPosY = 160;
+  let startTime, endTime;
+  let canvasHeight = 180;
+  let canvasWidth = 650;
+  let drawBox = 0; //flag to add a box to indicate saved clip
+  let drawBoxList = [];
+  let clipBoxColor = 'rgba(0,255,0, 0.25)';
+  let dragging = false;
+  let bigAudioId;
+
+  //********************** main p5 functions **********************************
+
+  // PRELOAD everything in here finishes before setup and draw run
+  function preload() {
+    //getAudioContext().resume();
+    '{% if messages %}'
+    '{% for message in messages %}'
+    // <!-- <script type="text/javascript" src="{% static '/js/ajax_getAudioById.js' %}"> -->
+    function getAudioURL(id) {
+      $.ajax(
+            {
+                type: 'GET',
+                data: {'id': id},
+                url: '/ajax/getAudioFileById/',
+
+                success: function(response)
+                {
+                  console.log(response);
+                  return response;
+                },
+
+                failure: function()
+                {
+                    alert("AJAX FAILED!");
+                }
+            }
+        );
+    }
+    message = '{{ message }}';
+    message = message.split('/');
+    document.getElementById('msg').innerHTML = message[0]
+    soundFile = loadSound(getAudioURL(message[1]));
+    console.log(message[1])
+    console.log(message[0])
+    '{% endfor %}'
+    '{% endif %}'
+    //soundFile = loadSound(getAudioURL(big_audio_id_from_upload_audio));
+    // soundFile = loadSound("{% static '../media/user_25_big/french_1.wav'%}"); //# 'ibaudiofiles/' lblb message.id rbrb '/' lblb message.filename rbrb # lb = { , rb = }
+    console.log('PRELOAD');
+    recorderState=2;  //ready to play clip
+    // console.log(typeof(soundFile))
+    // getMethods = (obj) => Object.getOwnPropertyNames(obj);
+    // console.log(getMethods(soundFile));
+  }
+
+  // SETUP Run starts before draw, but not guaranteed to finish before draw
+  function setup() {
+
+    getAudioContext().resume(); //in the console there is an error that pop up that alerts you to add this
+    console.log('setup1');  // for debugging
+    recording_time = 0;  //remnant from upload audio.  turn this into soundFile length?
+    var canvas = createCanvas(canvasWidth, canvasHeight);
+    canvas.parent('trim_audio_container');
+    canvas.style("visibility", "visible");
+    background(audio_background_color);
+    fill(0,0,0);  //draws in black
+    console.log('setup2'); // for debugging
+    makePeaks(soundFile);
+    // cut and paste this in to prefill big_audio id for form submitting
+    // needs testing
+  //      window.onload = function(){
+  console.log("bigAudioId:  ", bigAudioId)
+  console.log("bigAudioIdType:  ", typeof(bigAudioId))
+    document.getElementById('formBigAudioID').value = bigAudioId;
+  //      };
+
+  }
+  // DRAW  Runs ~50 to 60 times per second
+  function draw() {
+    console.log(dragging) // For debugging
+    //cursor(ARROW)
+    //getAudioContext().resume();  // I thought I would need this.  Gives a bunch of errors in the console though
+    //resizeCanvas(600, 150, true);  // if we dynamically resize canvas, may use this function
+    background(audio_background_color);  // need to force a redraw for every frame
+    beginShape();  // Draws wave form
+    for (i = 0; i < peaks.length; i++) {
+      vertex(i, map(peaks[i], -1, 1, height, 0));
+    }
+    endShape();
+    // playHeadTime is needed to draw the playhead. Don't want to update
+    // playHeadTime if song is paused or being dragged
+    if (soundFile.isPlaying() && dragging === false) {
+      playheadTime=soundFile.currentTime();
+    }
+    checkCursor();  // changes shape of cursor when dragging
+    if (dragging === false) {
+      drawPlayhead(playheadTime);
+    }
+    else {  // moves playHeadTime to match the location of the mouse while dragging
+      playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
+      drawPlayhead(playheadTime);
+    }
+    text("Clip start: "+startTimeStr, startMarkPosX, startMarkPosY);
+    text("Clip end: "+endTimeStr, endMarkPosX, endMarkPosY);
+    text("Clip length: "+clipDurStr, durMarkPosX, durMarkPosY);
+    //text("Playhead x: "+ map(playheadTime, 0, soundFile.duration(), 0, width).toFixed(2) , durMarkPosX+100, durMarkPosY);
+    //text("MouseX: "+ mouseX.toFixed(2), durMarkPosX+220, durMarkPosY);
+
+    //draws boxes to show saved clips
+    for (i = 0; i < drawBoxList.length; i++) {
+      fill('rgba(0,255,0, 0.25)');
+      rect(drawBoxList[i][0], 0, drawBoxList[i][1], drawBoxList[i][2]);
+      fill(0);
+    }
+  }
+
+  //***********************  Helper Functions ****************************************************************\
+    // TODO
+    // function to find the next quiet spot and atumatically make a clip
+    // sensitivity function (and slider) for above function
+    // make generator function to give new colors for clip boxes--> only useful for overlapping clips?
+    // fix save audio
+    // work positioning of waveform and dynamic sizing
+    // fix drag so it doesn't start playing immediately after drag
+    // change to single play/pause button
+    // fix layout of buttons, canvas
+    // make it so when the canvas is clicked it toggles play and pause
+    // Make a list of the saved clips so one could be selected and edited
+    //    or make boundaries of boxes draggable? or both?
+    // Decide whether clips are uploaded to database by form submit
+    //    button or save icon button
+
+    //Changes the cursor to a hand when it's close to the playHead
+    function checkCursor() {
+      playHeadX = map(playheadTime, 0, soundFile.duration(), 0, width);
+      if (mouseX > playHeadX-3 && mouseX < playHeadX+3 && mouseY > 0 && mouseY < height) {
+        cursor(HAND);
+      } else {
+        cursor(ARROW);
+      }
+    }
+
+    function mousePressed() {
+    // Did I click on the playhead? then set dragging to true
+    playHeadX = map(playheadTime, 0, soundFile.duration(), 0, width);
+    if (mouseX > playHeadX-3 && mouseX < playHeadX+3 && mouseY > 0 && mouseY < height) {
+      dragging = true;
+      // prevent default behavior
+      return false;
+    }
+  }
+
+  function mouseReleased() {
+    // Quit dragging
+    if (dragging === true) {
+
+      dragging = false;
+      //soundFile.stop(); //trying to stop the clip from playing immediately -test this
+      playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
+      console.log("playheadtime:  "+playheadTime);
+      if (playheadTime < 0) {playheadTime = 0;} // bound check
+      else if (playheadTime > soundFile.duration()) {playheadTime = soundfile.duration()-0.2;}
+      //soundFile.play(0,1,.5,playheadTime,soundFile.duration());
+      //soundFile.stop();  // jump doesn't work unless you stop it first
+
+      soundFile.jump(playheadTime);
+      soundFile.pause();
+    }
+    // prevent default behavior
+    return false;
+  }
+
+    // makeBox finds the coordinates needed to draw a clip box in draw()
+    //todo: box entries an object to faciliate pulling out info
+    function makeBox() {
+      let trimDuration, trimStartTime;
+      boxXstart = map(startTime, 0, soundFile.duration(), 0, width);
+      boxXend = map(endTime, 0, soundFile.duration(), 0, width);
+      boxWidth = boxXend - boxXstart;
+      trimDuration = ~~((endTime - startTime)*1000)
+      trimStartTime = ~~(startTime*1000);
+      tempTrimId = drawBoxList.length+1;
+      tempParams = [boxXstart, boxWidth, height, trimStartTime, trimDuration, tempTrimId]
+      console.log(tempParams)  //for debugging
+      drawBoxList.push(tempParams)
+      //Add to the radio list of trims
+      var radioHTML = '<input type=\"radio\" value=\"' + tempTrimId + '\" id=\"trim'+ tempTrimId + '\" name=\"trimRadio\"  />';
+      var labelHTML = '<label for=\"trim'+ tempTrimId + '\"> Trim ' + tempTrimId + ':   '+ startTime + ' sec. to '+ endTime +' sec.' + '</label><br>';
+      radioHTML += labelHTML;
+      document.getElementById("listOfTrimsDiv").innerHTML += radioHTML;
+      console.log(document.getElementById("listOfTrimsDiv").innerHTML);
+    }  //close makeBox
+
+  //         Taking a step from what Patrick suggests, using a temporary node we can get rid of the try/catch:
+
+  // function createRadioElement(name, checked) {
+  //     var radioHtml = '<input type="radio" name="' + name + '"';
+  //     if ( checked ) {
+  //         radioHtml += ' checked="checked"';
+  //     }
+  //     radioHtml += '/>';
+
+  //     var radioFragment = document.createElement('div');
+  //     radioFragment.innerHTML = radioHtml;
+
+  //     return radioFragment.firstChild;
+  // }
+
+  //*********************************************
+
+
+
+    function setStartTime() {
+      startTime = playheadTime.toFixed(2);
+      startTimeStr = startTime,toString()
+      setState();  // e.g. valid clip, invalid, beginning time only, end only
+    }
+
+    function setEndTime() {
+      endTime = playheadTime.toFixed(2);
+      endTimeStr = endTime.toString();
+      setState(); // e.g. valid clip, invalid, beginning time only, end only
+    }
+
+    // called whenever mark start, mark end, are called
+    // e.g. valid clip, invalid, beginning time only, end only
+    function setState() {
+      if (!isNaN(parseInt(startTimeStr)) && isNaN(parseInt(endTimeStr))) {
+        clipState = myE.STARTONLY;
+        clipDurStr = " ";
+      }
+      else if (isNaN(parseInt(startTimeStr)) && !isNaN(parseInt(endTimeStr))) {
+        clipState = myE.ENDONLY;
+        clipDurStr = " ";
+      }
+      else if (!isNaN(parseInt(startTimeStr)) && !isNaN(parseInt(endTimeStr))) {
+        if (parseInt(startTimeStr) < parseInt(endTimeStr)) {
+          clipState = myE.DONE;
+          clipDur = endTime - startTime;
+          clipDurStr = clipDur.toString();
+        }
+        else {
+          clipState = myE.INVALID;
+          clipDurStr = "End time must be after start time."
+          clipDur = -1;
+        }
+        // Do I need a flag for saved?
+      }
+      console.log(clipState);
+    }
+
+
+    // getPeaks returns a list of amplitude peaks.  Can take a paramter to make more
+    // peaks (looks more detailed then).  Defaults to 5x window size
+    function makePeaks(soundFile) {
+        peaks = soundFile.getPeaks();
+    }
+    // This is the red line on the waveform
+    function drawPlayhead(playheadTime) {
+      noStroke();  // necessary?
+      fill(255,0,0);
+      // apparently width, height are p5 automagically created variables descripting canvas.
+      // may need to replace with canvasWidth/ canvasHeight at some point
+      rect(map(playheadTime, 0, soundFile.duration(), 0, width), 0, 2, height);
+      fill(0,0,0);
+    }
+
+  // runs when play button is clicked
+  function play() {
+    //getAudioContext().resume();
+    console.log(recorderState);  // for debugging
+    if (recorderState === 0) {  // remnant from upload audio
+      audio_message = 'Nothing to play.  Record audio first.';
+    } else if (recorderState === 1) {  // this recorderState is a remnant from upload audio
+      audio_message = 'Currently recording.  Press the recording icon to stop.';
+    } else if (recorderState === 2 || recorderState ===3) {
+      audio_background_color = myGrey;
+      audio_message = 'Playing.';
+      soundFile.play();
+      soundFile.playMode("untilDone")
+      soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})
+      recorderState = 2;
+    }
+  }
+
+  // runs when pause button is clicked
+  function pause() {
+    // getAudioContext().resume();  //probably won't need this
+    // this if is so if someone presses pause when it is already paused,
+    // it doesn't reset playheadTime to zero. Not working right!!!!
+    if (soundFile.isPlaying()) {
+      playheadTime=soundFile.currentTime();
+      soundFile.pause();
+    }
+  }
+
+  // draws a clip box, saves trim into to  database
+
+  function mark_audio() {
+    //Keep this code
+    console.log(clipState);
+    console.log(recorderState);
+    // If we have a valid clip, makeBox() will add a clipBox to draw on the waveform
+    // to indicate it has been saved
+    if (clipState === myE.DONE) {
+      //clipState = myE.SAVED;  // not sure where to put this yet
+      makeBox();  //Really makeBox coordinaes.  Box is drawn in draw() (box corners are created in this function)
+      //javascript to click the submit button?
+    }
+  }
+
+    // p5 copied code not using now but may be useful when saving trim
+    // try {
+    //   let soundBlob = soundFile.getBlob();
+    //   let serverUrl = 'http://jsonplaceholder.typicode.com/posts';
+    //   let httpRequestOptions = {
+    //     method: 'POST',
+    //     body: new FormData().append('soundBlob', soundBlob),
+    //     headers: new Headers({
+    //       'Content-Type': 'multipart/form-data'
+    //     })
+    //   };
+    //   httpDo(serverUrl, httpRequestOptions);
+
+    // }
+    // catch(err) {
+    //   console.log(err);
+    // }
+    // write to database here
+
+  // timeIt is a remnant from upload audio. May need it later
+  function timeIt() {
+    // 1 counter = 0.1 second
+    recording_time++;
+  }
+
+  </script>
+  <!-- <script type="text/javascript" src="{% static '/js/trimAudio.js' %}"></script> -->
 
   <!--  start of script *****************************************************************************
         p5 will automatically call preload, setup and draw.  Draw is called ~50-60 times per second
         p5 may not play well with other javascript code.  It has a lot of global variables.  It is
         possible to run in instance mode to mitigate this, if necessary (see p5 website)  -->
-  <script type="text/javascript" src="{% static '/js/ajax_getAudioById.js' %}"></script>
-  <script >
-    //*************************  variables **********************************
-    console.log('START');
-    var soundFile, peaks;
-    let recorderState = 0; // state 0: nothing, state 1: recording,  state 2: audio recorded, state 3: overwrite warning  --> change to enum?
-    let audio_message, secondStr, tenthsStr, startTimeStr, endTimeStr, clipDurStr;
-    audio_message = secondStr = tenthsStr = startTimeStr = endTimeStr = clipDurStr = " ";
-    // myE is short for clipStateEnum.  JS doesn't have real enums, but this works.  If speed is an issue, change strings to 1,2,3,4,5 for faster comparison
-    let myE = {NOSTART: "no times yet", STARTONLY: "has start time", ENDONLY: "needs start time", DONE: "has start and end time", SAVED: "has been saved to DB", INVALID: "end time < start time"};
-    let clipState = myE.NOSTART;
-    let myGrey = (200,200,200);
-    let audio_background_color = myGrey;
-    let recording_time, seconds, ready, playheadTime = 0;
-    // These are the positions for the time text on the drawing canvas
-    let startMarkPosX = 20;
-    let startMarkPosY = 160;
-    let endMarkPosX = 120;
-    let endMarkPosY = 160;
-    let durMarkPosX = 220;
-    let durMarkPosY = 160;
-    let startTime, endTime;
-    let canvasHeight = 180;
-    let canvasWidth = 650;
-    let drawBox = 0; //flag to add a box to indicate saved clip
-    let drawBoxList = [];
-    let clipBoxColor = 'rgba(0,255,0, 0.25)';
-    let dragging = false;
-    let bigAudioId;
 
-    //********************** main p5 functions **********************************
-
-    // PRELOAD everything in here finishes before setup and draw run
-    function preload() {
-      //getAudioContext().resume();
-      // '{% if me
-      //   ssages %}'
-      // '{% for
-      //    message in messages %}'
-      // message = '{{ mes
-      // sage }}'
-      // message = message.split(' ')
-      // console.log(message)
-      // console.log(message[1])
-      // console.log(typeof(message))
-      // message = 'user_12_gib/mySound_10.wav'
-      // prefix = "{% static '/bigAudioFiles/"'%}"   + message[0] + "/"
-      // soundFile = loadSound("{% static
-      // '/../media/'%}" + message);
-      // '{% en
-        // dfor %}'
-      // '{% end
-        // if %}'  
-      //soundFile = loadSound(getAudioURL(big_audio_id_from_upload_audio));
-      soundFile = loadSound("{% static '../media/user_25_big/french_1.wav'%}"); //# 'ibaudiofiles/' lblb message.id rbrb '/' lblb message.filename rbrb # lb = { , rb = }
-      console.log('PRELOAD');
-      recorderState=2;  //ready to play clip
-      // console.log(typeof(soundFile))
-      // getMethods = (obj) => Object.getOwnPropertyNames(obj);
-      // console.log(getMethods(soundFile));
-    }
-
-    // SETUP Run starts before draw, but not guaranteed to finish before draw
-    function setup() {
-      getAudioContext().resume(); //in the console there is an error that pop up that alerts you to add this
-      console.log('setup1');  // for debugging
-      recording_time = 0;  //remnant from upload audio.  turn this into soundFile length?
-      var canvas = createCanvas(canvasWidth, canvasHeight);
-      canvas.parent('trim_audio_container');
-      canvas.style("visibility", "visible");
-      background(audio_background_color);
-      fill(0,0,0);  //draws in black
-      console.log('setup2'); // for debugging
-      makePeaks(soundFile);
-      // cut and paste this in to prefill big_audio id for form submitting
-      // needs testing
-//      window.onload = function(){
-  console.log("bigAudioId:  ", bigAudioId)
-  console.log("bigAudioIdType:  ", typeof(bigAudioId))
-      document.getElementById('formBigAudioID').value = bigAudioId;
-//      };
-
-    }
-    // DRAW  Runs ~50 to 60 times per second
-		function draw() {
-      console.log(dragging) // For debugging
-      //cursor(ARROW)
-			//getAudioContext().resume();  // I thought I would need this.  Gives a bunch of errors in the console though
-			//resizeCanvas(600, 150, true);  // if we dynamically resize canvas, may use this function
-			background(audio_background_color);  // need to force a redraw for every frame
-			beginShape();  // Draws wave form
-			for (i = 0; i < peaks.length; i++) {
-				vertex(i, map(peaks[i], -1, 1, height, 0));
-			}
-			endShape();
-      // playHeadTime is needed to draw the playhead. Don't want to update
-      // playHeadTime if song is paused or being dragged
-			if (soundFile.isPlaying() && dragging === false) {
-				playheadTime=soundFile.currentTime();
-			}
-      checkCursor();  // changes shape of cursor when dragging
-      if (dragging === false) {
-        drawPlayhead(playheadTime);
-      }
-			else {  // moves playHeadTime to match the location of the mouse while dragging
-        playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
-        drawPlayhead(playheadTime);
-      }
-      text("Clip start: "+startTimeStr, startMarkPosX, startMarkPosY);
-      text("Clip end: "+endTimeStr, endMarkPosX, endMarkPosY);
-      text("Clip length: "+clipDurStr, durMarkPosX, durMarkPosY);
-      //text("Playhead x: "+ map(playheadTime, 0, soundFile.duration(), 0, width).toFixed(2) , durMarkPosX+100, durMarkPosY);
-      //text("MouseX: "+ mouseX.toFixed(2), durMarkPosX+220, durMarkPosY);
-
-      //draws boxes to show saved clips
-      for (i = 0; i < drawBoxList.length; i++) {
-        fill('rgba(0,255,0, 0.25)');
-        rect(drawBoxList[i][0], 0, drawBoxList[i][1], drawBoxList[i][2]);
-        fill(0);
-      }
-    }
-
-//***********************  Helper Functions ****************************************************************\
-      // TODO
-      // function to find the next quiet spot and atumatically make a clip
-      // sensitivity function (and slider) for above function
-      // make generator function to give new colors for clip boxes--> only useful for overlapping clips?
-      // fix save audio
-      // work positioning of waveform and dynamic sizing
-      // fix drag so it doesn't start playing immediately after drag
-      // change to single play/pause button
-      // fix layout of buttons, canvas
-      // make it so when the canvas is clicked it toggles play and pause
-      // Make a list of the saved clips so one could be selected and edited
-      //    or make boundaries of boxes draggable? or both?
-      // Decide whether clips are uploaded to database by form submit
-      //    button or save icon button
-
-      //Changes the cursor to a hand when it's close to the playHead
-      function checkCursor() {
-        playHeadX = map(playheadTime, 0, soundFile.duration(), 0, width);
-        if (mouseX > playHeadX-3 && mouseX < playHeadX+3 && mouseY > 0 && mouseY < height) {
-          cursor(HAND);
-        } else {
-          cursor(ARROW);
-        }
-      }
-
-      function mousePressed() {
-      // Did I click on the playhead? then set dragging to true
-      playHeadX = map(playheadTime, 0, soundFile.duration(), 0, width);
-      if (mouseX > playHeadX-3 && mouseX < playHeadX+3 && mouseY > 0 && mouseY < height) {
-        dragging = true;
-        // prevent default behavior
-        return false;
-      }
-    }
-
-    function mouseReleased() {
-      // Quit dragging
-      if (dragging === true) {
-        
-        dragging = false;
-        //soundFile.stop(); //trying to stop the clip from playing immediately -test this
-        playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
-        console.log("playheadtime:  "+playheadTime);
-        if (playheadTime < 0) {playheadTime = 0;} // bound check
-        else if (playheadTime > soundFile.duration()) {playheadTime = soundfile.duration()-0.2;}
-        //soundFile.play(0,1,.5,playheadTime,soundFile.duration());
-        //soundFile.stop();  // jump doesn't work unless you stop it first
-        
-        soundFile.jump(playheadTime);
-        soundFile.pause();
-      }
-      // prevent default behavior
-      return false;
-    }
-
-      // makeBox finds the coordinates needed to draw a clip box in draw()
-      //todo: box entries an object to faciliate pulling out info
-      function makeBox() {
-        let trimDuration, trimStartTime;
-        boxXstart = map(startTime, 0, soundFile.duration(), 0, width);
-        boxXend = map(endTime, 0, soundFile.duration(), 0, width);
-        boxWidth = boxXend - boxXstart;
-        trimDuration = ~~((endTime - startTime)*1000)
-        trimStartTime = ~~(startTime*1000);
-        tempTrimId = drawBoxList.length+1;
-        tempParams = [boxXstart, boxWidth, height, trimStartTime, trimDuration, tempTrimId]
-        console.log(tempParams)  //for debugging
-        drawBoxList.push(tempParams)
-        //Add to the radio list of trims
-        var radioHTML = '<input type=\"radio\" value=\"' + tempTrimId + '\" id=\"trim'+ tempTrimId + '\" name=\"trimRadio\"  />';
-        var labelHTML = '<label for=\"trim'+ tempTrimId + '\"> Trim ' + tempTrimId + ':   '+ startTime + ' sec. to '+ endTime +' sec.' + '</label><br>';
-        radioHTML += labelHTML;
-        document.getElementById("listOfTrimsDiv").innerHTML += radioHTML;
-        console.log(document.getElementById("listOfTrimsDiv").innerHTML);
-      }  //close makeBox
-
-//         Taking a step from what Patrick suggests, using a temporary node we can get rid of the try/catch:
-
-// function createRadioElement(name, checked) {
-//     var radioHtml = '<input type="radio" name="' + name + '"';
-//     if ( checked ) {
-//         radioHtml += ' checked="checked"';
-//     }
-//     radioHtml += '/>';
-
-//     var radioFragment = document.createElement('div');
-//     radioFragment.innerHTML = radioHtml;
-
-//     return radioFragment.firstChild;
-// }
-
-//*********************************************
-
-
-
-      function setStartTime() {
-        startTime = playheadTime.toFixed(2);
-        startTimeStr = startTime,toString()
-        setState();  // e.g. valid clip, invalid, beginning time only, end only
-      }
-
-      function setEndTime() {
-        endTime = playheadTime.toFixed(2);
-        endTimeStr = endTime.toString();
-        setState(); // e.g. valid clip, invalid, beginning time only, end only
-      }
-
-      // called whenever mark start, mark end, are called
-      // e.g. valid clip, invalid, beginning time only, end only
-      function setState() {
-        if (!isNaN(parseInt(startTimeStr)) && isNaN(parseInt(endTimeStr))) {
-          clipState = myE.STARTONLY;
-          clipDurStr = " ";
-        }
-        else if (isNaN(parseInt(startTimeStr)) && !isNaN(parseInt(endTimeStr))) {
-          clipState = myE.ENDONLY;
-          clipDurStr = " ";
-        }
-        else if (!isNaN(parseInt(startTimeStr)) && !isNaN(parseInt(endTimeStr))) {
-          if (parseInt(startTimeStr) < parseInt(endTimeStr)) {
-            clipState = myE.DONE;
-            clipDur = endTime - startTime;
-            clipDurStr = clipDur.toString();
-          }
-          else {
-            clipState = myE.INVALID;
-            clipDurStr = "End time must be after start time."
-            clipDur = -1;
-          }
-          // Do I need a flag for saved?
-        }
-        console.log(clipState);
-      }
-
-
-      // getPeaks returns a list of amplitude peaks.  Can take a paramter to make more
-      // peaks (looks more detailed then).  Defaults to 5x window size
-      function makePeaks(soundFile) {
-          peaks = soundFile.getPeaks();
-      }
-      // This is the red line on the waveform
-      function drawPlayhead(playheadTime) {
-        noStroke();  // necessary?
-        fill(255,0,0);
-        // apparently width, height are p5 automagically created variables descripting canvas.
-        // may need to replace with canvasWidth/ canvasHeight at some point
-        rect(map(playheadTime, 0, soundFile.duration(), 0, width), 0, 2, height);
-        fill(0,0,0);
-      }
-
-		// runs when play button is clicked
-    function play() {
-      //getAudioContext().resume();
-      console.log(recorderState);  // for debugging
-      if (recorderState === 0) {  // remnant from upload audio
-        audio_message = 'Nothing to play.  Record audio first.';
-      } else if (recorderState === 1) {  // this recorderState is a remnant from upload audio
-        audio_message = 'Currently recording.  Press the recording icon to stop.';
-      } else if (recorderState === 2 || recorderState ===3) {
-        audio_background_color = myGrey;
-        audio_message = 'Playing.';
-        soundFile.play();
-        soundFile.playMode("untilDone")
-        soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})
-        recorderState = 2;
-      }
-    }
-
-    // runs when pause button is clicked
-		function pause() {
-			// getAudioContext().resume();  //probably won't need this
-      // this if is so if someone presses pause when it is already paused,
-      // it doesn't reset playheadTime to zero. Not working right!!!!
-			if (soundFile.isPlaying()) {
-				playheadTime=soundFile.currentTime();
-				soundFile.pause();
-			}
-		}
-
-    // draws a clip box, saves trim into to  database
-
-    function mark_audio() {
-      //Keep this code
-      console.log(clipState);
-      console.log(recorderState);
-      // If we have a valid clip, makeBox() will add a clipBox to draw on the waveform
-      // to indicate it has been saved
-      if (clipState === myE.DONE) {
-        //clipState = myE.SAVED;  // not sure where to put this yet
-        makeBox();  //Really makeBox coordinaes.  Box is drawn in draw() (box corners are created in this function)        
-        //javascript to click the submit button?
-      }
-    }
-
-      // p5 copied code not using now but may be useful when saving trim
-      // try {
-      //   let soundBlob = soundFile.getBlob();
-      //   let serverUrl = 'http://jsonplaceholder.typicode.com/posts';
-      //   let httpRequestOptions = {
-      //     method: 'POST',
-      //     body: new FormData().append('soundBlob', soundBlob),
-      //     headers: new Headers({
-      //       'Content-Type': 'multipart/form-data'
-      //     })
-      //   };
-      //   httpDo(serverUrl, httpRequestOptions);
-
-      // }
-      // catch(err) {
-      //   console.log(err);
-      // }
-      // write to database here
-
-    // timeIt is a remnant from upload audio. May need it later
-    function timeIt() {
-      // 1 counter = 0.1 second
-      recording_time++;
-    } 
-  </script>
   <!--  end of script *****************************************************************************-->
   <style>
     .h1 {
@@ -466,7 +483,7 @@
           <h4 class="fancyText">Mark Audio Clip</h4>
         </div>
       </div>
-    </div>  
+    </div>
     <div class="w3-container">
       <div class="w3-half">
         <form class="audioForm">
@@ -504,17 +521,15 @@
   <div id='success' class="hide max-w-50vw w3-bottom w3-left w3-light-blue">
     <span onclick="this.parentElement.style.display='none'" class="w3-button w3-hover-red w3-large w3-display-topright">&times;</span>
     <h3>Message!</h3>
-    <p>{{ message }}</p>
+    <p id='msg'></p>
   </div>
   {% endfor %}
   {% endif %}
   <!--  -->
 </body>
-<script>
-  '{% if messages %}'
-  document.getElementById('success').style.display = 'block';
-  '{% endif %}'
-</script>
+  {% if messages %}
+  <script>
+    document.getElementById('success').style.display = 'block';
+  </script>
+  {% endif %}
 </html>
-
-

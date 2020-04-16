@@ -2,6 +2,9 @@ $(document).ready(function(){
   $.ajax(
     {
       type: 'GET',
+      data: {
+        'ratable':false
+      },
       url: '/ajax/getAllAudioTrims/',
 
       success: function(response)
