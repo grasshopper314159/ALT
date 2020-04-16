@@ -356,6 +356,7 @@ def ajax_logoutUser(request):
 @csrf_exempt
 @login_required(login_url='/home/')
 def ajax_postUploadAudio(request):
+    print(request)
     print("You have reached ajax_post uploaded audio in views.py")
     if is_user_type(request, ['ADMIN','research_user', 'student_user'], OR=True):
         if request.method == 'POST':

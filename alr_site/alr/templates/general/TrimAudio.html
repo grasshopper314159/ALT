@@ -42,7 +42,7 @@
   let durMarkPosY = 160;
   let startTime, endTime;
   let canvasHeight = 180;
-  let canvasWidth = 650;
+  var canvasWidth = ~~(.9 * screen.width);
   let drawBox = 0; //flag to add a box to indicate saved clip
   let drawBoxList = [];
   let clipBoxColor = 'rgba(0,255,0, 0.25)';
@@ -54,6 +54,7 @@
   // PRELOAD everything in here finishes before setup and draw run
   function preload() {
     //getAudioContext().resume();
+    
     '{% if messages %}'
     '{% for message in messages %}'
     // <!-- <script type="text/javascript" src="{% static '/js/ajax_getAudioById.js' %}"> -->
@@ -80,13 +81,13 @@
     message = '{{ message }}';
     message = message.split('/');
     document.getElementById('msg').innerHTML = message[0]
-    soundFile = loadSound(getAudioURL(message[1]));
+    //soundFile = loadSound(getAudioURL(message[1]));
     console.log(message[1])
     console.log(message[0])
     '{% endfor %}'
     '{% endif %}'
     //soundFile = loadSound(getAudioURL(big_audio_id_from_upload_audio));
-    // soundFile = loadSound("{% static '../media/user_25_big/french_1.wav'%}"); //# 'ibaudiofiles/' lblb message.id rbrb '/' lblb message.filename rbrb # lb = { , rb = }
+    soundFile = loadSound("{% static '../media/user_25_big/french_1.wav'%}"); //# 'ibaudiofiles/' lblb message.id rbrb '/' lblb message.filename rbrb # lb = { , rb = }
     console.log('PRELOAD');
     recorderState=2;  //ready to play clip
     // console.log(typeof(soundFile))
@@ -96,29 +97,27 @@
 
   // SETUP Run starts before draw, but not guaranteed to finish before draw
   function setup() {
-
+    console.log('setup started');  // for debugging
+   // Add listener to resize p5 drawing canvas if the window is resized
+    window.addEventListener("resize", change_canvas_size());
     getAudioContext().resume(); //in the console there is an error that pop up that alerts you to add this
-    console.log('setup1');  // for debugging
     recording_time = 0;  //remnant from upload audio.  turn this into soundFile length?
     var canvas = createCanvas(canvasWidth, canvasHeight);
     canvas.parent('trim_audio_container');
     canvas.style("visibility", "visible");
     background(audio_background_color);
     fill(0,0,0);  //draws in black
-    console.log('setup2'); // for debugging
     makePeaks(soundFile);
-    // cut and paste this in to prefill big_audio id for form submitting
-    // needs testing
-  //      window.onload = function(){
-  console.log("bigAudioId:  ", bigAudioId)
-  console.log("bigAudioIdType:  ", typeof(bigAudioId))
+  //window.onload = function(){
     document.getElementById('formBigAudioID').value = bigAudioId;
-  //      };
-
+    console.log("bigAudioId:  ", bigAudioId)
+    console.log("bigAudioIdType:  ", typeof(bigAudioId))
+  //};
+    console.log('setup finished'); // for debugging
   }
   // DRAW  Runs ~50 to 60 times per second
   function draw() {
-    console.log(dragging) // For debugging
+    //console.log(dragging) // For debugging, just logs true or false
     //cursor(ARROW)
     //getAudioContext().resume();  // I thought I would need this.  Gives a bunch of errors in the console though
     //resizeCanvas(600, 150, true);  // if we dynamically resize canvas, may use this function
@@ -141,6 +140,7 @@
       playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
       drawPlayhead(playheadTime);
     }
+    //Move this out of draw to speed up?
     text("Clip start: "+startTimeStr, startMarkPosX, startMarkPosY);
     text("Clip end: "+endTimeStr, endMarkPosX, endMarkPosY);
     text("Clip length: "+clipDurStr, durMarkPosX, durMarkPosY);
@@ -162,14 +162,14 @@
     // make generator function to give new colors for clip boxes--> only useful for overlapping clips?
     // fix save audio
     // work positioning of waveform and dynamic sizing
-    // fix drag so it doesn't start playing immediately after drag
+    // fix drag so it doesn't start playing from the beginning after drag
     // change to single play/pause button
     // fix layout of buttons, canvas
     // make it so when the canvas is clicked it toggles play and pause
     // Make a list of the saved clips so one could be selected and edited
     //    or make boundaries of boxes draggable? or both?
-    // Decide whether clips are uploaded to database by form submit
-    //    button or save icon button
+    // Add playback speed control
+    //  Add zoom
 
     //Changes the cursor to a hand when it's close to the playHead
     function checkCursor() {
@@ -202,10 +202,11 @@
       if (playheadTime < 0) {playheadTime = 0;} // bound check
       else if (playheadTime > soundFile.duration()) {playheadTime = soundfile.duration()-0.2;}
       //soundFile.play(0,1,.5,playheadTime,soundFile.duration());
-      //soundFile.stop();  // jump doesn't work unless you stop it first
+      soundFile.stop();  // jump doesn't work unless you stop it first
 
       soundFile.jump(playheadTime);
-      soundFile.pause();
+      //If pause is used, it will start playing from the beginning when resumed.  Bug?
+      //soundFile.pause();
     }
     // prevent default behavior
     return false;
@@ -309,7 +310,7 @@
   // runs when play button is clicked
   function play() {
     //getAudioContext().resume();
-    console.log(recorderState);  // for debugging
+    console.log(recorderState);  // for debugging, 
     if (recorderState === 0) {  // remnant from upload audio
       audio_message = 'Nothing to play.  Record audio first.';
     } else if (recorderState === 1) {  // this recorderState is a remnant from upload audio
@@ -328,7 +329,6 @@
   function pause() {
     // getAudioContext().resume();  //probably won't need this
     // this if is so if someone presses pause when it is already paused,
-    // it doesn't reset playheadTime to zero. Not working right!!!!
     if (soundFile.isPlaying()) {
       playheadTime=soundFile.currentTime();
       soundFile.pause();
@@ -348,6 +348,12 @@
       makeBox();  //Really makeBox coordinaes.  Box is drawn in draw() (box corners are created in this function)
       //javascript to click the submit button?
     }
+  }
+
+  function change_canvas_size() {
+    console.log("changing window size");
+    canvasWidth = ~~(.9 * screen.width);
+    resizeCanvas(canvasWidth, canvasHeight);
   }
 
     // p5 copied code not using now but may be useful when saving trim
@@ -370,12 +376,16 @@
     // write to database here
 
   // timeIt is a remnant from upload audio. May need it later
-  function timeIt() {
-    // 1 counter = 0.1 second
-    recording_time++;
-  }
+  // function timeIt() {
+  //   // 1 counter = 0.1 second
+  //   recording_time++;
+  // }
+
+  
 
   </script>
+
+
   <!-- <script type="text/javascript" src="{% static '/js/trimAudio.js' %}"></script> -->
 
   <!--  start of script *****************************************************************************
@@ -448,7 +458,7 @@
     <br><br><br><br><br><br><br><br>
     <div class="w3-half"></div>
 
-    <div style="float: center; margin: auto; width: 70%">
+    <div style="float: center; margin: auto; width: 90%">
       <div id="fancyHeader">
         <br><br>
         <h1>Segment Your Audio File</h2>
@@ -466,19 +476,19 @@
           <i class="fa fa-play-circle-o fa-3x" aria-hidden="true" onclick="play()"></i>
           <h4 class="fancyText">Play</h4>
         </div>
-        <div class="w3-btn" style="margin-left: 10vh" onclick="pause()">
+        <div class="w3-btn"  onclick="pause()">
           <i class="fa fa-pause-circle fa-3x" aria-hidden="true" onclick="pause()"></i>
           <h4 class="fancyText">Pause</h4>
         </div>
-        <div class="w3-btn" style="margin-left: 10vh">
+        <div class="w3-btn" >
           <i class="fa fa-check-circle-o fa-3x" aria-hidden="true" onclick="setStartTime()"></i>
           <h4 class="fancyText">Mark Start</h4>
         </div>
-        <div class="w3-btn" style="margin-left: 10vh">
+        <div class="w3-btn" >
           <i class="fa fa-window-close fa-3x" aria-hidden="true" onclick="setEndTime()"></i>
           <h4 class="fancyText">Mark End</h4>
         </div>
-        <div class="w3-btn" style="margin-left: 10vh">
+        <div class="w3-btn" >
           <i class="fa fa-save fa-3x" aria-hidden="true" onclick="mark_audio()"></i>
           <h4 class="fancyText">Mark Audio Clip</h4>
         </div>
