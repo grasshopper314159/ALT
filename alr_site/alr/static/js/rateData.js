@@ -1,8 +1,12 @@
 function toggle_rate(id) {
   console.log("Rate_"+id);
 
-  rate = document.getElementById(('Rate_' + id))
-  rate.classList.toggle('hide')
+  if (document.getElementById('ratingContainer').classList.contains('hide')) {
+    document.getElementById('ratingContainer').classList.toggle('hide');
+    rate = document.getElementById(('Rate_' + id))
+    rate.classList.toggle('hide')
+  }
+
 }
 
 function add_rating(id) {
@@ -13,10 +17,4 @@ function add_rating(id) {
       //document.getElementById('submit_check_'+id).checked = true;
     }
   }
-}
-
-function fake_messsage() {
-  document.getElementById('message').classList.toggle('hide');
-  msg = document.getElementById('fake_message');
-  msg.innerHTML = "Your Changes Have been saved";
 }

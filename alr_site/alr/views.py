@@ -156,8 +156,10 @@ def display_aboutUs(request):
 # TODO remove when no longer used
 def display_taskBar(request):
     return render(request, 'general/TaskBar.html')
-def display_test(request):
-    return render(request, 'temp.html')
+def display_test1(request):
+    return render(request, 'tempViewData.html')
+def display_test2(request):
+    return render(request, 'tempRateData.html')
 
 # for displaying a meesage to the user
 # Attaches messages to the request from the active_messages dict

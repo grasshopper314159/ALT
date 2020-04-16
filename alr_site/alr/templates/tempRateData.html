@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  {% load static %}
+  <link rel="stylesheet" href="{% static '/css/master.css' %}">
+  <script src="{% static '/js/rateData.js' %}" charset="utf-8"></script>
+
+  <title>Rate Data</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <style>
+    .h1 {
+        font-size: 70px;
+    }
+
+    .radioButtons input {
+      width: 25px;
+      height: 25px;
+    }
+
+    #background {
+       background-image: url('{% static '/imgs/neutralBackground.jpg' %}');
+       background-size: cover;
+       overflow-y: scroll;
+       height: 100%;
+     }
+     #ratingTable {
+       width: 99%;
+     }
+     #submitRatings {
+       float: right;
+       margin-right: 1.5vh;
+     }
+     #ratingContainer {
+       border-radius: 25px;
+     }
+     #ratingBox {
+       display: inline-block;
+       padding: 0;
+       width: 100%;
+       text-align: center;
+       border-radius: 25px;
+       border: solid 1px grey;
+     }
+     #ratings {
+       text-align: center;
+       width: 95%;
+     }
+     #uploadButton {
+       margin-bottom: 1em;
+       border: 2px solid black;
+       border-radius: 4px;
+     }
+
+     /*Reduce space between text elements*/
+     p {
+       margin: 0;
+     }
+  </style>
+
+   	<script>
+	$(document).ready(function() {
+            $("#myInput").on("keyup", function() {
+                var value = $(this)
+                    .val()
+                    .toLowerCase();
+                $("#ratingTable tr").filter(function() {
+                    $(this).toggle(
+                        $(this)
+                            .text()
+                            .toLowerCase()
+                            .indexOf(value) > -1
+                    );
+                });
+            });
+        });
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("ratingTable");
+  switching = true;
+  // Set the sorting direction to ascending:
+  dir = "asc";
+  /* Make a loop that will continue until
+  no switching has been done: */
+  while (switching) {
+    // Start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /* Loop through all table rows (except the
+    first, which contains table headers): */
+    for (i = 1; i < (rows.length - 1); i++) {
+      // Start by saying there should be no switching:
+      shouldSwitch = false;
+      /* Get the two elements you want to compare,
+      one from current row and one from the next: */
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /* Check if the two rows should switch place,
+      based on the direction, asc or desc: */
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /* If a switch has been marked, make the switch
+      and mark that a switch has been done: */
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      // Each time a switch is done, increase this count by 1:
+      switchcount ++;
+    } else {
+      /* If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again. */
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
+
+
+
+
+</head>
+
+<body>
+  <div class="w3-top w3-grey" id="background">
+    <div class="home-background">
+      <div class="w3-top" id="navigationBar">
+        <a href="/"><img src="{% static '/imgs/alr_example_logo.jpg'%}" class="w3-col w3-circle w3-border-red w3-topbar w3-leftbar w3-rightbar w3-bottombar w3-hover-border-green" style="width:5em" alt="ALT Logo"></a>
+        <a href="/" style="text-decoration: none"><h2 class="w3-rest" id="mainHeader"> Applied Language Resources </h2></a>
+        <br>
+        <div class="w3-bar w3-card w3-center" id="navigationButtons">
+          <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+          {% if user.is_authenticated %}
+          <a href="/viewAudio/" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">View Audio</a>
+          <a href="/uploadAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Upload Audio</a>
+          <a href="/shareAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Share Audio</a>
+          <a href="/rateAudio/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge currentButton">Rate Audio</a> <!--Need this here for UI testing. Will change later.-->
+          {% endif %}
+          {% if user.is_anonymous %}
+          <a href="/signUp/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Sign Up</a>
+          <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
+          {% endif %}
+          <div class="w3-dropdown-hover w3-hide-small w3-right  w3-xlarge">
+            <button class="w3-round w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+              <a href="/home/settings" class="w3-bar-item w3-button">Settings</a>
+              <a href="/home/" class="w3-bar-item w3-button">Home</a>
+              {% if user.is_authenticated %}
+              <a href="/ajax/logoutUser" class="w3-bar-item w3-button">Log Out</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="w3-container"  style="margin-top: 18vh;">
+      <!-- container to enclose the rest of the body, to add margins -->
+      <br>
+      <div class="w3-col" style="width:150px">
+        <label>Search</label>
+        <input class="w3-input w3-border w3-animate-input" type="text" id="myInput">
+      </div>
+      <!--close search area-->
+      <div class="w3-rest w3-center">
+        <h2 class="simpleHeader">Rate Data</h2>
+      </div>
+      <!--close heading-->
+
+      <div class="w3-responsive">
+        <div class="w3-twothird">
+          <table class="w3-table-all" id="ratingTable">
+            <thead>
+              <tr>
+                <th class='w3-center' onclick="sortTable(1)" >Researcher</th>
+                <th class='w3-center' onclick="sortTable(2)" >Speaker</th>
+                <th class='w3-center' onclick="sortTable(3)" >Word(Orig)</th>
+                <th class='w3-center' onclick="sortTable(4)" >Word(Eng)</th>
+                <th class='w3-center' onclick="sortTable(5)" >Score</th>
+                <th class='w3-center' onclick="sortTable(6)" >Date</th>
+                <th class='w3-center'>Select to rate</th>
+              </tr>
+            </thead>
+            <tbody id="data">
+              <!-- ajax_getRateableTrims will populate this area -->
+      	    </tbody>
+          </table>
+        </div>
+        <!--close table three quarter-->
+        <div id="ratingContainer" class="w3-third w3-white hide">
+          <div class="w3-container" id="ratingBox">
+            <!-- ajax_getRateableTrims will populate this area -->
+          </div>
+          <!--close w3-container-center-->
+        </div>
+        <!--close w3-quarter-->
+      </div>
+      <!--close w3-responsive-->
+    </div><!-- close main body container -->
+    <!-- display a message -->
+
+    <!-- message currently fake as rating is not saved -->
+    {% if messages %}
+    {% for message in messages %}
+    <div id='message' class="hide max-w-50vw w3-bottom w3-left w3-light-blue">
+      <span onclick="this.parentElement.style.display = 'none';" class="w3-button w3-hover-red w3-large w3-display-topright">&times;</span>
+      <h3>Message!</h3>
+      <p>{{ message }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <!--  -->
+  </div>
+</body>
+<script type="text/javascript" src="{% static '/js/ajax_getRateableTrims.js' %}"></script>
+<script type="text/javascript" src="{% static '/js/ajax_getAudioById.js' %}"></script>
+
+{% if messages %}
+<script>
+  document.getElementById('message').style.display = 'block';
+</script>
+{% endif %}
+
+</html>

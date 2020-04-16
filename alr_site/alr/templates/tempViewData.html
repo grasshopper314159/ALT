@@ -141,6 +141,9 @@ function sortTable(n) {
         <h2 class="simpleHeader">Student Audio Recordings</h2>
       </div>
       <!--close heading-->
+      <!-- TODO: Audio played is entire big audio, need to select certain time or rework trims to be files, sections from the big audio file-->
+      <!-- TODO: Add deletion of trims, big_audio's, ect-->
+      <!-- TODO: Implement what the edit button needs to be able to do -->
       <div class="w3-responsive">
         <div class="w3-threequarter">
           <table class="w3-table-all" id="myTable2">
@@ -177,13 +180,26 @@ function sortTable(n) {
       </div>
       <!--close w3-responsive-->
     </div> <!-- close main body container -->
+    {% if messages %}
+    {% for message in messages %}
+    <div id='message' class="hide max-w-50vw w3-bottom w3-left w3-light-blue">
+      <span onclick="this.parentElement.style.display = 'none';" class="w3-button w3-hover-red w3-large w3-display-topright">&times;</span>
+      <h3>Message!</h3>
+      <p>{{ message }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
   </div>
 </body>
 
 <script type="text/javascript" src="{% static '/js/ajax_getAllAudioTrims.js' %}"></script>
-<script type="text/javascript" src="{% static '/js/ajax_getAudioById.js' %}"></script>
 <script type="text/javascript" src="{% static '/js/p5.js' %}"></script>
 <script type="text/javascript" src="{% static '/js/addons/p5.sound.js' %}"></script>
 <script type="text/javascript" src="{% static '/js/addons/p5.dom.js' %}"></script>
 
+{% if messages %}
+<script>
+  document.getElementById('message').style.display = 'block';
+</script>
+{% endif %}
 </html>

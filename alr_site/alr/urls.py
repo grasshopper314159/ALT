@@ -28,7 +28,8 @@ urlpatterns = [
 
     # For testing
     url(r'^taskBar/$', views.display_taskBar, name='display_taskBar'),
-    url(r'^test/$', views.display_test, name='display_test'),
+    url(r'^testview/$', views.display_test1, name='display_test1'),
+    url(r'^testrate/$', views.display_test2, name='display_test2'),
 
 
     # ajax misc. URLs

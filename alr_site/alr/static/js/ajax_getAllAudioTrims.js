@@ -31,7 +31,6 @@ $(document).ready(function(){
             '<td><audio controls><source src="' + response[key]['url'] + '" type="audio/wav">Your browser does not support the audio element.</audio>' +
             '<td><button class="w3-btn w3-white w3-block w3-border w3-round" onclick="showTrimDetails(\'id\');">Show</button>' +
             '</td></tr>';
-            // getAudio(' + response[key]['big_audio_id'] + ')'</td></tr>';
           data.innerHTML += entry;
         }
         // TODO: use localStorage to save reaponse for later?
