@@ -76,9 +76,9 @@
       // '{% en
         // dfor %}'
       // '{% end
-        // if %}'
-      soundFile = loadSound(getAudioURL(big_audio_id_from_upload_audio));
-      //soundFile = loadSound("{% static '/sounds/french_1.wav'%}"); //# 'ibaudiofiles/' lblb message.id rbrb '/' lblb message.filename rbrb # lb = { , rb = }
+        // if %}'  
+      //soundFile = loadSound(getAudioURL(big_audio_id_from_upload_audio));
+      soundFile = loadSound("{% static '../media/user_25_big/french_1.wav'%}"); //# 'ibaudiofiles/' lblb message.id rbrb '/' lblb message.filename rbrb # lb = { , rb = }
       console.log('PRELOAD');
       recorderState=2;  //ready to play clip
       // console.log(typeof(soundFile))
@@ -124,7 +124,7 @@
 			if (soundFile.isPlaying() && dragging === false) {
 				playheadTime=soundFile.currentTime();
 			}
-      checkCursor();
+      checkCursor();  // changes shape of cursor when dragging
       if (dragging === false) {
         drawPlayhead(playheadTime);
       }
@@ -201,13 +201,56 @@
 
       // makeBox finds the coordinates needed to draw a clip box in draw()
       function makeBox() {
+        let trimDuration, trimStartTime, trimListHTML, listNode, textNode;
         boxXstart = map(startTime, 0, soundFile.duration(), 0, width);
         boxXend = map(endTime, 0, soundFile.duration(), 0, width);
         boxWidth = boxXend - boxXstart;
-        tempParams = [boxXstart, boxWidth, height]
+        trimDuration = ~~((endTime - startTime)*1000)
+        trimStartTime = ~~(startTime*1000);
+        tempTrimId = drawBoxList.length+1;
+        tempParams = [boxXstart, boxWidth, height, trimStartTime, trimDuration, tempTrimId]
         console.log(tempParams)  //for debugging
         drawBoxList.push(tempParams)
-      }
+        //Add to the list of trims
+        trimListHTML = document.getElementById("listOfTrimsDiv").innerHTML;
+        var radioHtml = '<input type="radio" value="' + tempTrimId + '" id="trim'+ tempTrimId + '" name=\"trimRadio\"  />';
+        console.log(radioHtml);
+        var labelHTML = '<'
+
+        <label for="male">Male</label><br>
+
+
+
+
+        //*********************************************
+        trimList = document.getElementById("listOfTrims")
+        listNode = document.createElement("LI");                 // Create a <li> node
+        textnode = document.createTextNode(tempTrimId);         // Create a text node
+        listNode.appendChild(textnode);                              // Append the text to <li>
+        trimList.appendChild(listNode);  
+
+        <input type="radio" id="male" name="gender" value="male">
+        <label for="male">Male</label><br>
+        element.innerHTML += "additional HTML code"
+
+        Taking a step from what Patrick suggests, using a temporary node we can get rid of the try/catch:
+
+function createRadioElement(name, checked) {
+    var radioHtml = '<input type="radio" name="' + name + '"';
+    if ( checked ) {
+        radioHtml += ' checked="checked"';
+    }
+    radioHtml += '/>';
+
+    var radioFragment = document.createElement('div');
+    radioFragment.innerHTML = radioHtml;
+
+    return radioFragment.firstChild;
+}
+
+//*********************************************
+
+      }  //close makeBox
 
       function setStartTime() {
         startTime = playheadTime.toFixed(2);
@@ -295,7 +338,7 @@
 
     // draws a clip box, saves trim into to  database
 
-    function save_audio() {
+    function mark_audio() {
       //Keep this code
       console.log(clipState);
       console.log(recorderState);
@@ -303,12 +346,12 @@
       // to indicate it has been saved
       if (clipState === myE.DONE) {
         //clipState = myE.SAVED;  // not sure where to put this yet
-        makeBox()  //Really makeBox coordinaes.  Box is drawn in draw() (box corners are created in this function)        
+        makeBox();  //Really makeBox coordinaes.  Box is drawn in draw() (box corners are created in this function)        
         //javascript to click the submit button?
       }
     }
 
-      // p5 copied code not using now but may be useful in save_audio()
+      // p5 copied code not using now but may be useful when saving trim
       // try {
       //   let soundBlob = soundFile.getBlob();
       //   let serverUrl = 'http://jsonplaceholder.typicode.com/posts';
@@ -429,14 +472,17 @@
           <h4 class="fancyText">Mark End</h4>
         </div>
         <div class="w3-btn" style="margin-left: 10vh">
-          <i class="fa fa-save fa-3x" aria-hidden="true" onclick="save_audio()"></i>
-          <h4 class="fancyText">Save Audio Clip</h4>
+          <i class="fa fa-save fa-3x" aria-hidden="true" onclick="mark_audio()"></i>
+          <h4 class="fancyText">Mark Audio Clip</h4>
         </div>
       </div>
-    </div>
+    </div>  
     <div class="w3-container">
       <div class="w3-half">
         <form class="audioForm">
+          <div class="w3-bar" id="listOfTrimsDiv">
+
+          </div>
           <!-- <label>Hide me!  (Big-audio id for posting)</label><br> -->
           <input type="hidden" id="formBigAudioID" name="big_audio_id" required></input>
           <br><br>
