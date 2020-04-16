@@ -200,6 +200,7 @@
     }
 
       // makeBox finds the coordinates needed to draw a clip box in draw()
+      //todo: box entries an object to faciliate pulling out info
       function makeBox() {
         let trimDuration, trimStartTime, trimListHTML, listNode, textNode;
         boxXstart = map(startTime, 0, soundFile.duration(), 0, width);
@@ -212,41 +213,40 @@
         console.log(tempParams)  //for debugging
         drawBoxList.push(tempParams)
         //Add to the list of trims
-        trimListHTML = document.getElementById("listOfTrimsDiv").innerHTML;
-        var radioHtml = '<input type="radio" value="' + tempTrimId + '" id="trim'+ tempTrimId + '" name=\"trimRadio\"  />';
-        console.log(radioHtml);
-        var labelHTML = '<'
-
-        <label for="male">Male</label><br>
-
+        var radioHTML = '<input type=\"radio\" value=\"' + tempTrimId + '\" id=\"trim'+ tempTrimId + '\" name=\"trimRadio\"  />';
+        var labelHTML = '<label for=\"trim'+ tempTrimId + '\"> Trim ' + tempTrimId + ':   '+ startTime + ' sec. to '+ endTime +' sec.' + '</label><br>';
+        radioHTML += labelHTML;
+        document.getElementById("listOfTrimsDiv").innerHTML += radioHTML;
+        console.log(document.getElementById("listOfTrimsDiv").innerHTML);
 
 
 
-        //*********************************************
-        trimList = document.getElementById("listOfTrims")
-        listNode = document.createElement("LI");                 // Create a <li> node
-        textnode = document.createTextNode(tempTrimId);         // Create a text node
-        listNode.appendChild(textnode);                              // Append the text to <li>
-        trimList.appendChild(listNode);  
 
-        <input type="radio" id="male" name="gender" value="male">
-        <label for="male">Male</label><br>
-        element.innerHTML += "additional HTML code"
+//         //*********************************************
+//         trimList = document.getElementById("listOfTrims")
+//         listNode = document.createElement("LI");                 // Create a <li> node
+//         textnode = document.createTextNode(tempTrimId);         // Create a text node
+//         listNode.appendChild(textnode);                              // Append the text to <li>
+//         trimList.appendChild(listNode);  
 
-        Taking a step from what Patrick suggests, using a temporary node we can get rid of the try/catch:
+//         <input type="radio" id="male" name="gender" value="male">
+//         <label for="male">Male</label><br>
+//         element.innerHTML += "additional HTML code"
 
-function createRadioElement(name, checked) {
-    var radioHtml = '<input type="radio" name="' + name + '"';
-    if ( checked ) {
-        radioHtml += ' checked="checked"';
-    }
-    radioHtml += '/>';
+//         Taking a step from what Patrick suggests, using a temporary node we can get rid of the try/catch:
 
-    var radioFragment = document.createElement('div');
-    radioFragment.innerHTML = radioHtml;
+// function createRadioElement(name, checked) {
+//     var radioHtml = '<input type="radio" name="' + name + '"';
+//     if ( checked ) {
+//         radioHtml += ' checked="checked"';
+//     }
+//     radioHtml += '/>';
 
-    return radioFragment.firstChild;
-}
+//     var radioFragment = document.createElement('div');
+//     radioFragment.innerHTML = radioHtml;
+
+//     return radioFragment.firstChild;
+// }
 
 //*********************************************
 
