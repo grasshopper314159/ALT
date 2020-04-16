@@ -185,15 +185,18 @@
     function mouseReleased() {
       // Quit dragging
       if (dragging === true) {
+        
         dragging = false;
-        soundFile.stop(); //trying to stop the clip from playing immediately -test this
+        //soundFile.stop(); //trying to stop the clip from playing immediately -test this
         playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
         console.log("playheadtime:  "+playheadTime);
         if (playheadTime < 0) {playheadTime = 0;} // bound check
         else if (playheadTime > soundFile.duration()) {playheadTime = soundfile.duration()-0.2;}
         //soundFile.play(0,1,.5,playheadTime,soundFile.duration());
-        soundFile.stop();  // jump doesn't work unless you stop it first
+        //soundFile.stop();  // jump doesn't work unless you stop it first
+        
         soundFile.jump(playheadTime);
+        soundFile.pause();
       }
       // prevent default behavior
       return false;
@@ -202,7 +205,7 @@
       // makeBox finds the coordinates needed to draw a clip box in draw()
       //todo: box entries an object to faciliate pulling out info
       function makeBox() {
-        let trimDuration, trimStartTime, trimListHTML, listNode, textNode;
+        let trimDuration, trimStartTime;
         boxXstart = map(startTime, 0, soundFile.duration(), 0, width);
         boxXend = map(endTime, 0, soundFile.duration(), 0, width);
         boxWidth = boxXend - boxXstart;
@@ -212,26 +215,13 @@
         tempParams = [boxXstart, boxWidth, height, trimStartTime, trimDuration, tempTrimId]
         console.log(tempParams)  //for debugging
         drawBoxList.push(tempParams)
-        //Add to the list of trims
+        //Add to the radio list of trims
         var radioHTML = '<input type=\"radio\" value=\"' + tempTrimId + '\" id=\"trim'+ tempTrimId + '\" name=\"trimRadio\"  />';
         var labelHTML = '<label for=\"trim'+ tempTrimId + '\"> Trim ' + tempTrimId + ':   '+ startTime + ' sec. to '+ endTime +' sec.' + '</label><br>';
         radioHTML += labelHTML;
         document.getElementById("listOfTrimsDiv").innerHTML += radioHTML;
         console.log(document.getElementById("listOfTrimsDiv").innerHTML);
-
-
-
-
-//         //*********************************************
-//         trimList = document.getElementById("listOfTrims")
-//         listNode = document.createElement("LI");                 // Create a <li> node
-//         textnode = document.createTextNode(tempTrimId);         // Create a text node
-//         listNode.appendChild(textnode);                              // Append the text to <li>
-//         trimList.appendChild(listNode);  
-
-//         <input type="radio" id="male" name="gender" value="male">
-//         <label for="male">Male</label><br>
-//         element.innerHTML += "additional HTML code"
+      }  //close makeBox
 
 //         Taking a step from what Patrick suggests, using a temporary node we can get rid of the try/catch:
 
@@ -250,7 +240,7 @@
 
 //*********************************************
 
-      }  //close makeBox
+
 
       function setStartTime() {
         startTime = playheadTime.toFixed(2);
@@ -309,7 +299,7 @@
 
 		// runs when play button is clicked
     function play() {
-      getAudioContext().resume();
+      //getAudioContext().resume();
       console.log(recorderState);  // for debugging
       if (recorderState === 0) {  // remnant from upload audio
         audio_message = 'Nothing to play.  Record audio first.';
@@ -319,7 +309,7 @@
         audio_background_color = myGrey;
         audio_message = 'Playing.';
         soundFile.play();
-        soundFile.playMode("restart")
+        soundFile.playMode("untilDone")
         soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})
         recorderState = 2;
       }
