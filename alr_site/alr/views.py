@@ -232,8 +232,7 @@ def ajax_getAudioFileById(request):
     if is_user_type(request, ['ADMIN','auth_user'], OR=True):
         if request.method == 'GET':
             Audio = BigAudio.objects.get(id=request.GET['id'])
-            print(Audio.sound_file.url)
-            return FileResponse(Audio.sound_file.url)
+            return HttpResponse(Audio.sound_file.url)
     else:
         return redirect_home(request)
 
