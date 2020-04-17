@@ -32,7 +32,7 @@
   let clipState = myE.NOSTART;
   let myGrey = (200,200,200);
   let audio_background_color = myGrey;
-  let recording_time, seconds, ready, zoomCenter, zoomFactor, playheadTime = 0;
+  let recording_time, seconds, ready, zoomCenter, zoomFactor, waveStart, waveEnd, peakStart, peakEnd, playheadTime = 0;
   zoomCenter = 0;
   zoomFactor = 1;
   // These are the positions for the time text on the drawing canvas
@@ -100,18 +100,23 @@
   // SETUP Run starts before draw, but not guaranteed to finish before draw
   function setup() {
     console.log('setup started');  // for debugging
+    waveStart = 0;
+    waveEnd = soundFile.duration();
+    console.log("song length: ", waveEnd);
    // Add listener to resize p5 drawing canvas if the window is resized, not working
    // window.addEventListener("resize", change_canvas_size());
     getAudioContext().resume(); //in the console there is an error that pop up that alerts you to add this
-    recording_time = 0;  //remnant from upload audio.  turn this into soundFile length?
+    recording_time = soundFile.duration();  //remnant from upload audio.  turn this into soundFile length?
     var canvas = createCanvas(canvasWidth, canvasHeight);
     canvas.parent('trim_audio_container');
     canvas.style("visibility", "visible");
     canvas.mouseReleased(mouse_release);
     background(audio_background_color);
     fill(0,0,0);  //draws in black
-    makePeaks(soundFile);
-    noStroke();  //i can never undo this.  Bug?
+    makePeaks(soundFile);  // defines peaks, a list of amplitudes for the soundfile
+    peakStart = 0;  // defined now in makePeaks
+    peakEnd = peaks.length; // defined now in makePeaks
+    noStroke();  //i can never undo this.  p5.js Bug?
   //window.onload = function(){
     document.getElementById('formBigAudioID').value = bigAudioId;
     console.log("bigAudioId:  ", bigAudioId)
@@ -121,14 +126,19 @@
   }
   // DRAW  Runs ~50 to 60 times per second
   function draw() {
+    let peakX, peakY;
     //console.log(dragging) // For debugging, just logs true or false
     //cursor(ARROW)
     //getAudioContext().resume();  // I thought I would need this.  Gives a bunch of errors in the console though
     //resizeCanvas(600, 150, true);  // if we dynamically resize canvas, may use this function
     background(audio_background_color);  // need to force a redraw for every frame
     beginShape();  // Draws wave form
-    for (i = 0; i < peaks.length; i++) {
-      vertex(i, map(peaks[i], -1, 1, height, 0));
+    for (i = peakStart; i < peakEnd; i++) {
+      //console.log("peakX");
+      peakX = map(i, peakStart, peakEnd, 0, canvasWidth);
+      //console.log("peakY");
+      peakY = map(peaks[i], -.75, .75, height, 0);  // making 2 and 3rd #s smaller increases wave height on canvas
+      vertex(peakX, peakY);
     }
     endShape();
     // playHeadTime is needed to draw the playhead. Don't want to update
@@ -141,14 +151,15 @@
       drawPlayhead(playheadTime);
     }
     else {  // moves playHeadTime to match the location of the mouse while dragging
-      playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
+      //console.log("playheadTime line 154");
+      playheadTime = map(mouseX, 0,  width, waveStart, waveEnd);
       drawPlayhead(playheadTime);
     }
     //Move this out of draw to speed up?
     text("Clip start: "+startTimeStr, startMarkPosX, startMarkPosY);
     text("Clip end: "+endTimeStr, endMarkPosX, endMarkPosY);
     text("Clip length: "+clipDurStr, durMarkPosX, durMarkPosY);
-    //text("Playhead x: "+ map(playheadTime, 0, soundFile.duration(), 0, width).toFixed(2) , durMarkPosX+100, durMarkPosY);
+    //text("Playhead x: "+ map(playheadTime, 0, waveEnd, 0, width).toFixed(2) , durMarkPosX+100, durMarkPosY);
     //text("MouseX: "+ mouseX.toFixed(2), durMarkPosX+220, durMarkPosY);
 
     //draws boxes to show saved clips
@@ -187,7 +198,8 @@
 
     //Changes the cursor to a hand when it's close to the playHead
     function checkCursor() {
-      playHeadX = map(playheadTime, 0, soundFile.duration(), 0, width);
+      //console.log("playheadX , 201, check cursor");
+      playHeadX = map(playheadTime, waveStart, waveEnd, 0, width);
       if (mouseX > playHeadX-3 && mouseX < playHeadX+3 && mouseY > 0 && mouseY < height) {
         cursor(HAND);
       } else {
@@ -197,7 +209,8 @@
 
     function mousePressed() {
     // Did I click on the playhead? then set dragging to true
-    playHeadX = map(playheadTime, 0, soundFile.duration(), 0, width);
+    console.log("playheadX , 212, mousepressed");
+    playHeadX = map(playheadTime, waveStart, waveEnd, 0, width);
     if (mouseX > playHeadX-3 && mouseX < playHeadX+3 && mouseY > 0 && mouseY < height) {
       dragging = true;
       // prevent default behavior
@@ -210,10 +223,11 @@
     if (dragging === true) {
       soundFile.pause();
       dragging = false;
-      playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
+      console.log("playheadtime, 227, mouse_released");
+      playheadTime = map(mouseX, 0,  width, waveStart, waveEnd);
       console.log("playheadtime:  "+playheadTime);
-      if (playheadTime < 0) {playheadTime = 0;} // bound check
-      else if (playheadTime > soundFile.duration()) {playheadTime = soundfile.duration()-0.2;}
+      if (playheadTime < waveStart) {playheadTime = waveStart;} // bound check
+      else if (playheadTime > waveEnd) {playheadTime = waveEnd-0.2;}
       soundFile.stop();  // jump doesn't work unless you stop it first
       soundFile.jump(playheadTime);
       soundFile.pause();
@@ -227,8 +241,10 @@
     //todo: box entries an object to faciliate pulling out info
     function makeBox() {
       let trimDuration, trimStartTime, tempParams;
-      boxXstart = map(startTime, 0, soundFile.duration(), 0, width);
-      boxXend = map(endTime, 0, soundFile.duration(), 0, width);
+      //console.log("boxstart , makebox");
+      boxXstart = map(startTime, waveStart, waveEnd, 0, width);
+      //console.log("boxEnd , makebox");
+      boxXend = map(endTime, waveStart, waveEnd, 0, width);
       boxWidth = boxXend - boxXstart;
       trimDuration = ~~((endTime - startTime)*1000) // ~~ converts to an int
       trimStartTime = ~~(startTime*1000);
@@ -332,6 +348,8 @@
     // peaks (looks more detailed then).  Defaults to 5x window size
     function makePeaks(soundFile) {
         peaks = soundFile.getPeaks();
+
+        console.log("peakstart: ", peakStart, "  Peakend: ", peakEnd);
     }
     // This is the red line on the waveform
     function drawPlayhead(playheadTime) {
@@ -339,7 +357,8 @@
       fill(255,0,0);
       // apparently width, height are p5 automagically created variables descripting canvas.
       // may need to replace with canvasWidth/ canvasHeight at some point
-      rect(map(playheadTime, 0, soundFile.duration(), 0, width), 0, 2, height);
+      //console.log("drawing playhead");
+      rect(map(playheadTime, waveStart, waveEnd, 0, width), 0, 2, height);
       fill(0,0,0);
     }
 
@@ -383,18 +402,45 @@
     resizeCanvas(canvasWidth, canvasHeight);
   }
 
+  function convertTimetoPeakPosition(playheadTime) {
+    let factor =  playheadTime / recording_time;
+    return ~~(factor * peaks.length);  // ~~ converts to int
+  }
+
   function zoom_in() {
+    let zoomedDuration = waveEnd - waveStart;
+    let peakCount = peakEnd - peakStart;
+    let peakCenter;
     if (!soundFile.isPlaying()) { 
       zoomCenter = playheadTime;
-      zoomFactor *= 1.25
-      console.log("playheadtime: ", playheadTime, "Zoom factor: ", zoomFactor);
+      peakCenter = convertTimetoPeakPosition(playheadTime);
+      console.log("peakcener:  ", peakCenter);
+      zoomFactor *= .75;
+      zoomedDuration = zoomFactor * zoomedDuration;
+      peakCount = peakCount * zoomFactor;
+      waveStart = zoomCenter - .5 * zoomedDuration;
+      waveEnd = zoomCenter + .5 * zoomedDuration;
+      //peakCenter =  map(playheadTime,waveStart, waveEnd,  )
+      peakStart = peakCenter - .5 * peakCount;
+      peakEnd = peakCenter + .5 * peakCount;
+      
+      if (waveStart < 0) {
+        peakEnd -= peakStart;
+        peakStart = 0;
+        waveEnd -= waveStart;
+        waveStart = 0;
+      }
+
+      console.log("playheadtime: ", playheadTime, "  Zoom factor: ", zoomFactor);
+      console.log("zoomed duration: ", zoomedDuration, "  waveStart: ", waveStart, '  waveEnd: ', waveEnd);
+      console.log("peakstart: ", peakStart, "  Peakend: ", peakEnd);
     }
   }
 
   function zoom_out() {
     if (!soundFile.isPlaying()) { 
       zoomCenter = playheadTime;
-      zoomFactor *= .75
+      zoomFactor *= 1.25;
       console.log("playheadtime: ", playheadTime, "Zoom factor: ", zoomFactor);
     }
   }
