@@ -404,7 +404,7 @@ def ajax_postUploadAudio(request):
             else:
                 active_messages["uploadAudio"] = 'File with that name already exists'
                 return redirect('/uploadAudio/')
-            active_messages["trimAudio"] = 'File succesfully uploaded/' + str(big_audio.id)
+            active_messages["trimAudio"] = 'File succesfully uploaded/split/' + str(big_audio.sound_file.url)
             return redirect('/trimAudio/')
         else:
             redirect('/uploadAudio/')

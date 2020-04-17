@@ -57,44 +57,19 @@
 
   // PRELOAD everything in here finishes before setup and draw run
   function preload() {
-    //getAudioContext().resume();
-    
+    //We pass the url for a sound file to this page through the messages from view.py
     '{% if messages %}'
     '{% for message in messages %}'
-    // <!-- <script type="text/javascript" src="{% static '/js/ajax_getAudioById.js' %}"> -->
-    function getAudioURL(id) {
-      $.ajax(
-            {
-                type: 'GET',
-                data: {'id': id},
-                url: '/ajax/getAudioFileById/',
-
-                success: function(response)
-                {
-                  console.log(response);
-                  return response;
-                },
-
-                failure: function()
-                {
-                    alert("AJAX FAILED!");
-                }
-            }
-        );
-    }
     message = '{{ message }}';
-    message = message.split('/');
+    message = message.split('/split/');
     document.getElementById('msg').innerHTML = message[0]
-    //soundFile = loadSound(getAudioURL(message[1]));
     console.log(message[1])
     console.log(message[0])
     '{% endfor %}'
     '{% endif %}'
-    //soundFile = loadSound(getAudioURL(big_audio_id_from_upload_audio));
-    soundFile = loadSound("{% static '../media/user_25_big/french_1.wav'%}"); //# 'ibaudiofiles/' lblb message.id rbrb '/' lblb message.filename rbrb # lb = { , rb = }
+    soundFile = loadSound(message[1]);
     console.log('PRELOAD');
     recorderState=2;  //ready to play clip
-    // console.log(typeof(soundFile))
     // getMethods = (obj) => Object.getOwnPropertyNames(obj);
     // console.log(getMethods(soundFile));
   }
@@ -181,7 +156,7 @@
         fill('rgba(220,20, 60, 0.5)');
         //noStroke();
       }
-      //case 1 
+      //case 1
       if (drawBoxList[i].trimStartTime_/1000 < waveEnd && ((drawBoxList[i].trimStartTime_+drawBoxList[i].trimDuration_)/1000) > waveStart) {
         //console.log("drawbox");
         //rect(scaleBoxTime(drawBoxList[i].trimStartTime_/1000), 0, scaleBoxWidth(drawBoxList[i].trimStartTime/1000, drawBoxList[i].trimDuration_/1000), drawBoxList[i].height_);
@@ -199,7 +174,7 @@
   function scaleBoxTime(time) {
     if (time > waveStart && time < waveEnd) {
       return map(time, waveStart, waveEnd, 0, width);
-    } 
+    }
     else if (time <= waveStart) {
       return 0;
     }
@@ -212,7 +187,7 @@
     if (boxStartTime + duration < waveEnd) {
       let yy = map(boxStartTime + duration, waveStart, waveEnd, 0, width);
       return yy - scaleBoxTime(boxStartTime);
-    } 
+    }
     else {
       //return waveEnd - yy - scaleBoxTime(boxStartTime);
       return width - scaleBoxTime(boxStartTime);
@@ -294,29 +269,29 @@
       trimStartTime = ~~(startTime*1000);
       trimEndTime = ~~(endTime*1000);
       tempTrimId = drawBoxList.length;
-      tempParams = {boxXstart_: boxXstart, boxXend: boxXend, boxWidth_:boxWidth, height_:height, 
-                  trimStartTime_:trimStartTime, trimEndTime_: trimEndTime, trimDuration_: trimDuration, 
+      tempParams = {boxXstart_: boxXstart, boxXend: boxXend, boxWidth_:boxWidth, height_:height,
+                  trimStartTime_:trimStartTime, trimEndTime_: trimEndTime, trimDuration_: trimDuration,
                   trimId_: tempTrimId, active: false};
       console.log(tempParams);  //for debugging
       drawBoxList.push(tempParams);
       //Add to the radio list of trims
       //for some reason the last part (label for checkbox) is not getting added to the innerhtml
       var radioHTML = '<tr>' +
-        '<td><input type=\"radio\" value=\"' + tempTrimId + 
+        '<td><input type=\"radio\" value=\"' + tempTrimId +
         '\" id=\"trim'+ tempTrimId + '\" name=\"trimRadio\" onclick=\"clipSelected(this.value)\" /> ' +
-        '<label for=\"trim'+ tempTrimId + '\"> Trim ' + tempTrimId + ':   '+ startTime + 
+        '<label for=\"trim'+ tempTrimId + '\"> Trim ' + tempTrimId + ':   '+ startTime +
         ' sec. to '+ endTime +' sec.' + '</label></td>' +
 
         '<td> <button class="w3-button w3-tiny w3-white w3-border w3-round"' +
             'onclick="editTrim(' + tempTrimId +')">Edit</button>'+
             // '<button class="w3-button w3-tiny w3-white w3-border w3-round"' +
             // 'onclick="deleteTrim(' + tempTrimId +')">Del</button>'+
-            '</td>' + 
+            '</td>' +
 
-        '<td><input type="checkbox" id="trimCheck' + tempTrimId + '" name="trimChecks" value="trimCheck' + 
-              tempTrimId +'\">' + 
+        '<td><input type="checkbox" id="trimCheck' + tempTrimId + '" name="trimChecks" value="trimCheck' +
+              tempTrimId +'\">' +
               '<label for=\"trimCheck' + tempTrimId +'> Saved </label><br></td>'
-              
+
         +'</tr>';
       // var labelHTML = ;
       // radioHTML += labelHTML;  <div class="w3-bar">
@@ -343,7 +318,7 @@
           box.active = false;
         }
       });
-      
+
     }
 
     function activateBox(boxId) {
@@ -358,7 +333,7 @@
     //   function clipSelected(clipId) {
     //   console.log(clipId);
     //   drawBoxList.forEach(activateBox(clipId));
-      
+
     // }
 
     // function activateBox(boxId) {
@@ -499,7 +474,7 @@
     zoomedDuration = waveEnd - waveStart;
     peakCount = peakEnd - peakStart;
     if (zoomFactor > 1) {zoomFactor = 1;}
-    if (!soundFile.isPlaying()) { 
+    if (!soundFile.isPlaying()) {
       zoomCenter = playheadTime;
       peakCenter = convertTimetoPeakPosition(playheadTime);
       console.log("peakcener:  ", peakCenter);
@@ -526,7 +501,7 @@
     zoomedDuration = waveEnd - waveStart;
     peakCount = peakEnd - peakStart;
     if (zoomFactor < 1) {zoomFactor = 1;}
-    if (!soundFile.isPlaying()) { 
+    if (!soundFile.isPlaying()) {
       zoomCenter = playheadTime;
       peakCenter = convertTimetoPeakPosition(playheadTime);
       console.log("peakcener:  ", peakCenter);
@@ -579,8 +554,8 @@
 // samples/peak * sampleRate = time per peak
 // 1/2 sec / time per peak = peaks to average
 // if running average < some threshold (absolute value of sum of peaks),
-// then find the the starting peak of silence, flag silence, when threshold 
-// is exceeded, flag end peak of silence, divide halfway. 
+// then find the the starting peak of silence, flag silence, when threshold
+// is exceeded, flag end peak of silence, divide halfway.
 // 1/2 sec and threshold could be parameterized with sliders
   }
 
@@ -704,7 +679,7 @@
 
         <!-- <i class="icon-zoom-in"></i> icon-zoom-in
         <i class="fas fa-search-plus"></i> -->
-        
+
       </div>
     </div>
     <div class="w3-container">
@@ -721,7 +696,7 @@
               </tr>
             </thead>
             <!-- makeBox() adds innerhtml to this div -->
-            <tbody  id="listOfTrimsDiv"> 
+            <tbody  id="listOfTrimsDiv">
             </tbody>
         </table>
 
