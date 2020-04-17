@@ -32,7 +32,9 @@
   let clipState = myE.NOSTART;
   let myGrey = (200,200,200);
   let audio_background_color = myGrey;
-  let recording_time, seconds, ready, playheadTime = 0;
+  let recording_time, seconds, ready, zoomCenter, zoomFactor, playheadTime = 0;
+  zoomCenter = 0;
+  zoomFactor = 1;
   // These are the positions for the time text on the drawing canvas
   let startMarkPosX = 20;
   let startMarkPosY = 160;
@@ -105,6 +107,7 @@
     var canvas = createCanvas(canvasWidth, canvasHeight);
     canvas.parent('trim_audio_container');
     canvas.style("visibility", "visible");
+    canvas.mouseReleased(mouse_release);
     background(audio_background_color);
     fill(0,0,0);  //draws in black
     makePeaks(soundFile);
@@ -202,22 +205,19 @@
     }
   }
 
-  function mouseReleased() {
+  function mouse_release() {
     // Quit dragging
     if (dragging === true) {
-
+      soundFile.pause();
       dragging = false;
-      //soundFile.stop(); //trying to stop the clip from playing immediately -test this
       playheadTime = map(mouseX, 0,  width, 0, soundFile.duration());
       console.log("playheadtime:  "+playheadTime);
       if (playheadTime < 0) {playheadTime = 0;} // bound check
       else if (playheadTime > soundFile.duration()) {playheadTime = soundfile.duration()-0.2;}
-      //soundFile.play(0,1,.5,playheadTime,soundFile.duration());
       soundFile.stop();  // jump doesn't work unless you stop it first
-
       soundFile.jump(playheadTime);
-      //If pause is used, it will start playing from the beginning when resumed.  Bug?
-      //soundFile.pause();
+      soundFile.pause();
+      soundFile.pauseTime = playheadTime;
     }
     // prevent default behavior
     return false;
@@ -303,16 +303,16 @@
     // called whenever mark start, mark end, are called
     // e.g. valid clip, invalid, beginning time only, end only
     function setState() {
-      if (!isNaN(parseInt(startTimeStr)) && isNaN(parseInt(endTimeStr))) {
+      if (!isNaN(parseFloat(startTimeStr)) && isNaN(parseFloat(endTimeStr))) {
         clipState = myE.STARTONLY;
         clipDurStr = " ";
       }
-      else if (isNaN(parseInt(startTimeStr)) && !isNaN(parseInt(endTimeStr))) {
+      else if (isNaN(parseFloat(startTimeStr)) && !isNaN(parseFloat(endTimeStr))) {
         clipState = myE.ENDONLY;
         clipDurStr = " ";
       }
-      else if (!isNaN(parseInt(startTimeStr)) && !isNaN(parseInt(endTimeStr))) {
-        if (parseInt(startTimeStr) < parseInt(endTimeStr)) {
+      else if (!isNaN(parseFloat(startTimeStr)) && !isNaN(parseFloat(endTimeStr))) {
+        if (parseFloat(startTimeStr) < parseFloat(endTimeStr)) {
           clipState = myE.DONE;
           clipDur = endTime - startTime;
           clipDurStr = clipDur.toString();
@@ -346,19 +346,9 @@
   // runs when play button is clicked
   function play() {
     //getAudioContext().resume();
-    console.log(recorderState);  // for debugging, 
-    if (recorderState === 0) {  // remnant from upload audio
-      audio_message = 'Nothing to play.  Record audio first.';
-    } else if (recorderState === 1) {  // this recorderState is a remnant from upload audio
-      audio_message = 'Currently recording.  Press the recording icon to stop.';
-    } else if (recorderState === 2 || recorderState ===3) {
-      audio_background_color = myGrey;
-      audio_message = 'Playing.';
-      soundFile.play();
-      soundFile.playMode("untilDone")
-      soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';})
-      recorderState = 2;
-    }
+    soundFile.play();
+    soundFile.playMode("untilDone");
+    //soundFile.onended(function() {audio_message = 'Press the Play icon to listen.';});
   }
 
   // runs when pause button is clicked
@@ -386,12 +376,28 @@
     }
   }
 
+    // fixme
   function change_canvas_size() {
     canvasWidth = .9 * screen.width;
     console.log("changing window size: ", canvasWidth);
     resizeCanvas(canvasWidth, canvasHeight);
   }
 
+  function zoom_in() {
+    if (!soundFile.isPlaying()) { 
+      zoomCenter = playheadTime;
+      zoomFactor *= 1.25
+      console.log("playheadtime: ", playheadTime, "Zoom factor: ", zoomFactor);
+    }
+  }
+
+  function zoom_out() {
+    if (!soundFile.isPlaying()) { 
+      zoomCenter = playheadTime;
+      zoomFactor *= .75
+      console.log("playheadtime: ", playheadTime, "Zoom factor: ", zoomFactor);
+    }
+  }
 
   </script>
 
@@ -502,6 +508,18 @@
           <i class="fa fa-save fa-3x" aria-hidden="true" onclick="mark_audio()"></i>
           <h4 class="fancyText">Mark Audio Clip</h4>
         </div>
+        <div class="w3-btn" >
+          <i class="fa fa-search-plus fa-3x" aria-hidden="true" onclick="zoom_in()"></i>
+          <h4 class="fancyText">Zoom In</h4>
+        </div>
+        <div class="w3-btn" >
+          <i class="fa fa-search-minus fa-3x" aria-hidden="true" onclick="zoom_out()"></i>
+          <h4 class="fancyText">Zoom Out</h4>
+        </div>
+
+        <!-- <i class="icon-zoom-in"></i> icon-zoom-in
+        <i class="fas fa-search-plus"></i> -->
+        
       </div>
     </div>
     <div class="w3-container">
