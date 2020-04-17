@@ -263,13 +263,30 @@
       console.log(tempParams)  //for debugging
       drawBoxList.push(tempParams)
       //Add to the radio list of trims
-      var radioHTML = '<input type=\"radio\" value=\"' + tempTrimId + '\" id=\"trim'+ tempTrimId + '\" name=\"trimRadio\" onclick=\"clipSelected(this.value)\" />';
-      var labelHTML = '<label for=\"trim'+ tempTrimId + '\"> Trim ' + tempTrimId + ':   '+ startTime + ' sec. to '+ endTime +' sec.' + '</label><br>';
-      radioHTML += labelHTML;
+      var radioHTML = '<tr><td>' +
+        '<input type=\"radio\" value=\"' + tempTrimId + 
+        '\" id=\"trim'+ tempTrimId + '\" name=\"trimRadio\" onclick=\"clipSelected(this.value)\" /> </td>' +
+        '<label for=\"trim'+ tempTrimId + '\"> Trim ' + tempTrimId + ':   '+ startTime + 
+        ' sec. to '+ endTime +' sec.' + '</label></td>' +
+        '<td> <div class="w3-bar">' +
+            '<button class="w3-button w3-tiny w3-white w3-border w3-round"' +
+            'onclick="editTrim(' + tempTrimId +')">Edit</button>'+
+            // '<button class="w3-button w3-tiny w3-white w3-border w3-round"' +
+            // 'onclick="deleteTrim(' + tempTrimId +')">Del</button>'+
+            '</div></td></tr>';
+      // var labelHTML = ;
+      // radioHTML += labelHTML;
       document.getElementById("listOfTrimsDiv").innerHTML += radioHTML;
-      //console.log(document.getElementById("listOfTrimsDiv").innerHTML);  //for debugging
+      console.log(document.getElementById("listOfTrimsDiv").innerHTML);  //for debugging
     }  //close makeBox
 
+    function editTrim(trimId) {
+      pass;
+    }
+
+    function deleteTrim(trimId) {
+      pass;
+    }
 
     function clipSelected(clipId) {
       console.log(clipId);
@@ -644,9 +661,12 @@
     <div class="w3-container">
       <div class="w3-half">
         <form class="audioForm">
-          <div class="w3-bar" id="listOfTrimsDiv">
+          <tbody id="trimTable">
+            <div class="w3-bar" id="listOfTrimsDiv">
 
-          </div>
+            </div>
+        </tbody>
+        
           <!-- <label>Hide me!  (Big-audio id for posting)</label><br> -->
           <input type="hidden" id="formBigAudioID" name="big_audio_id" required></input>
           <br><br>
