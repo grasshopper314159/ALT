@@ -200,7 +200,7 @@
     if (time > waveStart && time < waveEnd) {
       return map(time, waveStart, waveEnd, 0, width);
     } 
-    else if (time < waveStart) {
+    else if (time <= waveStart) {
       return 0;
     }
     else {
@@ -300,19 +300,26 @@
       console.log(tempParams);  //for debugging
       drawBoxList.push(tempParams);
       //Add to the radio list of trims
-      var radioHTML = '<tr><td>' +
-        '<input type=\"radio\" value=\"' + tempTrimId + 
-        '\" id=\"trim'+ tempTrimId + '\" name=\"trimRadio\" onclick=\"clipSelected(this.value)\" /> </td>' +
+      //for some reason the last part (label for checkbox) is not getting added to the innerhtml
+      var radioHTML = '<tr>' +
+        '<td><input type=\"radio\" value=\"' + tempTrimId + 
+        '\" id=\"trim'+ tempTrimId + '\" name=\"trimRadio\" onclick=\"clipSelected(this.value)\" /> ' +
         '<label for=\"trim'+ tempTrimId + '\"> Trim ' + tempTrimId + ':   '+ startTime + 
         ' sec. to '+ endTime +' sec.' + '</label></td>' +
-        '<td> <div class="w3-bar">' +
-            '<button class="w3-button w3-tiny w3-white w3-border w3-round"' +
+
+        '<td> <button class="w3-button w3-tiny w3-white w3-border w3-round"' +
             'onclick="editTrim(' + tempTrimId +')">Edit</button>'+
             // '<button class="w3-button w3-tiny w3-white w3-border w3-round"' +
             // 'onclick="deleteTrim(' + tempTrimId +')">Del</button>'+
-            '</div></td></tr>';
+            '</td>' + 
+
+        '<td><input type="checkbox" id="trimCheck' + tempTrimId + '" name="trimChecks" value="trimCheck' + 
+              tempTrimId +'\">' + 
+              '<label for=\"trimCheck' + tempTrimId +'> Saved </label><br></td>'
+              
+        +'</tr>';
       // var labelHTML = ;
-      // radioHTML += labelHTML;
+      // radioHTML += labelHTML;  <div class="w3-bar">
       document.getElementById("listOfTrimsDiv").innerHTML += radioHTML;
       console.log(document.getElementById("listOfTrimsDiv").innerHTML);  //for debugging
     }  //close makeBox
@@ -409,7 +416,7 @@
     // getPeaks returns a list of amplitude peaks.  Can take a paramter to make more
     // peaks (looks more detailed then).  Defaults to 5x window size
     function makePeaks(soundFile) {
-        peaks = soundFile.getPeaks();
+        peaks = soundFile.getPeaks(10*width);  //default is 5*browser window width
 
         //console.log("peakstart: ", peakStart, "  Peakend: ", peakEnd);
     }
@@ -702,12 +709,21 @@
     </div>
     <div class="w3-container">
       <div class="w3-half">
+        <br>
         <form class="audioForm">
-          <tbody id="trimTable">
-            <div class="w3-bar" id="listOfTrimsDiv">
-
-            </div>
-        </tbody>
+          <table id="trimTable" style="width:100%">
+            <thead>
+              <!-- can't get headings to line up! -->
+              <tr>
+                <th> Clip </th>
+                <th> Edit </th>
+                <th> Saved </th>
+              </tr>
+            </thead>
+            <!-- makeBox() adds innerhtml to this div -->
+            <tbody  id="listOfTrimsDiv"> 
+            </tbody>
+        </table>
 
           <!-- <label>Hide me!  (Big-audio id for posting)</label><br> -->
           <input type="hidden" id="formBigAudioID" name="big_audio_id" required></input>
