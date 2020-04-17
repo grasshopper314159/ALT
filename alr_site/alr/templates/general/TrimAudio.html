@@ -51,6 +51,7 @@
   let dragging = false;
   let bigAudioId;
   let frameCount = 0;
+  let zoomedDuration, peakCount, peakCenter;
 
   //********************** main p5 functions **********************************
 
@@ -356,18 +357,36 @@
     function makePeaks(soundFile) {
         peaks = soundFile.getPeaks();
 
-        console.log("peakstart: ", peakStart, "  Peakend: ", peakEnd);
+        //console.log("peakstart: ", peakStart, "  Peakend: ", peakEnd);
     }
     // This is the red line on the waveform
     function drawPlayhead(playheadTime) {
-        // necessary?
+      if (playheadTime>waveEnd) {
+        zoomedDuration = waveEnd - waveStart;
+        peakCount = peakEnd - peakStart;
+        waveEnd += zoomedDuration;
+        peakEnd += peakCount;
+        waveStart += zoomedDuration;
+        peakStart += peakCount;
+      }
+      else if (playheadTime<waveStart) {
+        zoomedDuration = waveEnd - waveStart;
+        peakCount = peakEnd - peakStart;
+        waveEnd -= zoomedDuration;
+        peakEnd -= peakCount;
+        waveStart -= zoomedDuration;
+        peakStart -= peakCount;
+      }
+      waveBounds();
       fill(255,0,0);
       // apparently width, height are p5 automagically created variables descripting canvas.
-      // may need to replace with canvasWidth/ canvasHeight at some point
       //console.log("drawing playhead");
       rect(map(playheadTime, waveStart, waveEnd, 0, width), 0, 2, height);
       fill(0,0,0);
     }
+
+
+
 
   // runs when play button is clicked
   function play() {
@@ -415,9 +434,8 @@
   }
 
   function zoom_in() {
-    let zoomedDuration = waveEnd - waveStart;
-    let peakCount = peakEnd - peakStart;
-    let peakCenter;
+    zoomedDuration = waveEnd - waveStart;
+    peakCount = peakEnd - peakStart;
     if (zoomFactor > 1) {zoomFactor = 1;}
     if (!soundFile.isPlaying()) { 
       zoomCenter = playheadTime;
@@ -434,13 +452,7 @@
       peakStart = Math.floor(peakStart);
       peakEnd = peakCenter + .5 * peakCount;
       peakEnd = Math.floor(peakEnd);
-      
-      if (waveStart < 0) {
-        peakEnd -= peakStart;
-        peakStart = 0;
-        waveEnd -= waveStart;
-        waveStart = 0;
-      }
+      waveBounds();
 
       console.log("playheadtime: ", playheadTime, "  Zoom factor: ", zoomFactor);
       console.log("zoomed duration: ", zoomedDuration, "  waveStart: ", waveStart, '  waveEnd: ', waveEnd);
@@ -449,9 +461,8 @@
   }
 
   function zoom_out() {
-    let zoomedDuration = waveEnd - waveStart;
-    let peakCount = peakEnd - peakStart;
-    let peakCenter;
+    zoomedDuration = waveEnd - waveStart;
+    peakCount = peakEnd - peakStart;
     if (zoomFactor < 1) {zoomFactor = 1;}
     if (!soundFile.isPlaying()) { 
       zoomCenter = playheadTime;
@@ -468,12 +479,25 @@
       peakStart = Math.floor(peakStart);
       peakEnd = peakCenter + .5 * peakCount;
       peakEnd = Math.floor(peakEnd);
-      
-      if (waveStart < 0) {
+      waveBounds();
+
+
+      console.log("playheadtime: ", playheadTime, "  Zoom factor: ", zoomFactor);
+      console.log("zoomed duration: ", zoomedDuration, "  waveStart: ", waveStart, '  waveEnd: ', waveEnd);
+      console.log("peakstart: ", peakStart, "  Peakend: ", peakEnd);
+    }
+  }
+
+  function waveBounds() {
+    if (waveStart < 0) {
         peakEnd -= peakStart;
         peakStart = 0;
         waveEnd -= waveStart;
         waveStart = 0;
+        if (peakEnd>peaks.length) {
+          peakEnd = peaks.length;
+          waveEnd = recording_time;
+        }
       }
       if (waveEnd > recording_time) {
         peakStart = peakStart - (peakEnd - peaks.length+1);
@@ -483,11 +507,6 @@
         if (waveStart < 0) {waveStart =0;}
         waveEnd = recording_time;
       }
-
-      console.log("playheadtime: ", playheadTime, "  Zoom factor: ", zoomFactor);
-      console.log("zoomed duration: ", zoomedDuration, "  waveStart: ", waveStart, '  waveEnd: ', waveEnd);
-      console.log("peakstart: ", peakStart, "  Peakend: ", peakEnd);
-    }
   }
 
 
