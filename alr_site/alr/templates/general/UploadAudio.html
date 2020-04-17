@@ -48,14 +48,19 @@
           <a href="/signUp/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Sign Up</a>
           <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
           {% endif %}
-          <div class="w3-dropdown-hover w3-hide-small w3-right  w3-xlarge">
-            <button class="w3-round w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
-            <div class="w3-dropdown-content w3-bar-block w3-card-4">
-              <a href="/home/settings" class="w3-bar-item w3-button">Settings</a>
-              <a href="/home/" class="w3-bar-item w3-button">Home</a>
-              {% if user.is_authenticated %}
-              <a href="/ajax/logoutUser" class="w3-bar-item w3-button">Log Out</a>
-              {% endif %}
+          <div class="w3-right">
+            {% if user.is_authenticated %}
+            <p class="w3-left w3-xlarge" style="padding-right: 30px;margin-top: 12px;margin-bottom: 0px;">{{user.username}}</p>
+            {% endif %}
+            <div class="w3-dropdown-hover w3-hide-small w3-xlarge">
+              <button class="w3-round w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
+              <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                <a href="/home/settings" class="w3-bar-item w3-button">Settings</a>
+                <a href="/home/" class="w3-bar-item w3-button">Home</a>
+                {% if user.is_authenticated %}
+                <a href="/ajax/logoutUser" class="w3-bar-item w3-button">Log Out</a>
+                {% endif %}
+              </div>
             </div>
           </div>
         </div>
@@ -146,10 +151,10 @@
   <!--  start of recording scripts *****************************************************************************
     p5 will automatically call preload, setup and draw.  Draw is called ~50-60 times per second
     p5 may not play well with other javascript code.  It has a lot of global variables.  It is
-    possible to run in instance mode to mitigate this, if necessary (see p5 website)  
+    possible to run in instance mode to mitigate this, if necessary (see p5 website)
     Collapse the following commented block to hide these scripts                                                      -->
 
-<!-- 
+<!--
 <script>
   var mic, recorder, soundFile, soundBlob, blobFile;
 
@@ -212,9 +217,9 @@
     // use the '.enabled' boolean to make sure user enabled the mic (otherwise we'd record silence)
     if (state === 0 && mic.enabled) {
       // Tell recorder to record to a p5.SoundFile which we will use for playback
-      // !! this doesn't seem to be  really creating a a p5.SoundFile type object-- 
+      // !! this doesn't seem to be  really creating a a p5.SoundFile type object--
       // as demonstrated by console logging the methods on the object.   need to convert somehow to that type
-      // 
+      //
       recorder.record(soundFile);
       a_timer = setInterval(timeIt, 100);
       audio_background_color = 'red';
@@ -290,7 +295,7 @@
       //I think we will have to build off of the above code to submit the form and not rely on the http submit
       //document.getElementById('recordingToUpload').value = blobFile.name;
 
-//************ from 
+//************ from
     //   let formdata = new FormData() ; //create a from to of data to upload to the server
     // formdata.append('soundBlob', soundBlob,  'myfiletosave.wav') ; // append the sound blob and the name of the file. third argument will show up on the server as req.file.originalname
 
@@ -317,7 +322,7 @@
 
     //**********************  from https://stackoverflow.com/questions/60700389/real-time-audio-streaming-from-javascrit-to-python-django/60700473#60700473
 
-    
+
 
     AjaxRequest();
 
@@ -339,7 +344,7 @@
     $.ajax({
       url: "http://localhost:8000/ajax/postRecordedAudio",
       method: "POST",
-      data: form, //here passing the wav file 
+      data: form, //here passing the wav file
       dataType: "json",
       processData: false,
       contentType:false,

@@ -26,14 +26,19 @@
           <a href="/signUp/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">Sign Up</a>
           <a href="/aboutUs/" class="w3-round w3-bar-item w3-button w3-padding-large w3-hide-small w3-xlarge">About Us</a>
           {% endif %}
-          <div class="w3-dropdown-hover w3-hide-small w3-right  w3-xlarge">
-            <button class="w3-round w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
-            <div class="w3-dropdown-content w3-bar-block w3-card-4">
-              <a href="/home/settings" class="w3-bar-item w3-button">Settings</a>
-              <a href="/home/" class="w3-bar-item w3-button">Home</a>
-              {% if user.is_authenticated %}
-              <a href="/ajax/logoutUser" class="w3-bar-item w3-button">Log Out</a>
-              {% endif %}
+          <div class="w3-right">
+            {% if user.is_authenticated %}
+            <p class="w3-left w3-xlarge" style="padding-right: 30px;margin-top: 12px;margin-bottom: 0px;">{{user.username}}</p>
+            {% endif %}
+            <div class="w3-dropdown-hover w3-hide-small w3-xlarge">
+              <button class="w3-round w3-padding-large w3-button" title="More">Options <i class="fa fa-caret-down"></i></button>
+              <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                <a href="/home/settings" class="w3-bar-item w3-button">Settings</a>
+                <a href="/home/" class="w3-bar-item w3-button">Home</a>
+                {% if user.is_authenticated %}
+                <a href="/ajax/logoutUser" class="w3-bar-item w3-button">Log Out</a>
+                {% endif %}
+              </div>
             </div>
           </div>
         </div>
