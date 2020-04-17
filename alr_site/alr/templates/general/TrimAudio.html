@@ -41,7 +41,7 @@
   let durMarkPosX = 220;
   let durMarkPosY = 160;
   let startTime, endTime;
-  let canvasHeight = 180;
+  var canvasHeight = 180;
   var canvasWidth = ~~(.9 * screen.width);
   let drawBox = 0; //flag to add a box to indicate saved clip
   let drawBoxList = [];
@@ -98,8 +98,8 @@
   // SETUP Run starts before draw, but not guaranteed to finish before draw
   function setup() {
     console.log('setup started');  // for debugging
-   // Add listener to resize p5 drawing canvas if the window is resized
-    window.addEventListener("resize", change_canvas_size());
+   // Add listener to resize p5 drawing canvas if the window is resized, not working
+   // window.addEventListener("resize", change_canvas_size());
     getAudioContext().resume(); //in the console there is an error that pop up that alerts you to add this
     recording_time = 0;  //remnant from upload audio.  turn this into soundFile length?
     var canvas = createCanvas(canvasWidth, canvasHeight);
@@ -150,7 +150,8 @@
     //draws boxes to show saved clips
     for (i = 0; i < drawBoxList.length; i++) {
       fill('rgba(0,255,0, 0.25)');
-      rect(drawBoxList[i][0], 0, drawBoxList[i][1], drawBoxList[i][2]);
+      //rect(drawBoxList[i][0], 0, drawBoxList[i][1], drawBoxList[i][2]);
+      rect(drawBoxList[i].boxXstart_, 0, drawBoxList[i].boxWidth_, drawBoxList[i].height_);
       fill(0);
     }
   }
@@ -215,42 +216,42 @@
     // makeBox finds the coordinates needed to draw a clip box in draw()
     //todo: box entries an object to faciliate pulling out info
     function makeBox() {
-      let trimDuration, trimStartTime;
+      let trimDuration, trimStartTime, tempParams;
       boxXstart = map(startTime, 0, soundFile.duration(), 0, width);
       boxXend = map(endTime, 0, soundFile.duration(), 0, width);
       boxWidth = boxXend - boxXstart;
-      trimDuration = ~~((endTime - startTime)*1000)
+      trimDuration = ~~((endTime - startTime)*1000) // ~~ converts to an int
       trimStartTime = ~~(startTime*1000);
       tempTrimId = drawBoxList.length+1;
-      tempParams = [boxXstart, boxWidth, height, trimStartTime, trimDuration, tempTrimId]
+      tempParams = {boxXstart_: boxXstart, boxWidth_:boxWidth, height_:height, 
+                  trimStartTime_:trimStartTime, trimDuration_: trimDuration, 
+                  trimId_: tempTrimId, active: false}
       console.log(tempParams)  //for debugging
       drawBoxList.push(tempParams)
       //Add to the radio list of trims
-      var radioHTML = '<input type=\"radio\" value=\"' + tempTrimId + '\" id=\"trim'+ tempTrimId + '\" name=\"trimRadio\"  />';
+      var radioHTML = '<input type=\"radio\" value=\"' + tempTrimId + '\" id=\"trim'+ tempTrimId + '\" name=\"trimRadio\" onclick=\"clipSelected(this.value)\" />';
       var labelHTML = '<label for=\"trim'+ tempTrimId + '\"> Trim ' + tempTrimId + ':   '+ startTime + ' sec. to '+ endTime +' sec.' + '</label><br>';
       radioHTML += labelHTML;
       document.getElementById("listOfTrimsDiv").innerHTML += radioHTML;
-      console.log(document.getElementById("listOfTrimsDiv").innerHTML);
+      //console.log(document.getElementById("listOfTrimsDiv").innerHTML);  //for debugging
     }  //close makeBox
 
-  //         Taking a step from what Patrick suggests, using a temporary node we can get rid of the try/catch:
 
-  // function createRadioElement(name, checked) {
-  //     var radioHtml = '<input type="radio" name="' + name + '"';
-  //     if ( checked ) {
-  //         radioHtml += ' checked="checked"';
-  //     }
-  //     radioHtml += '/>';
+    function clipSelected(clipId) {
+      console.log(clipId);
+      drawBoxList.forEach(activateBox(clipId));
+      
+    }
 
-  //     var radioFragment = document.createElement('div');
-  //     radioFragment.innerHTML = radioHtml;
-
-  //     return radioFragment.firstChild;
-  // }
-
-  //*********************************************
-
-
+    function activateBox(boxId) {
+        if (this.trimId_ == boxId) {
+          this.active = true;
+          console.log("active trim: ", this.trimId_);
+        }
+        else {
+          this.active = false;
+        }
+      }
 
     function setStartTime() {
       startTime = playheadTime.toFixed(2);
@@ -351,37 +352,11 @@
   }
 
   function change_canvas_size() {
-    console.log("changing window size");
-    canvasWidth = ~~(.9 * screen.width);
+    canvasWidth = .9 * screen.width;
+    console.log("changing window size: ", canvasWidth);
     resizeCanvas(canvasWidth, canvasHeight);
   }
 
-    // p5 copied code not using now but may be useful when saving trim
-    // try {
-    //   let soundBlob = soundFile.getBlob();
-    //   let serverUrl = 'http://jsonplaceholder.typicode.com/posts';
-    //   let httpRequestOptions = {
-    //     method: 'POST',
-    //     body: new FormData().append('soundBlob', soundBlob),
-    //     headers: new Headers({
-    //       'Content-Type': 'multipart/form-data'
-    //     })
-    //   };
-    //   httpDo(serverUrl, httpRequestOptions);
-
-    // }
-    // catch(err) {
-    //   console.log(err);
-    // }
-    // write to database here
-
-  // timeIt is a remnant from upload audio. May need it later
-  // function timeIt() {
-  //   // 1 counter = 0.1 second
-  //   recording_time++;
-  // }
-
-  
 
   </script>
 
@@ -421,7 +396,7 @@
   <title>Trim Audio</title>
 </head>
 
-<body>
+<body onresize="change_canvas_size()">
   <div class="w3-top" id="background2">
     <div class="home-background">
       <div class="w3-top" id="navigationBar">
