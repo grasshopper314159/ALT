@@ -108,6 +108,7 @@
     background(audio_background_color);
     fill(0,0,0);  //draws in black
     makePeaks(soundFile);
+    noStroke();  //i can never undo this.  Bug?
   //window.onload = function(){
     document.getElementById('formBigAudioID').value = bigAudioId;
     console.log("bigAudioId:  ", bigAudioId)
@@ -149,7 +150,16 @@
 
     //draws boxes to show saved clips
     for (i = 0; i < drawBoxList.length; i++) {
-      fill('rgba(0,255,0, 0.25)');
+      if (drawBoxList[i].active == false) {
+        fill('rgba(0,255,0, 0.25)');
+      }
+      else {
+        //stroke('rgba(0,255,0, 0.75)');    // TRYING TO UNDO nostroke but doesn[t work]
+        //strokeWeight(4);
+        fill('rgba(220,20, 60, 0.5)');
+        //noStroke();
+      }
+      
       //rect(drawBoxList[i][0], 0, drawBoxList[i][1], drawBoxList[i][2]);
       rect(drawBoxList[i].boxXstart_, 0, drawBoxList[i].boxWidth_, drawBoxList[i].height_);
       fill(0);
@@ -222,7 +232,7 @@
       boxWidth = boxXend - boxXstart;
       trimDuration = ~~((endTime - startTime)*1000) // ~~ converts to an int
       trimStartTime = ~~(startTime*1000);
-      tempTrimId = drawBoxList.length+1;
+      tempTrimId = drawBoxList.length;
       tempParams = {boxXstart_: boxXstart, boxWidth_:boxWidth, height_:height, 
                   trimStartTime_:trimStartTime, trimDuration_: trimDuration, 
                   trimId_: tempTrimId, active: false}
@@ -239,7 +249,15 @@
 
     function clipSelected(clipId) {
       console.log(clipId);
-      drawBoxList.forEach(activateBox(clipId));
+      drawBoxList.forEach(function(box){
+        if (box.trimId_ == clipId) {
+          box.active = true;
+          console.log("active trim: ", box.trimId_);
+        }
+        else {
+          box.active = false;
+        }
+      });
       
     }
 
@@ -252,6 +270,23 @@
           this.active = false;
         }
       }
+    //   function clipSelected(clipId) {
+    //   console.log(clipId);
+    //   drawBoxList.forEach(activateBox(clipId));
+      
+    // }
+
+    // function activateBox(boxId) {
+    //     if (this.trimId_ == boxId) {
+    //       this.active = true;
+    //       console.log("active trim: ", this.trimId_);
+    //     }
+    //     else {
+    //       this.active = false;
+    //     }
+    //   }
+
+
 
     function setStartTime() {
       startTime = playheadTime.toFixed(2);
@@ -300,7 +335,7 @@
     }
     // This is the red line on the waveform
     function drawPlayhead(playheadTime) {
-      noStroke();  // necessary?
+        // necessary?
       fill(255,0,0);
       // apparently width, height are p5 automagically created variables descripting canvas.
       // may need to replace with canvasWidth/ canvasHeight at some point
