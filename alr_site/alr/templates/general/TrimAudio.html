@@ -169,7 +169,7 @@
     text("Clip length: "+clipDurStr, durMarkPosX, durMarkPosY);
     //text("Playhead x: "+ map(playheadTime, 0, waveEnd, 0, width).toFixed(2) , durMarkPosX+100, durMarkPosY);
     //text("MouseX: "+ mouseX.toFixed(2), durMarkPosX+220, durMarkPosY);
-
+    rectMode(CORNERS);
     //draws boxes to show saved clips
     for (i = 0; i < drawBoxList.length; i++) {
       if (drawBoxList[i].active == false) {
@@ -181,12 +181,47 @@
         fill('rgba(220,20, 60, 0.5)');
         //noStroke();
       }
-      
-      //rect(drawBoxList[i][0], 0, drawBoxList[i][1], drawBoxList[i][2]);
-      rect(drawBoxList[i].boxXstart_, 0, drawBoxList[i].boxWidth_, drawBoxList[i].height_);
+      //case 1 
+      if (drawBoxList[i].trimStartTime_/1000 < waveEnd && ((drawBoxList[i].trimStartTime_+drawBoxList[i].trimDuration_)/1000) > waveStart) {
+        //console.log("drawbox");
+        //rect(scaleBoxTime(drawBoxList[i].trimStartTime_/1000), 0, scaleBoxWidth(drawBoxList[i].trimStartTime/1000, drawBoxList[i].trimDuration_/1000), drawBoxList[i].height_);
+        rect(scaleBoxTime(drawBoxList[i].trimStartTime_/1000), 0, scaleBoxTime(drawBoxList[i].trimEndTime_/1000), drawBoxList[i].height_);
+
+      }
+      //need an intermediate calc here
+      // to process boxXstart and boxWidth to scale factor
+
+      //rect(drawBoxList[i].boxXstart_, 0, drawBoxList[i].boxWidth_, drawBoxList[i].height_);
       fill(0);
     }
   }
+  //returns x value based on zoom
+  function scaleBoxTime(time) {
+    if (time > waveStart && time < waveEnd) {
+      return map(time, waveStart, waveEnd, 0, width);
+    } 
+    else if (time < waveStart) {
+      return 0;
+    }
+    else {
+      return width;
+    }
+  }
+  //returns pixel width of duration based on zoom
+  function scaleBoxWidth(boxStartTime, duration) {
+    if (boxStartTime + duration < waveEnd) {
+      let yy = map(boxStartTime + duration, waveStart, waveEnd, 0, width);
+      return yy - scaleBoxTime(boxStartTime);
+    } 
+    else {
+      //return waveEnd - yy - scaleBoxTime(boxStartTime);
+      return width - scaleBoxTime(boxStartTime);
+    }
+  }
+  // function convertTimetoPeakPosition(playheadTime) {
+  //   let factor =  playheadTime / recording_time;
+  //   return ~~(factor * peaks.length);  // ~~ converts to int
+  // }
 
   //***********************  Helper Functions ****************************************************************\
     // TODO
@@ -248,6 +283,7 @@
     // makeBox finds the coordinates needed to draw a clip box in draw()
     //todo: box entries an object to faciliate pulling out info
     function makeBox() {
+      console.log(endTime);
       let trimDuration, trimStartTime, tempParams;
       //console.log("boxstart , makebox");
       boxXstart = map(startTime, waveStart, waveEnd, 0, width);
@@ -256,12 +292,13 @@
       boxWidth = boxXend - boxXstart;
       trimDuration = ~~((endTime - startTime)*1000) // ~~ converts to an int
       trimStartTime = ~~(startTime*1000);
+      trimEndTime = ~~(endTime*1000);
       tempTrimId = drawBoxList.length;
-      tempParams = {boxXstart_: boxXstart, boxWidth_:boxWidth, height_:height, 
-                  trimStartTime_:trimStartTime, trimDuration_: trimDuration, 
-                  trimId_: tempTrimId, active: false}
-      console.log(tempParams)  //for debugging
-      drawBoxList.push(tempParams)
+      tempParams = {boxXstart_: boxXstart, boxXend: boxXend, boxWidth_:boxWidth, height_:height, 
+                  trimStartTime_:trimStartTime, trimEndTime_: trimEndTime, trimDuration_: trimDuration, 
+                  trimId_: tempTrimId, active: false};
+      console.log(tempParams);  //for debugging
+      drawBoxList.push(tempParams);
       //Add to the radio list of trims
       var radioHTML = '<tr><td>' +
         '<input type=\"radio\" value=\"' + tempTrimId + 
@@ -398,6 +435,7 @@
       fill(255,0,0);
       // apparently width, height are p5 automagically created variables descripting canvas.
       //console.log("drawing playhead");
+      rectMode(CORNER);
       rect(map(playheadTime, waveStart, waveEnd, 0, width), 0, 2, height);
       fill(0,0,0);
     }
@@ -507,7 +545,7 @@
 
   function waveBounds() {
     if (waveStart < 0) {
-        peakEnd -= peakStart;
+        peakEnd -= peakStart;  // peakStart will be negative, so this will shift peakEnd right
         peakStart = 0;
         waveEnd -= waveStart;
         waveStart = 0;
@@ -527,13 +565,17 @@
   }
 
 
-  // function zoom_out() {
-  //   if (!soundFile.isPlaying()) { 
-  //     zoomCenter = playheadTime;
-  //     zoomFactor *= 1.25;
-  //     console.log("playheadtime: ", playheadTime, "Zoom factor: ", zoomFactor);
-  //   }
-  // }
+  function autoTrim() {
+
+// samplerate * duration = samples
+// samples/num of peaks= samples/peak
+// samples/peak * sampleRate = time per peak
+// 1/2 sec / time per peak = peaks to average
+// if running average < some threshold (absolute value of sum of peaks),
+// then find the the starting peak of silence, flag silence, when threshold 
+// is exceeded, flag end peak of silence, divide halfway. 
+// 1/2 sec and threshold could be parameterized with sliders
+  }
 
   </script>
 
@@ -666,7 +708,7 @@
 
             </div>
         </tbody>
-        
+
           <!-- <label>Hide me!  (Big-audio id for posting)</label><br> -->
           <input type="hidden" id="formBigAudioID" name="big_audio_id" required></input>
           <br><br>
