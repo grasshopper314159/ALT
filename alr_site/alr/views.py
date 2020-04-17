@@ -104,19 +104,9 @@ def display_createEval(request):
 
 @login_required(login_url='/home/')
 def display_trimAudio(request):
-    # TODO: remove active set
-    # active_messages["trimAudio"] = str(1) + ' ' + str('a.wav')
+    # TODO: to send an audio file to trim Audio use the following format
+    # active_messages["trimAudio"] = 'message/split/' + str(big_audio.sound_file.url)
     messages.success(request, active_messages["trimAudio"])
-    # try:
-    #     if type(parseInt(active_messages["trimAudio"])) == type(426):
-    #         messages.success(request, parseInt(active_messages["trimAudio"]))
-    #         active_messages["trimAudio"] = ''
-    # except:
-    #     print(active_messages["trimAudio"])
-    # else:
-    #     request = check_message(request, 'trimAudio')
-
-
     return render(request, 'general/TrimAudio.html')
 
 # A simplified login view for evaluator accounts made by researchers
