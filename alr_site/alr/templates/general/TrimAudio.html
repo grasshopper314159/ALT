@@ -50,6 +50,7 @@
   let clipBoxColor = 'rgba(0,255,0, 0.25)';
   let dragging = false;
   let bigAudioId;
+  let frameCount = 0;
 
   //********************** main p5 functions **********************************
 
@@ -126,19 +127,25 @@
   }
   // DRAW  Runs ~50 to 60 times per second
   function draw() {
+    frameCount +=1;
     let peakX, peakY;
     //console.log(dragging) // For debugging, just logs true or false
     //cursor(ARROW)
     //getAudioContext().resume();  // I thought I would need this.  Gives a bunch of errors in the console though
     //resizeCanvas(600, 150, true);  // if we dynamically resize canvas, may use this function
     background(audio_background_color);  // need to force a redraw for every frame
+    // if (frameCount % 100 == 0) {
+    //     console.log("peakstart, ia:  ", peakStart,  "  ~~:  ", ~~peakStart, "  peakend:  ", peakEnd, "  ~~  ", ~~peakEnd);
+    //   }
     beginShape();  // Draws wave form
-    for (i = peakStart; i < peakEnd; i++) {
+    for (ia = peakStart; ia < peakEnd-1; ia++) {
       //console.log("peakX");
-      peakX = map(i, peakStart, peakEnd, 0, canvasWidth);
-      //console.log("peakY");
-      peakY = map(peaks[i], -.75, .75, height, 0);  // making 2 and 3rd #s smaller increases wave height on canvas
-      vertex(peakX, peakY);
+      peakX = map(ia, ~~peakStart, ~~peakEnd, 0, canvasWidth);
+      // if (frameCount % 100 == 0 || ia % 100 == 0) {
+      //   console.log("peakY, ia:  ", ia,  "  peeaks ~~ia:  ", ~~ia, "  peaks[ia]:  ", peaks[ia], "  height:  ", height, "  peaks length: ", peaks.length);
+      // }
+      peakY = map(peaks[ia], 1, -1, height, 0, true);  // making 2 and 3rd #s smaller increases wave height on canvas
+      vertex(~~peakX, ~~peakY);
     }
     endShape();
     // playHeadTime is needed to draw the playhead. Don't want to update
@@ -411,18 +418,22 @@
     let zoomedDuration = waveEnd - waveStart;
     let peakCount = peakEnd - peakStart;
     let peakCenter;
+    if (zoomFactor > 1) {zoomFactor = 1;}
     if (!soundFile.isPlaying()) { 
       zoomCenter = playheadTime;
       peakCenter = convertTimetoPeakPosition(playheadTime);
       console.log("peakcener:  ", peakCenter);
       zoomFactor *= .75;
+      if (zoomFactor < 0.5) {zoomFactor = 1};
       zoomedDuration = zoomFactor * zoomedDuration;
       peakCount = peakCount * zoomFactor;
       waveStart = zoomCenter - .5 * zoomedDuration;
       waveEnd = zoomCenter + .5 * zoomedDuration;
       //peakCenter =  map(playheadTime,waveStart, waveEnd,  )
       peakStart = peakCenter - .5 * peakCount;
+      peakStart = Math.floor(peakStart);
       peakEnd = peakCenter + .5 * peakCount;
+      peakEnd = Math.floor(peakEnd);
       
       if (waveStart < 0) {
         peakEnd -= peakStart;
@@ -438,12 +449,55 @@
   }
 
   function zoom_out() {
+    let zoomedDuration = waveEnd - waveStart;
+    let peakCount = peakEnd - peakStart;
+    let peakCenter;
+    if (zoomFactor < 1) {zoomFactor = 1;}
     if (!soundFile.isPlaying()) { 
       zoomCenter = playheadTime;
+      peakCenter = convertTimetoPeakPosition(playheadTime);
+      console.log("peakcener:  ", peakCenter);
       zoomFactor *= 1.25;
-      console.log("playheadtime: ", playheadTime, "Zoom factor: ", zoomFactor);
+      if (zoomFactor > 2) {zoomFactor = 1;}
+      zoomedDuration = zoomFactor * zoomedDuration;
+      peakCount = peakCount * zoomFactor;
+      waveStart = zoomCenter - .5 * zoomedDuration;
+      waveEnd = zoomCenter + .5 * zoomedDuration;
+      //peakCenter =  map(playheadTime,waveStart, waveEnd,  )
+      peakStart = peakCenter - .5 * peakCount;
+      peakStart = Math.floor(peakStart);
+      peakEnd = peakCenter + .5 * peakCount;
+      peakEnd = Math.floor(peakEnd);
+      
+      if (waveStart < 0) {
+        peakEnd -= peakStart;
+        peakStart = 0;
+        waveEnd -= waveStart;
+        waveStart = 0;
+      }
+      if (waveEnd > recording_time) {
+        peakStart = peakStart - (peakEnd - peaks.length+1);
+        peakEnd =  peaks.length;
+        if (peakStart < 0) {peakStart =0;}
+        waveStart -= (waveEnd - recording_time);
+        if (waveStart < 0) {waveStart =0;}
+        waveEnd = recording_time;
+      }
+
+      console.log("playheadtime: ", playheadTime, "  Zoom factor: ", zoomFactor);
+      console.log("zoomed duration: ", zoomedDuration, "  waveStart: ", waveStart, '  waveEnd: ', waveEnd);
+      console.log("peakstart: ", peakStart, "  Peakend: ", peakEnd);
     }
   }
+
+
+  // function zoom_out() {
+  //   if (!soundFile.isPlaying()) { 
+  //     zoomCenter = playheadTime;
+  //     zoomFactor *= 1.25;
+  //     console.log("playheadtime: ", playheadTime, "Zoom factor: ", zoomFactor);
+  //   }
+  // }
 
   </script>
 
@@ -482,8 +536,8 @@
   </style>
   <title>Trim Audio</title>
 </head>
-
-<body onresize="change_canvas_size()">
+<!-- <body onresize="change_canvas_size()"></body> -->
+<body>
   <div class="w3-top" id="background2">
     <div class="home-background">
       <div class="w3-top" id="navigationBar">
