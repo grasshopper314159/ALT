@@ -412,7 +412,7 @@ def ajax_postTrimAudio(request):
             fileOwner = alr_user.objects.get(id=User.objects.get(email=str(request.user)))
             # print(request.POST)
             #trim_big_audio_id = alr.getBigAudioIdFromUrl(request.POST["bigAudioUrl"])
-            trim_big_audio_id = BigAudio.objects.get(id=85)
+            trim_big_audio_id = BigAudio.objects.get(id=87)
            
            
             trim_original_text = request.POST["original_text"]
@@ -423,6 +423,8 @@ def ajax_postTrimAudio(request):
             trim_audio = AudioTrim(big_audio_id=trim_big_audio_id, english_text = trim_english_text, length = trim_length, original_text = trim_original_text,  start_time = trim_start_time)
             trim_audio.save()
             redirect('/trimAudio/')
+        redirect('/trimAudio/')
+    redirect('/trimAudio/')
     #         # if speaker in db already
     #         try:
     #             fileSpeakerId = Speaker.objects.get(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)
