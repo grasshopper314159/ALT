@@ -55,7 +55,7 @@
   // PRELOAD everything in here finishes before setup and draw run
   function preload() {
     // added debugging flag so don't have to upload a file every time we refresh
-    '{% with debugging=1 %}'
+    '{% with debugging=0 %}'
     '{% if debugging %}'
     console.log('debugging');
     soundFile = loadSound("{% static '../media/user_25_big/french_1.wav'%}");
