@@ -107,3 +107,10 @@ def updateRating(request):
     trim = AudioTrim.objects.get(id=int(request.POST['trim_id']))
     trim.score = request.POST['value']
     trim.save()
+
+def getBigAudioIdFromUrl(url):
+    all_bigAudio = BigAudio.objects.all()
+    for recording in all_bigAudio:
+        if recording.sound_file.url == url:
+            return recording.id
+    return "not found"

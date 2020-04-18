@@ -46,7 +46,7 @@
   let drawBoxList = [];
   let clipBoxColor = 'rgba(0,255,0, 0.25)';
   let dragging = false;
-  let bigAudioId;
+  let bigAudioUrl;
   let frameCount = 0;
   let zoomedDuration, peakCount, peakCenter;
 
@@ -59,7 +59,7 @@
     '{% if debugging %}'
     console.log('debugging');
     soundFile = loadSound("{% static '../media/user_25_big/french_1.wav'%}");
-    bigAudioId = "{% static '../media/user_25_big/french_1.wav'%}";
+    bigAudioUrl = "{% static '../media/user_25_big/french_1.wav'%}";
     '{% else %}'
     console.log('not debugging');
 
@@ -73,7 +73,7 @@
     console.log(message[0])
     '{% endfor %}'
     '{% endif %}'
-    bigAudioId = message[1];  //actually the url
+    bigAudioUrl = message[1];  //actually the url
     soundFile = loadSound(message[1]);
     '{% endif %}'
     '{% endwith %}'
@@ -103,9 +103,9 @@
     peakEnd = peaks.length; // 
     noStroke();  //i can never undo this.  p5.js Bug?
   //window.onload = function(){
-    document.getElementById('formBigAudioID').value = bigAudioId;
-    console.log("bigAudioId:  ", bigAudioId)
-    console.log("bigAudioIdType:  ", typeof(bigAudioId))
+    document.getElementById('formBigAudioURL').value = bigAudioUrl;
+    console.log("bigAudioUrl:  ", bigAudioUrl)
+    console.log("bigAudioIdType:  ", typeof(bigAudioUrl))
   //};
     console.log('setup finished'); // for debugging
   }
@@ -665,9 +665,7 @@
             <thead>
               <!-- can't get headings to line up! -->
               <tr>
-                <th> Clip </th>
-                <th> Edit </th>
-                <th> Saved </th>
+                <th> Clip </th> <th> Edit </th>  <th> Saved </th>
               </tr>
             </thead>
             <!-- makeBox() adds innerhtml to this div -->
@@ -676,7 +674,7 @@
         </table>
 
           <!-- <label>Hide me!  (Big-audio id for posting)</label><br> -->
-          <input type="hidden" id="formBigAudioID" name="big_audio_id" required></input>
+          <input type="hidden" id="formBigAudioURL" name="bigAudioUrl" required></input>
           <br><br>
           <label style="padding: 13px;">Text (original)</label><br>
           <textarea name="original_text" style="vertical-align: middle;" rows="3" cols="75"></textarea>
