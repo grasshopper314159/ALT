@@ -408,130 +408,122 @@ def ajax_postTrimAudio(request):
     print("You have reached ajax_post trim audio in views.py")
     if is_user_type(request, ['ADMIN','research_user', 'student_user'], OR=True):
         if request.method == 'POST':
-            #compare to request.user  #nate TODO change request.files in upload recording to request.blob
+            #compare to request.user 
             fileOwner = alr_user.objects.get(id=User.objects.get(email=str(request.user)))
-            fileFile = request.FILES['fileToUpload']
-            # print(fileFile)
-            import wave as wv
-            import math
-            f = wv.open(fileFile)
-            secs = f.getnframes() / f.getframerate()
-            secs = math.ceil(secs)
-            l = '0' + str(datetime.timedelta(seconds=secs))
-            # print(l)
+            # print(request.POST)
+            #trim_big_audio_id = alr.getBigAudioIdFromUrl(request.POST["bigAudioUrl"])
+            trim_big_audio_id = BigAudio.objects.get(id=85)
+           
+           
+            trim_original_text = request.POST["original_text"]
+            trim_english_text =  request.POST["english_text"]
+            trim_length = request.POST["length"]
+            #trim_start_time = request.POST["formStartTime"]
+            trim_start_time = "00:00:00:570000"
+            trim_audio = AudioTrim(big_audio_id=trim_big_audio_id, english_text = trim_english_text, length = trim_length, original_text = trim_original_text,  start_time = trim_start_time)
+            trim_audio.save()
+            redirect('/trimAudio/')
+    #         # if speaker in db already
+    #         try:
+    #             fileSpeakerId = Speaker.objects.get(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)
+    #         except Exception as e:
+    #             # TODO: Finish This
+    #             # add speaker to DB
+    #             try:
+    #                 # if new speaker is already a user
+    #                 newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=alr_user.objects.get(id=User.objects.get(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)))
+    #                 newSpeaker.save()
+    #                 fileSpeakerId = newSpeaker
+    #             except Exception as e:
+    #                 newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=None)
+    #                 newSpeaker.save()
+    #                 fileSpeakerId = newSpeaker
+    #         if not os.path.isfile(settings.MEDIA_ROOT + 'user_' + str(request.user.id) + '_big/' + str(fileFile)):
 
-            # print(wv.open(fileFile).getnframes())
-
-            # print(fileFile)
-            # print(fileFile.duration)
-            fileLength = "00:01:03"
-            fileSpeakerFirst = request.POST['fileSpeakerFirst']
-            fileSpeakerLast = request.POST['fileSpeakerLast']
-            fileSpeakerId = None
-            # TODO: Add langauge if new language given
-            fileLanguageId = Language.objects.get(name=request.POST['fileLanguageId'])
-
-            # if speaker in db already
-            try:
-                fileSpeakerId = Speaker.objects.get(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)
-            except Exception as e:
-                # TODO: Finish This
-                # add speaker to DB
-                try:
-                    # if new speaker is already a user
-                    newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=alr_user.objects.get(id=User.objects.get(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)))
-                    newSpeaker.save()
-                    fileSpeakerId = newSpeaker
-                except Exception as e:
-                    newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=None)
-                    newSpeaker.save()
-                    fileSpeakerId = newSpeaker
-            if not os.path.isfile(settings.MEDIA_ROOT + 'user_' + str(request.user.id) + '_big/' + str(fileFile)):
-                big_audio = BigAudio(sound_file=fileFile, length = fileLength, owner_id=fileOwner, speaker_id=fileSpeakerId, language_id=fileLanguageId)
-                big_audio.save()
-            else:
-                active_messages["uploadAudio"] = 'File with that name already exists'
-                return redirect('/uploadAudio/')
-            active_messages["trimAudio"] = 'File succesfully uploaded/split/' + str(big_audio.sound_file.url)
-            return redirect('/trimAudio/')
-        else:
-            redirect('/uploadAudio/')
-    else:
-        redirect('/uploadAudio/')
+    #         else:
+    #             active_messages["uploadAudio"] = 'Trim with that name already exists'
+    #             return redirect('/uploadAudio/')
+    #         active_messages["trimAudio"] = 'Trim succesfully uploaded/split/' + str(big_audio.sound_file.url)
+    #         return redirect('/trimAudio/')
+    #     else:
+    #         redirect('/uploadAudio/')
+    # else:
+    #     redirect('/uploadAudio/')
 
 #/ajax/postRecordedAudio
 #*******************************************   FOr uploading recordings (same as uploading files) ************************
 
-@csrf_exempt
-@login_required(login_url='/home/')
+# @csrf_exempt
+# @login_required(login_url='/home/')
 def ajax_postRecordedAudio(request):
-    print("You have reached ajax_post recoreded audio in views.py")
-    if is_user_type(request, ['ADMIN','research_user'], OR=True):
-        if request.method == 'POST':
-            fileOwner = alr_user.objects.get(id=User.objects.get(email=str(request.user)))
+    pass
+#     print("You have reached ajax_post recoreded audio in views.py")
+#     if is_user_type(request, ['ADMIN','research_user'], OR=True):
+#         if request.method == 'POST':
+#             fileOwner = alr_user.objects.get(id=User.objects.get(email=str(request.user)))
 
-            fileFile = request.FILES['recordingToUpload']
-            print(fileFile)
-            import wave as wv
-            import math
-            f = wv.open(fileFile)
-            secs = f.getnframes() / f.getframerate()
-            secs = math.ceil(secs)
-            l = '0' + str(datetime.timedelta(seconds=secs))
-            # print(l)
+#             fileFile = request.FILES['recordingToUpload']
+#             print(fileFile)
+#             import wave as wv
+#             import math
+#             f = wv.open(fileFile)
+#             secs = f.getnframes() / f.getframerate()
+#             secs = math.ceil(secs)
+#             l = '0' + str(datetime.timedelta(seconds=secs))
+#             # print(l)
 
 
-            # print(wv.open(fileFile).getnframes())
+#             # print(wv.open(fileFile).getnframes())
 
-            # print(fileFile)
-            # print(fileFile.duration)
-            fileLength = "00:01:03"
-            fileSpeakerFirst = request.POST['fileSpeakerFirst']
-            fileSpeakerLast = request.POST['fileSpeakerLast']
-            fileSpeakerId = None
-            # TODO: Add langauge if new language given
-            fileLanguageId = Language.objects.get(name=request.POST['fileLanguageId'])
+#             # print(fileFile)
+#             # print(fileFile.duration)
+#             fileLength = "00:01:03"
+#             fileSpeakerFirst = request.POST['fileSpeakerFirst']
+#             fileSpeakerLast = request.POST['fileSpeakerLast']
+#             fileSpeakerId = None
+#             # TODO: Add langauge if new language given
+#             fileLanguageId = Language.objects.get(name=request.POST['fileLanguageId'])
 
-            try:
-                # if speaker in db already
-                fileSpeakerId = Speaker.objects.get(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)
-            except Exception as e:
-                pass
-                print("Failed to get speaker")
-                print(e)
-            else:
-                # TODO: Finish This
-                # add speaker to DB
-                try:
-                    pass
-                    # if new speaker is already a user
-                    # newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=alr_user.objects.get(id=User.objects.get(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)))
-                    # newSpeaker.save()
-                    # fileSpeakerId = newSpeaker
-                except Exception as e:
-                    raise
-                else:
-                    pass
-                    # newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=None)
-                    # newSpeaker.save()
-                    # fileSpeakerId = newSpeaker
+#             try:
+#                 # if speaker in db already
+#                 fileSpeakerId = Speaker.objects.get(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)
+#             except Exception as e:
+#                 pass
+#                 print("Failed to get speaker")
+#                 print(e)
+#             else:
+#                 # TODO: Finish This
+#                 # add speaker to DB
+#                 try:
+#                     pass
+#                     # if new speaker is already a user
+#                     # newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=alr_user.objects.get(id=User.objects.get(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)))
+#                     # newSpeaker.save()
+#                     # fileSpeakerId = newSpeaker
+#                 except Exception as e:
+#                     raise
+#                 else:
+#                     pass
+#                     # newSpeaker = Speaker(first_name=fileSpeakerFirst, last_name=fileSpeakerLast, user_id=None)
+#                     # newSpeaker.save()
+#                     # fileSpeakerId = newSpeaker
 
-            if not os.path.isfile(settings.MEDIA_ROOT + 'user_' + str(request.user.id) + '_big/' + str(fileFile)):
-                big_audio = BigAudio(sound_file=fileFile, length = fileLength, owner_id=fileOwner, speaker_id=fileSpeakerId, language_id=fileLanguageId)
-                big_audio.save()
-                active_messages["trimAudio"] = 'user_' + str(request.user.id) + '_big/' + str(fileFile)
-            else:
-                active_messages["trimAudio"] = 'File with that name already exists'
-                #return redirect('/uploadAudio/')
-            # print(settings.MEDIA_ROOT + 'user_' + str(request.user.id) + 'big/' + str(fileFile))
-            # print(active_messages["trimAudio"])
-            # print(settings.MEDIA_ROOT + active_messages["trimAudio"])
-            active_messages["trimAudio"] = 'File succesfully uploaded'
-            return redirect('/trimAudio/')
-        else:
-            redirect('/uploadAudio/')
-    else:
-        redirect('/uploadAudio/')
+#             if not os.path.isfile(settings.MEDIA_ROOT + 'user_' + str(request.user.id) + '_big/' + str(fileFile)):
+#                 big_audio = BigAudio(sound_file=fileFile, length = fileLength, owner_id=fileOwner, speaker_id=fileSpeakerId, language_id=fileLanguageId)
+#                 big_audio.save()
+#                 active_messages["trimAudio"] = 'user_' + str(request.user.id) + '_big/' + str(fileFile)
+#             else:
+#                 active_messages["trimAudio"] = 'File with that name already exists'
+#                 #return redirect('/uploadAudio/')
+#             # print(settings.MEDIA_ROOT + 'user_' + str(request.user.id) + 'big/' + str(fileFile))
+#             # print(active_messages["trimAudio"])
+#             # print(settings.MEDIA_ROOT + active_messages["trimAudio"])
+#             active_messages["trimAudio"] = 'File succesfully uploaded'
+#             return redirect('/trimAudio/')
+#         else:
+#             redirect('/uploadAudio/')
+#     else:
+#         redirect('/uploadAudio/')
 
 #end of ajax calls
 

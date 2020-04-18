@@ -73,6 +73,9 @@ class AudioTrim(models.Model):
     score = models.IntegerField(default=None, blank=True, null=True)
     word_count = models.IntegerField(default=None, blank=True, null=True)
     # Length should probably be required
+    # it might be useful to use a duration field here
+    # https://docs.djangoproject.com/en/3.0/ref/models/fields/#durationfield
+    # this is length in miliseconds
     length = models.IntegerField(default=None, blank=True, null=True)
     start_time = models.TimeField()
 
