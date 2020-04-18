@@ -5,11 +5,7 @@
 	<script src="{% static '/js/p5.js'%}"></script>
 	<script src="{% static '/js/addons/p5.sound.js'%}"></script>
 	<script src="{% static '/js/addons/p5.dom.js'%}"></script>
-	  <!-- Load p5 library from CDN,  THIS WAS TOO SLOW
-	//<script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
-  //<script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
-  //<script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.sound.js"></script>
-	-->
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- LET'S CONSIDER HOSTING THESE ON OUR SERVER-->
@@ -22,6 +18,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script type="text/javascript">
   //*************************  variables **********************************
+
   console.log('START');
   var soundFile, peaks;
   let recorderState = 0; // state 0: nothing, state 1: recording,  state 2: audio recorded, state 3: overwrite warning  --> change to enum?
@@ -57,6 +54,15 @@
 
   // PRELOAD everything in here finishes before setup and draw run
   function preload() {
+    // added debugging flag so don't have to upload a file every time we refresh
+    '{% with debugging=1 %}'
+    '{% if debugging %}'
+    console.log('debugging');
+    soundFile = loadSound("{% static '../media/user_25_big/french_1.wav'%}");
+    bigAudioId = "{% static '../media/user_25_big/french_1.wav'%}";
+    '{% else %}'
+    console.log('not debugging');
+
     //We pass the url for a sound file to this page through the messages from view.py
     '{% if messages %}'
     '{% for message in messages %}'
@@ -67,11 +73,13 @@
     console.log(message[0])
     '{% endfor %}'
     '{% endif %}'
+    bigAudioId = message[1];  //actually the url
     soundFile = loadSound(message[1]);
+    '{% endif %}'
+    '{% endwith %}'
+
     console.log('PRELOAD');
     recorderState=2;  //ready to play clip
-    // getMethods = (obj) => Object.getOwnPropertyNames(obj);
-    // console.log(getMethods(soundFile));
   }
 
   // SETUP Run starts before draw, but not guaranteed to finish before draw
@@ -83,7 +91,7 @@
    // Add listener to resize p5 drawing canvas if the window is resized, not working
    // window.addEventListener("resize", change_canvas_size());
     getAudioContext().resume(); //in the console there is an error that pop up that alerts you to add this
-    recording_time = soundFile.duration();  //remnant from upload audio.  turn this into soundFile length?
+    recording_time = soundFile.duration();  
     var canvas = createCanvas(canvasWidth, canvasHeight);
     canvas.parent('trim_audio_container');
     canvas.style("visibility", "visible");
@@ -91,8 +99,8 @@
     background(audio_background_color);
     fill(0,0,0);  //draws in black
     makePeaks(soundFile);  // defines peaks, a list of amplitudes for the soundfile
-    peakStart = 0;  // defined now in makePeaks
-    peakEnd = peaks.length; // defined now in makePeaks
+    peakStart = 0;  // 
+    peakEnd = peaks.length; // 
     noStroke();  //i can never undo this.  p5.js Bug?
   //window.onload = function(){
     document.getElementById('formBigAudioID').value = bigAudioId;
@@ -103,7 +111,7 @@
   }
   // DRAW  Runs ~50 to 60 times per second
   function draw() {
-    frameCount +=1;
+    //frameCount +=1;
     let peakX, peakY;
     //console.log(dragging) // For debugging, just logs true or false
     //cursor(ARROW)
@@ -163,9 +171,6 @@
         rect(scaleBoxTime(drawBoxList[i].trimStartTime_/1000), 0, scaleBoxTime(drawBoxList[i].trimEndTime_/1000), drawBoxList[i].height_);
 
       }
-      //need an intermediate calc here
-      // to process boxXstart and boxWidth to scale factor
-
       //rect(drawBoxList[i].boxXstart_, 0, drawBoxList[i].boxWidth_, drawBoxList[i].height_);
       fill(0);
     }
@@ -182,7 +187,7 @@
       return width;
     }
   }
-  //returns pixel width of duration based on zoom
+  //returns pixel width of duration based on zoom -- NOT WORKING
   function scaleBoxWidth(boxStartTime, duration) {
     if (boxStartTime + duration < waveEnd) {
       let yy = map(boxStartTime + duration, waveStart, waveEnd, 0, width);
@@ -193,11 +198,6 @@
       return width - scaleBoxTime(boxStartTime);
     }
   }
-  // function convertTimetoPeakPosition(playheadTime) {
-  //   let factor =  playheadTime / recording_time;
-  //   return ~~(factor * peaks.length);  // ~~ converts to int
-  // }
-
   //***********************  Helper Functions ****************************************************************\
     // TODO
     // function to find the next quiet spot and atumatically make a clip
@@ -256,9 +256,8 @@
   }
 
     // makeBox finds the coordinates needed to draw a clip box in draw()
-    //todo: box entries an object to faciliate pulling out info
     function makeBox() {
-      console.log(endTime);
+      //console.log(endTime);
       let trimDuration, trimStartTime, tempParams;
       //console.log("boxstart , makebox");
       boxXstart = map(startTime, waveStart, waveEnd, 0, width);
@@ -271,8 +270,8 @@
       tempTrimId = drawBoxList.length;
       tempParams = {boxXstart_: boxXstart, boxXend: boxXend, boxWidth_:boxWidth, height_:height,
                   trimStartTime_:trimStartTime, trimEndTime_: trimEndTime, trimDuration_: trimDuration,
-                  trimId_: tempTrimId, active: false};
-      console.log(tempParams);  //for debugging
+                  trimId_: tempTrimId, active: false, saved: false};
+      //console.log(tempParams);  //for debugging
       drawBoxList.push(tempParams);
       //Add to the radio list of trims
       //for some reason the last part (label for checkbox) is not getting added to the innerhtml
@@ -295,8 +294,9 @@
         +'</tr>';
       // var labelHTML = ;
       // radioHTML += labelHTML;  <div class="w3-bar">
+      
       document.getElementById("listOfTrimsDiv").innerHTML += radioHTML;
-      console.log(document.getElementById("listOfTrimsDiv").innerHTML);  //for debugging
+      //console.log(document.getElementById("listOfTrimsDiv").innerHTML);  //for debugging
     }  //close makeBox
 
     function editTrim(trimId) {
@@ -308,44 +308,19 @@
     }
 
     function clipSelected(clipId) {
-      console.log(clipId);
+      //console.log(clipId);
       drawBoxList.forEach(function(box){
         if (box.trimId_ == clipId) {
           box.active = true;
           console.log("active trim: ", box.trimId_);
+          document.getElementById('trimLength').value = box.trimDuration_;
+          document.getElementById('formStartTime').value = box.trimStartTime_;
         }
         else {
           box.active = false;
         }
       });
-
     }
-
-    function activateBox(boxId) {
-        if (this.trimId_ == boxId) {
-          this.active = true;
-          console.log("active trim: ", this.trimId_);
-        }
-        else {
-          this.active = false;
-        }
-      }
-    //   function clipSelected(clipId) {
-    //   console.log(clipId);
-    //   drawBoxList.forEach(activateBox(clipId));
-
-    // }
-
-    // function activateBox(boxId) {
-    //     if (this.trimId_ == boxId) {
-    //       this.active = true;
-    //       console.log("active trim: ", this.trimId_);
-    //     }
-    //     else {
-    //       this.active = false;
-    //     }
-    //   }
-
 
 
     function setStartTime() {
@@ -382,9 +357,8 @@
           clipDurStr = "End time must be after start time."
           clipDur = -1;
         }
-        // Do I need a flag for saved?
       }
-      console.log(clipState);
+     // console.log(clipState);
     }
 
 
@@ -443,12 +417,12 @@
     }
   }
 
-  // draws a clip box, saves trim into to  database
+  // draws a clip box
 
   function mark_audio() {
     //Keep this code
-    console.log(clipState);
-    console.log(recorderState);
+    //console.log(clipState);
+    //console.log(recorderState);
     // If we have a valid clip, makeBox() will add a clipBox to draw on the waveform
     // to indicate it has been saved
     if (clipState === myE.DONE) {
@@ -458,7 +432,7 @@
     }
   }
 
-    // fixme
+    // fixme: not working at all
   function change_canvas_size() {
     canvasWidth = .9 * screen.width;
     console.log("changing window size: ", canvasWidth);
@@ -478,7 +452,7 @@
       zoomCenter = playheadTime;
       peakCenter = convertTimetoPeakPosition(playheadTime);
       console.log("peakcener:  ", peakCenter);
-      zoomFactor *= .75;
+      zoomFactor = .75;
       if (zoomFactor < 0.5) {zoomFactor = 1};
       zoomedDuration = zoomFactor * zoomedDuration;
       peakCount = peakCount * zoomFactor;
@@ -491,9 +465,9 @@
       peakEnd = Math.floor(peakEnd);
       waveBounds();
 
-      console.log("playheadtime: ", playheadTime, "  Zoom factor: ", zoomFactor);
-      console.log("zoomed duration: ", zoomedDuration, "  waveStart: ", waveStart, '  waveEnd: ', waveEnd);
-      console.log("peakstart: ", peakStart, "  Peakend: ", peakEnd);
+     // console.log("playheadtime: ", playheadTime, "  Zoom factor: ", zoomFactor);
+     // console.log("zoomed duration: ", zoomedDuration, "  waveStart: ", waveStart, '  waveEnd: ', waveEnd);
+     // console.log("peakstart: ", peakStart, "  Peakend: ", peakEnd);
     }
   }
 
@@ -505,7 +479,7 @@
       zoomCenter = playheadTime;
       peakCenter = convertTimetoPeakPosition(playheadTime);
       console.log("peakcener:  ", peakCenter);
-      zoomFactor *= 1.25;
+      zoomFactor = 1.25;
       if (zoomFactor > 2) {zoomFactor = 1;}
       zoomedDuration = zoomFactor * zoomedDuration;
       peakCount = peakCount * zoomFactor;
@@ -519,9 +493,9 @@
       waveBounds();
 
 
-      console.log("playheadtime: ", playheadTime, "  Zoom factor: ", zoomFactor);
-      console.log("zoomed duration: ", zoomedDuration, "  waveStart: ", waveStart, '  waveEnd: ', waveEnd);
-      console.log("peakstart: ", peakStart, "  Peakend: ", peakEnd);
+      //console.log("playheadtime: ", playheadTime, "  Zoom factor: ", zoomFactor);
+     // console.log("zoomed duration: ", zoomedDuration, "  waveStart: ", waveStart, '  waveEnd: ', waveEnd);
+     // console.log("peakstart: ", peakStart, "  Peakend: ", peakEnd);
     }
   }
 
@@ -681,16 +655,12 @@
           <i class="fa fa-search-minus fa-3x" aria-hidden="true" onclick="zoom_out()"></i>
           <h4 class="fancyText">Zoom Out</h4>
         </div>
-
-        <!-- <i class="icon-zoom-in"></i> icon-zoom-in
-        <i class="fas fa-search-plus"></i> -->
-
       </div>
     </div>
     <div class="w3-container">
       <div class="w3-half">
         <br>
-        <form class="audioForm">
+        <form class="audioForm"  action="/ajax/postTrimAudio/" enctype="multipart/form-data"  method="post" style="float: left; margin-left: 5vh;">
           <table id="trimTable" style="width:100%">
             <thead>
               <!-- can't get headings to line up! -->
@@ -718,13 +688,13 @@
           <label style="padding: 13px;">Score (optional)</label><br>
           <input type="text" name="score" style="vertical-align: middle;"></input>
           <br><br>
-          <label style="padding: 13px;">Word Count</label><br>
+          <label style="padding: 13px;">Word Count (Optional)</label><br>
           <input type="text" name="word_count" style="vertical-align: middle;"></input>
           <br><br>
-          <!-- TO DO: make this auto-filled  -->
-          <label style="padding: 13px;">Length</label><br>
-          <input type="text" name="length" style="vertical-align: middle;"></input>
+          <label style="padding: 13px;">Length (milliseconds)</label><br>
+          <input type="text" name="length" style="vertical-align: middle;" id="trimLength"></input>
           <br><br>
+          <input type="hidden" id="formStartTime" name="formStartTime" required></input>
           <button type="submit" class="w3-btn w3-green" id="formUploadButton">Upload Audio Clip</button>
         </form>
       </div>
