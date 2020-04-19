@@ -79,8 +79,8 @@ class AudioTrim(models.Model):
     length = models.IntegerField(default=None, blank=True, null=True)
     start_time = models.TimeField()
 
-    class Meta:
-        unique_together = (("big_audio_id", "start_time")) #AudioTrim has a composite key.
+    # class Meta:
+    #     unique_together = (("big_audio_id", "start_time")) #AudioTrim has a composite key.
 
     def __str__(self):
         return (self.english_text + ', Trim: ' + str(self.id) + ', Big: ' + str(self.big_audio_id.id))

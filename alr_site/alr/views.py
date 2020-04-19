@@ -406,6 +406,7 @@ def ajax_postUploadAudio(request):
 def ajax_postTrimAudio(request):
     print(request)
     print("You have reached ajax_post trim audio in views.py")
+    active_messages["trimAudio"] = 'Trim succesfully uploaded/split/' + request.POST["bigAudioUrl"]
     if is_user_type(request, ['ADMIN','research_user', 'student_user'], OR=True):
         if request.method == 'POST':
             #compare to request.user 
