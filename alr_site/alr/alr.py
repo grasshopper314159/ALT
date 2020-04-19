@@ -109,8 +109,12 @@ def updateRating(request):
     trim.save()
 
 def getBigAudioIdFromUrl(url):
+    #print("url:  ", url)
     all_bigAudio = BigAudio.objects.all()
     for recording in all_bigAudio:
+        # for stuff in recording:
+        # print(recording.sound_file.url)
         if recording.sound_file.url == url:
-            return recording.id
+            return recording
     return "not found"
+

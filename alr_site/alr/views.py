@@ -104,6 +104,7 @@ def display_createEval(request):
 
 @login_required(login_url='/home/')
 def display_trimAudio(request):
+    print("display_trimAudio request:   *********************************   ", request)
     # TODO: to send an audio file to trim Audio use the following format
     # active_messages["trimAudio"] = 'message/split/' + str(big_audio.sound_file.url)
     messages.success(request, active_messages["trimAudio"])
@@ -412,8 +413,8 @@ def ajax_postTrimAudio(request):
             #compare to request.user 
             fileOwner = alr_user.objects.get(id=User.objects.get(email=str(request.user)))
             # print(request.POST)
-            #trim_big_audio_id = alr.getBigAudioIdFromUrl(request.POST["bigAudioUrl"])
-            trim_big_audio_id = BigAudio.objects.get(id=87)
+            trim_big_audio_id = alr.getBigAudioIdFromUrl(request.POST["bigAudioUrl"])
+            #trim_big_audio_id = BigAudio.objects.get(id=87)
            
            
             trim_original_text = request.POST["original_text"]
@@ -423,9 +424,9 @@ def ajax_postTrimAudio(request):
             trim_start_time = "00:00:00:570000"
             trim_audio = AudioTrim(big_audio_id=trim_big_audio_id, english_text = trim_english_text, length = trim_length, original_text = trim_original_text,  start_time = trim_start_time)
             trim_audio.save()
-            redirect('/trimAudio/')
-        redirect('/trimAudio/')
-    redirect('/trimAudio/')
+            return redirect('/trimAudio/')
+        return redirect('/trimAudio/')
+    return redirect('/trimAudio/')
     #         # if speaker in db already
     #         try:
     #             fileSpeakerId = Speaker.objects.get(first_name=fileSpeakerFirst, last_name=fileSpeakerLast)
