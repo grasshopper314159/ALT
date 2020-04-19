@@ -420,8 +420,10 @@ def ajax_postTrimAudio(request):
             trim_original_text = request.POST["original_text"]
             trim_english_text =  request.POST["english_text"]
             trim_length = request.POST["length"]
-            #trim_start_time = request.POST["formStartTime"]
-            trim_start_time = "00:00:00:570000"
+            trim_start_time = request.POST["formStartTime"]
+            trim_start_time = datetime.datetime.strptime("01/01/70 00:00:"+str(int(float(trim_start_time)))+ str(round((float(trim_start_time)%1),6)), '%m/%d/%y %H:%M:%S.%f')
+            print(trim_start_time)
+            #trim_start_time = "00:00:00:570000"
             trim_audio = AudioTrim(big_audio_id=trim_big_audio_id, english_text = trim_english_text, length = trim_length, original_text = trim_original_text,  start_time = trim_start_time)
             trim_audio.save()
             return redirect('/trimAudio/')
