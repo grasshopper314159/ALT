@@ -77,9 +77,9 @@
     message2 = message[1].split('/split2/');
     console.log("msg2[1]:  ", message2[1])
     console.log("msg2[0]:  ",message2[0])
-    if (message2[1] != '-1') {
-      document.getElementById('trimCheck'+message2[1]).checked = true;
-    }
+    // if (message2[1] != '-1') {
+    //   document.getElementById('trimCheck'+message2[1]).checked = true;
+    // }
 
     bigAudioUrl = message2[0];  //actually the url
     soundFile = loadSound(message2[0]);
