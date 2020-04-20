@@ -93,6 +93,13 @@
   // SETUP Run starts before draw, but not guaranteed to finish before draw
   function setup() {
     console.log('setup started');  // for debugging
+
+    $('#trimAudioForm').on('submit', function(event){
+      event.preventDefault();
+      console.log("form submitted!")  // sanity check
+      create_post();
+    });
+    
     waveStart = 0;
     waveEnd = soundFile.duration();
     console.log("song length: ", waveEnd);
@@ -770,7 +777,10 @@
     <div class="w3-container">
       <div class="w3-half">
         <br>
-        <form class="audioForm"  action="/ajax/postTrimAudio/" enctype="multipart/form-data"  method="post" style="float: left; margin-left: 5vh;">
+        <form class="audioForm"  id="trimAudioForm" enctype="multipart/form-data" style="float: left; margin-left: 5vh;">
+        <!-- <form class="audioForm"  action="/ajax/postTrimAudio/" enctype="multipart/form-data"  method="post" style="float: left; margin-left: 5vh;"> -->
+
+ 
           <table id="trimTable" style="width:100%">
             <thead>
               <!-- can't get headings to line up! -->
@@ -803,6 +813,7 @@
           <input type="text" name="length" style="vertical-align: middle;" id="trimLength"></input>
           <br><br>
           <input type="hidden" id="formStartTime" name="formStartTime" required></input>
+          <input type="hidden" id="formdrawBoxList" name="formdrawBoxList" required></input>
           <button type="submit" class="w3-btn w3-green" id="formUploadButton">Upload Audio Clip</button>
         </form>
       </div>
