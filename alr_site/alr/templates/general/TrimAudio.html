@@ -280,17 +280,17 @@
       var radioHTML = '<tr>' +
         '<td><input type=\"radio\" value=\"' + tempTrimId +
         '\" id=\"trim'+ tempTrimId + '\" name=\"trimRadio\" onclick=\"clipSelected(this.value)\" /> ' +
-        '<label for=\"trim'+ tempTrimId + '\"> Trim ' + tempTrimId + ':   '+ startTime +
-        ' sec. to '+ endTime +' sec.' + '</label></td>' +
+        '<label for=\"trim'+ tempTrimId + '\"> Trim ' + tempTrimId + ':   '+ startTime.toFixed(2) +
+        ' sec. to '+ endTime.toFixed(2) +' sec.' + '</label></td>' +
 
         '<td> <button class="w3-button w3-tiny w3-white w3-border w3-round"' +
-            'onclick="editTrim(' + tempTrimId +')">Edit</button>'+
+            'onclick="editTrim(' + tempTrimId +')\"" style=\"margin-left: 30px;\" >Edit</button>'+
             // '<button class="w3-button w3-tiny w3-white w3-border w3-round"' +
             // 'onclick="deleteTrim(' + tempTrimId +')">Del</button>'+
             '</td>' +
 
         '<td><input type="checkbox" id="trimCheck' + tempTrimId + '" name="trimChecks" value="trimCheck' +
-              tempTrimId +'\">' +
+              tempTrimId +'\"  style=\"margin-left: 30px;\">' +
               '<label for=\"trimCheck' + tempTrimId +'> Saved </label><br></td>'
 
         +'</tr>';
@@ -638,6 +638,21 @@
     #buttons {
       text-align: center;
     }
+    .icon-bar {
+      width: 90%;
+
+      overflow: auto;
+    }
+
+    
+    .icon-bar .w3-btn {
+  float: left;
+  width: 50%;
+  text-align: center;
+  padding: 12px 12px;
+  transition: all 0.3s ease;
+}
+
   </style>
   <title>Trim Audio</title>
 </head>
@@ -728,7 +743,7 @@
         </div>
       </div>
       <br><br>
-      <div id="centering">
+      <div class="icon-bar">
         <div class="w3-bar" id="buttons2">
           <div class="w3-btn">
             <!--- spacing on these buttons is wierd. Leaving it for now since we may move to dynamic resizing -->
