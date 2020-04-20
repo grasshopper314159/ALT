@@ -146,6 +146,9 @@ function sortTable(n) {
         <h2 class="simpleHeader">Student Audio Recordings</h2>
       </div>
       <!--close heading-->
+      <!-- TODO: Audio played is entire big audio, need to select certain time or rework trims to be files, sections from the big audio file-->
+      <!-- TODO: Add deletion of trims, big_audio's, ect-->
+      <!-- TODO: Implement what the edit button needs to be able to do -->
       <div class="w3-responsive">
         <div class="w3-threequarter">
           <table class="w3-table-all" id="myTable2">
@@ -158,56 +161,12 @@ function sortTable(n) {
                 <th class='text-center' onclick="sortTable(4)">Word (Eng)</th>
                 <th class='text-center' onclick="sortTable(5)">Score</th>
                 <th class='text-center' onclick="sortTable(6)">Date</th>
-                <th class='text-center'onclick="sortTable(7)">Comment</th>
+                <th class='text-center'onclick="sortTable(7)">Listen to file</th>
+                <th class='text-center'onclick="sortTable(8)">Comment</th>
               </tr>
             </thead>
             <tbody id="data">
-              <!-- data entries -->
-              <!-- Fake data for testing -->
-              <!-- <tr>
-              <td></td>
-              <td>Mizuki Miyashita</td>
-              <td>Noam Chomsky</td>
-              <td>Dog</td>
-              <td>Dog</td>
-              <td>4</td>
-              <td>2/20/2020</td>
-              <td>Great job!</td>
-              </tr>
-
-              <tr>
-              <td></td>
-              <td>Mizuki Miyashita</td>
-              <td>Jordan Theisen</td>
-              <td>Cat</td>
-              <td>Cat</td>
-              <td>2</td>
-              <td>2/20/2020</td>
-              <td>Needs improvement.</td>
-              </tr>
-
-              <tr>
-              <td></td>
-              <td>Mizuki Miyashita</td>
-              <td>Nathan Johnson</td>
-              <td>Hello</td>
-              <td>Hello</td>
-              <td>1</td>
-              <td>2/20/2020</td>
-              <td>Needs improvement.</td>
-              </tr>
-
-              <tr>
-              <td></td>
-              <td>Mizuki Miyashita</td>
-              <td>Cody Hill-Boss</td>
-              <td>The</td>
-              <td>The</td>
-              <td>7</td>
-              <td>2/20/2020</td>
-              <td>Great job!</td>
-              </tr> -->
-              <!-- End fake data for testing -->
+              <!-- data from db -->
             </tbody>
           </table>
         </div>
@@ -226,9 +185,26 @@ function sortTable(n) {
       </div>
       <!--close w3-responsive-->
     </div> <!-- close main body container -->
+    {% if messages %}
+    {% for message in messages %}
+    <div id='message' class="hide max-w-50vw w3-bottom w3-left w3-light-blue">
+      <span onclick="this.parentElement.style.display = 'none';" class="w3-button w3-hover-red w3-large w3-display-topright">&times;</span>
+      <h3>Message!</h3>
+      <p>{{ message }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
   </div>
 </body>
 
 <script type="text/javascript" src="{% static '/js/ajax_getAllAudioTrims.js' %}"></script>
+<script type="text/javascript" src="{% static '/js/p5.js' %}"></script>
+<script type="text/javascript" src="{% static '/js/addons/p5.sound.js' %}"></script>
+<script type="text/javascript" src="{% static '/js/addons/p5.dom.js' %}"></script>
 
+{% if messages %}
+<script>
+  document.getElementById('message').style.display = 'block';
+</script>
+{% endif %}
 </html>
