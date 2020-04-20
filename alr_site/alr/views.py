@@ -395,7 +395,7 @@ def ajax_postUploadAudio(request):
             else:
                 active_messages["uploadAudio"] = 'File with that name already exists'
                 return redirect('/uploadAudio/')
-            active_messages["trimAudio"] = 'File succesfully uploaded/split/' + str(big_audio.sound_file.url)
+            active_messages["trimAudio"] = 'File succesfully uploaded/split1/' + str(big_audio.sound_file.url)+'/split2/' + '-1'
             return redirect('/trimAudio/')
         else:
             redirect('/uploadAudio/')
@@ -407,8 +407,7 @@ def ajax_postUploadAudio(request):
 def ajax_postTrimAudio(request):
     print(request)
     print("You have reached ajax_post trim audio in views.py")
-    trimRadioButton = 
-    active_messages["trimAudio"] = 'Trim succesfully uploaded/split/' + request.POST["bigAudioUrl"]
+    #active_messages["trimAudio"] = 'Trim succesfully uploaded/split/' + request.POST["bigAudioUrl"]
     if is_user_type(request, ['ADMIN','research_user', 'student_user'], OR=True):
         if request.method == 'POST':
             #compare to request.user 
@@ -416,7 +415,7 @@ def ajax_postTrimAudio(request):
             # print(request.POST)
             trim_big_audio_id = alr.getBigAudioIdFromUrl(request.POST["bigAudioUrl"])
             #trim_big_audio_id = BigAudio.objects.get(id=87)
-           trimRadioButton = request.POST["trimRadio"]
+            trimRadioCheckBoxNum = request.POST["trimRadio"]
            
             trim_original_text = request.POST["original_text"]
             trim_english_text =  request.POST["english_text"]
@@ -427,6 +426,8 @@ def ajax_postTrimAudio(request):
             #trim_start_time = "00:00:00:570000"
             trim_audio = AudioTrim(big_audio_id=trim_big_audio_id, english_text = trim_english_text, length = trim_length, original_text = trim_original_text,  start_time = trim_start_time)
             trim_audio.save()
+            active_messages["trimAudio"] = 'Audio segment succesfully uploaded/split1/' + request.POST["bigAudioUrl"]+'/split2/' +  trimRadioCheckBoxNum
+            #active_messages["trimAudio"] = 'Audio segment succesfully uploaded/split1/' +  trimRadioCheckBoxNum
             #document.getElementById('trimCheck'+trimRadioButton).checked = true;
             return redirect('/trimAudio/')
         return redirect('/trimAudio/')
