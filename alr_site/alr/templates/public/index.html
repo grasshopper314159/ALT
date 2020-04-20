@@ -11,6 +11,21 @@
   <link rel="stylesheet" href="{% static '/css/master.css' %}">
   </style>
   <title>Home Page</title>
+  <script>
+  function validateForm()
+  {
+    //Extract data from form
+    var email = document.forms["login"]["username"].value;
+    var password = document.forms["login"]["password"].value;
+    
+    //Change to lowercase
+    email = email.toLowerCase();
+    //Return data
+    document.forms["login"]["username"].value = email;
+    
+    return true;
+  }
+</script>
 </head>
 
 <body>
@@ -87,7 +102,7 @@
         <div class="w3-white w3-container">
           <!-- login form -->
           {% if user.is_anonymous %}
-          <form class="" action="/ajax/loginUser/" method="post">
+          <form class="" action="/ajax/loginUser/" method="post" onsubmit="validateForm()" name="login">
             <div class="w3-container">
               <br><br>
               <h2 class="w3-center">Login</h2>

@@ -26,6 +26,34 @@
        height: 100%;
      }
   </style>
+  <script>
+  function validateForm()
+  {
+    //Extract data from form
+    var speaker_firstname = document.forms["uploadAudio"]["fileSpeakerFirst"].value;
+    var speaker_lastname = document.forms["uploadAudio"]["fileSpeakerLast"].value;
+    var original_text = document.forms["uploadAudio"]["original_text"].value;
+    var english_text = document.forms["uploadAudio"]["english_text"].value;
+    
+    //Strip white space
+    speaker_firstname = speaker_firstname.trim();
+    speaker_lastname = speaker_lastname.trim();
+    original_text = original_text.trim();
+    english_text = english_text.trim();
+    
+    //Remove quotation marks
+    original_text = original_text.replace('"', '');
+    english_text = english_text.replace('"', '');
+    
+    //Return data
+    document.forms["uploadAudio"]["fileSpeakerFirst"].value = speaker_firstname;
+    document.forms["uploadAudio"]["fileSpeakerLast"].value = speaker_lastname;
+    document.forms["uploadAudio"]["original_text"].value = original_text;
+    document.forms["uploadAudio"]["english_text"].value = english_text;
+    
+    return true;
+  }
+  </script>
   <title>Upload Audio</title>
 </head>
 
@@ -75,7 +103,7 @@
 
     <br><br><br><br><br><br><br><br>
     <div class="w3-half">
-      <form class="audioForm" action="/ajax/postUploadAudio/" enctype="multipart/form-data"  method="post" style="float: left; margin-left: 5vh;">
+      <form class="audioForm" name="uploadAudio" onsubmit="return validateForm()" action="/ajax/postUploadAudio/" enctype="multipart/form-data"  method="post" style="float: left; margin-left: 5vh;">
         <label style="font-weight: bold">Choose a File to Upload:</label>
         <br>
         <input class="w3-bar-item" type="file" name="fileToUpload" id="fileToUpload" style="margin-left:0;"></input>
@@ -93,10 +121,10 @@
         <br><br>
         <br><br>
         <label>Text (Original)</label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
+        <textarea style="vertical-align: middle;" rows="3" cols="70" name="original_text"></textarea>
         <br><br>
         <label>Text (English)</label><br>
-        <textarea style="vertical-align: middle;" rows="3" cols="70"></textarea>
+        <textarea style="vertical-align: middle;" rows="3" cols="70" name="english_text"></textarea>
         <br><br>
         <label>Language</label><br>
         <!-- <textarea style="vertical-align: middle;" rows="1" cols="30"></textarea>  -->

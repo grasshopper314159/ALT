@@ -2,3 +2,4 @@
 *.pyc
 *.log
 *.wav
+alr_site/sqlite3_default.db
