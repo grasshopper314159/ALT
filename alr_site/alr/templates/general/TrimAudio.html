@@ -108,6 +108,8 @@
     console.log("bigAudioIdType:  ", typeof(bigAudioUrl))
   //};
     console.log('setup finished'); // for debugging
+    getThreshData();
+    //autoTrim();
   }
   // DRAW  Runs ~50 to 60 times per second
   function draw() {
@@ -523,6 +525,74 @@
 
 
   function autoTrim() {
+    let threshold = 35;
+    flag = 0 ;
+    start = 0;
+    end = 0;
+    let sr=soundFile.sampleRate();
+    let numSamples = sr * soundFile.duration();
+    let samplesPerPeak = numSamples / peaks.length
+    let timePerPeak = samplesPerPeak / sr;
+    let pauseTime = .3;
+    let numPeaksToAverage = ~~(pauseTime / timePerPeak);
+    let iz;
+    let runningSum = 0;
+    startTime = 0;
+    endTime = 0;
+    for (iz = 0; iz < numPeaksToAverage-1; iz++) {
+      runningSum = runningSum + Math.abs(peaks[iz]);
+    }
+    for (iz =  numPeaksToAverage; iz < peaks.length; iz++) {
+      runningSum = runningSum - Math.abs(peaks[iz-numPeaksToAverage]) + Math.abs(peaks[iz]);
+      if (runningSum < threshold && flag == 0) {
+        flag = 1;
+        start = iz;
+      }
+      else if (runningSum > threshold && flag == 1) {
+        flag = 0;
+        end = iz;
+        endTime =  (start - numPeaksToAverage + end) / 2 * timePerPeak - .125 * pauseTime;
+        console.log ("gap at: ", endTime);
+        makeBox();
+        startTime = endTime + .125 * pauseTime;
+
+      }
+    }
+  }
+
+  function getThreshData() {
+    let threshold =0;
+    flag = 0 ;
+    peaksCounted = 0;
+    end = 0;
+    let sr=soundFile.sampleRate();
+    let numSamples = sr * soundFile.duration();
+    let samplesPerPeak = numSamples / peaks.length
+    let timePerPeak = samplesPerPeak / sr;
+    let pauseTime = .3;
+    let numPeaksToAverage = pauseTime / timePerPeak;
+    let izz;
+    let runningAve = 0;
+    for (izz = 0; izz < peaks.length; izz++) {
+      peaksCounted += 1;
+      if (peaksCounted < numPeaksToAverage) {
+        runningAve = runningAve + Math.abs(peaks[izz]);
+      }
+      else {
+        console.log ("threshold sum: ", runningAve);
+        peaksCounted = 0;
+        runningAve = 0;
+      }
+    }
+  }
+
+  function clearTrims() {
+    drawBoxList = [];
+  }
+
+
+
+
 
 // samplerate * duration = samples
 // samples/num of peaks= samples/peak
@@ -532,7 +602,7 @@
 // then find the the starting peak of silence, flag silence, when threshold
 // is exceeded, flag end peak of silence, divide halfway.
 // 1/2 sec and threshold could be parameterized with sliders
-  }
+  
 
   </script>
 
@@ -657,6 +727,22 @@
           <h4 class="fancyText">Zoom Out</h4>
         </div>
       </div>
+      <br><br>
+      <div id="centering">
+        <div class="w3-bar" id="buttons2">
+          <div class="w3-btn">
+            <!--- spacing on these buttons is wierd. Leaving it for now since we may move to dynamic resizing -->
+            <i class="fa fa-android fa-2x" aria-hidden="true" onclick="autoTrim()"></i>
+            <h4 class="fancyText">Robo-trim</h4>
+          </div>
+          <div class="w3-btn" >
+            <i class="fa fa-minus-circle fa-2x" aria-hidden="true" onclick="onclick=clearTrims()"></i>
+            <h4 class="fancyText">Remove All Trims</h4>
+          </div>
+        </div>
+      </div>
+
+
     </div>
     <div class="w3-container">
       <div class="w3-half">
