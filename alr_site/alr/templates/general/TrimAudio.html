@@ -5,6 +5,8 @@
 	<script src="{% static '/js/p5.js'%}"></script>
 	<script src="{% static '/js/addons/p5.sound.js'%}"></script>
 	<script src="{% static '/js/addons/p5.dom.js'%}"></script>
+  <script src="{% static '/js/ajax_postAudioTrim.js'%}"></script>
+
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,6 +18,8 @@
   <!-- localized stylesheets -->
   <link rel="stylesheet" href="{% static '/css/master.css' %}"></style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
   <script type="text/javascript">
   //*************************  variables **********************************
 
@@ -54,8 +58,9 @@
 
   // PRELOAD everything in here finishes before setup and draw run
   function preload() {
+    let message2;
     // added debugging flag so don't have to upload a file every time we refresh
-    '{% with debugging=0 %}'
+    '{% with debugging=0  %}'
     '{% if debugging %}'
     console.log('debugging');
     soundFile = loadSound("{% static '../media/user_25_big/french_1.wav'%}");
@@ -69,12 +74,19 @@
     message = '{{ message }}';
     message = message.split('/split/');
     document.getElementById('msg').innerHTML = message[0]
-    console.log(message[1])
-    console.log(message[0])
+    console.log("msg[1]:  ", message[1])
+    console.log("msg[0]:  ",message[0])
     '{% endfor %}'
     '{% endif %}'
+    // message2 = message[1].split('/split2/');
+    // console.log("msg2[1]:  ", message2[1])
+    // console.log("msg2[0]:  ",message2[0])
+    // if (message2[1] != '-1') {
+    //   document.getElementById('trimCheck'+message2[1]).checked = true;
+    // }
+
     bigAudioUrl = message[1];  //actually the url
-    soundFile = loadSound(message[1]);
+    soundFile = loadSound(bigAudioUrl);
     '{% endif %}'
     '{% endwith %}'
 
@@ -85,6 +97,13 @@
   // SETUP Run starts before draw, but not guaranteed to finish before draw
   function setup() {
     console.log('setup started');  // for debugging
+
+    $('#trimAudioForm').on('submit', function(event){
+      event.preventDefault();
+      console.log("form submitted!")  // sanity check
+      create_post();
+    });
+    
     waveStart = 0;
     waveEnd = soundFile.duration();
     console.log("song length: ", waveEnd);
@@ -108,6 +127,8 @@
     console.log("bigAudioIdType:  ", typeof(bigAudioUrl))
   //};
     console.log('setup finished'); // for debugging
+    getThreshData();
+    //autoTrim();
   }
   // DRAW  Runs ~50 to 60 times per second
   function draw() {
@@ -278,17 +299,17 @@
       var radioHTML = '<tr>' +
         '<td><input type=\"radio\" value=\"' + tempTrimId +
         '\" id=\"trim'+ tempTrimId + '\" name=\"trimRadio\" onclick=\"clipSelected(this.value)\" /> ' +
-        '<label for=\"trim'+ tempTrimId + '\"> Trim ' + tempTrimId + ':   '+ startTime +
-        ' sec. to '+ endTime +' sec.' + '</label></td>' +
+        '<label for=\"trim'+ tempTrimId + '\"> Trim ' + tempTrimId + ':   '+ startTime.toFixed(2) +
+        ' sec. to '+ endTime.toFixed(2) +' sec.' + '</label></td>' +
 
         '<td> <button class="w3-button w3-tiny w3-white w3-border w3-round"' +
-            'onclick="editTrim(' + tempTrimId +')">Edit</button>'+
+            'onclick="editTrim(' + tempTrimId +')\"" style=\"margin-left: 30px;\" >Edit</button>'+
             // '<button class="w3-button w3-tiny w3-white w3-border w3-round"' +
             // 'onclick="deleteTrim(' + tempTrimId +')">Del</button>'+
             '</td>' +
 
         '<td><input type="checkbox" id="trimCheck' + tempTrimId + '" name="trimChecks" value="trimCheck' +
-              tempTrimId +'\">' +
+              tempTrimId +'\"  style=\"margin-left: 30px;\">' +
               '<label for=\"trimCheck' + tempTrimId +'> Saved </label><br></td>'
 
         +'</tr>';
@@ -314,7 +335,8 @@
           box.active = true;
           console.log("active trim: ", box.trimId_);
           document.getElementById('trimLength').value = box.trimDuration_;
-          document.getElementById('formStartTime').value = box.trimStartTime_;
+          document.getElementById('formStartTime').value = box.trimStartTime_/1000;
+          console.log(box.trimStartTime_)
         }
         else {
           box.active = false;
@@ -522,6 +544,74 @@
 
 
   function autoTrim() {
+    let threshold = 35;
+    flag = 0 ;
+    start = 0;
+    end = 0;
+    let sr=soundFile.sampleRate();
+    let numSamples = sr * soundFile.duration();
+    let samplesPerPeak = numSamples / peaks.length
+    let timePerPeak = samplesPerPeak / sr;
+    let pauseTime = .3;
+    let numPeaksToAverage = ~~(pauseTime / timePerPeak);
+    let iz;
+    let runningSum = 0;
+    startTime = 0;
+    endTime = 0;
+    for (iz = 0; iz < numPeaksToAverage-1; iz++) {
+      runningSum = runningSum + Math.abs(peaks[iz]);
+    }
+    for (iz =  numPeaksToAverage; iz < peaks.length; iz++) {
+      runningSum = runningSum - Math.abs(peaks[iz-numPeaksToAverage]) + Math.abs(peaks[iz]);
+      if (runningSum < threshold && flag == 0) {
+        flag = 1;
+        start = iz;
+      }
+      else if (runningSum > threshold && flag == 1) {
+        flag = 0;
+        end = iz;
+        endTime =  (start - numPeaksToAverage + end) / 2 * timePerPeak - .125 * pauseTime;
+        console.log ("gap at: ", endTime);
+        makeBox();
+        startTime = endTime + .125 * pauseTime;
+
+      }
+    }
+  }
+
+  function getThreshData() {
+    let threshold =0;
+    flag = 0 ;
+    peaksCounted = 0;
+    end = 0;
+    let sr=soundFile.sampleRate();
+    let numSamples = sr * soundFile.duration();
+    let samplesPerPeak = numSamples / peaks.length
+    let timePerPeak = samplesPerPeak / sr;
+    let pauseTime = .3;
+    let numPeaksToAverage = pauseTime / timePerPeak;
+    let izz;
+    let runningAve = 0;
+    for (izz = 0; izz < peaks.length; izz++) {
+      peaksCounted += 1;
+      if (peaksCounted < numPeaksToAverage) {
+        runningAve = runningAve + Math.abs(peaks[izz]);
+      }
+      else {
+        console.log ("threshold sum: ", runningAve);
+        peaksCounted = 0;
+        runningAve = 0;
+      }
+    }
+  }
+
+  function clearTrims() {
+    drawBoxList = [];
+  }
+
+
+
+
 
 // samplerate * duration = samples
 // samples/num of peaks= samples/peak
@@ -531,7 +621,7 @@
 // then find the the starting peak of silence, flag silence, when threshold
 // is exceeded, flag end peak of silence, divide halfway.
 // 1/2 sec and threshold could be parameterized with sliders
-  }
+  
 
   </script>
 
@@ -567,6 +657,21 @@
     #buttons {
       text-align: center;
     }
+    .icon-bar {
+      width: 90%;
+
+      overflow: auto;
+    }
+
+    
+    .icon-bar .w3-btn {
+  float: left;
+  width: 50%;
+  text-align: center;
+  padding: 12px 12px;
+  transition: all 0.3s ease;
+}
+
   </style>
   <title>Trim Audio</title>
 </head>
@@ -656,11 +761,30 @@
           <h4 class="fancyText">Zoom Out</h4>
         </div>
       </div>
+      <br><br>
+      <div class="icon-bar">
+        <div class="w3-bar" id="buttons2">
+          <div class="w3-btn">
+            <!--- spacing on these buttons is wierd. Leaving it for now since we may move to dynamic resizing -->
+            <i class="fa fa-android fa-2x" aria-hidden="true" onclick="autoTrim()"></i>
+            <h4 class="fancyText">Robo-trim</h4>
+          </div>
+          <div class="w3-btn" >
+            <i class="fa fa-minus-circle fa-2x" aria-hidden="true" onclick="onclick=clearTrims()"></i>
+            <h4 class="fancyText">Remove All Trims</h4>
+          </div>
+        </div>
+      </div>
+
+
     </div>
     <div class="w3-container">
       <div class="w3-half">
         <br>
-        <form class="audioForm"  action="/ajax/postTrimAudio/" enctype="multipart/form-data"  method="post" style="float: left; margin-left: 5vh;">
+        <form class="audioForm"  id="trimAudioForm" enctype="multipart/form-data" style="float: left; margin-left: 5vh;">
+        <!-- <form class="audioForm"  action="/ajax/postTrimAudio/" enctype="multipart/form-data"  method="post" style="float: left; margin-left: 5vh;"> -->
+
+ 
           <table id="trimTable" style="width:100%">
             <thead>
               <!-- can't get headings to line up! -->
@@ -680,7 +804,7 @@
           <textarea name="original_text" style="vertical-align: middle;" rows="3" cols="75"></textarea>
           <br><br>
           <label style="padding: 13px;">Text (English)</label><br>
-          <textarea name="english_text" style="vertical-align: middle;" rows="3" cols="75"></textarea>
+          <textarea name="english_text" id="english_text" style="vertical-align: middle;" rows="3" cols="75"></textarea>
 
           <br><br>
           <label style="padding: 13px;">Score (optional)</label><br>
@@ -693,6 +817,7 @@
           <input type="text" name="length" style="vertical-align: middle;" id="trimLength"></input>
           <br><br>
           <input type="hidden" id="formStartTime" name="formStartTime" required></input>
+          <input type="hidden" id="formdrawBoxList" name="formdrawBoxList" required></input>
           <button type="submit" class="w3-btn w3-green" id="formUploadButton">Upload Audio Clip</button>
         </form>
       </div>

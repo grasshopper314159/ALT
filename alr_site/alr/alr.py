@@ -112,5 +112,6 @@ def getBigAudioIdFromUrl(url):
     all_bigAudio = BigAudio.objects.all()
     for recording in all_bigAudio:
         if recording.sound_file.url == url:
-            return recording.id
+            return recording
     return "not found"
+
