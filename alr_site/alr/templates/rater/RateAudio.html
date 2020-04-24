@@ -13,6 +13,7 @@
   <script src="{% static '/js/rateData.js' %}" charset="utf-8"></script>
 
   <title>Rate Data</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
   <style>
     .h1 {
@@ -198,162 +199,24 @@ function sortTable(n) {
           <table class="w3-table-all" id="ratingTable">
             <thead>
               <tr>
-                <th class='w3-center' onclick="sortTable(1)" >Speaker</th>
-                <th class='w3-center' onclick="sortTable(2)" >Researcher</th>
-                <th class='w3-center' onclick="sortTable(3)" >Text</th>
-                <th class='w3-center' onclick="sortTable(4)" >Date</th>
+                <th class='w3-center' onclick="sortTable(1)" >Researcher</th>
+                <th class='w3-center' onclick="sortTable(2)" >Speaker</th>
+                <th class='w3-center' onclick="sortTable(3)" >Word(Orig)</th>
+                <th class='w3-center' onclick="sortTable(4)" >Word(Eng)</th>
                 <th class='w3-center' onclick="sortTable(5)" >Score</th>
+                <th class='w3-center' onclick="sortTable(6)" >Date</th>
                 <th class='w3-center'>Select to rate</th>
               </tr>
             </thead>
-            <tbody>
-              <tr id="0">
-                <td>Noam</td>
-                <td>Chomsky</td>
-                <td>dog</td>
-                <td class="w3-center">7/20/20</td>
-                <td id="score_0" class="w3-center">N/A</td>
-                <td class="w3-center"><button class="w3-button w3-tiny w3-white w3-border w3-round" onclick="toggle_rate('0'); document.getElementById('ratingContainer').classList.toggle('hide');">Rate</button></td>
-              </tr>
-              <tr id="1">
-                <td>Jim</td>
-                <td>Thomas</td>
-                <td>apple</td>
-                <td class="w3-center">7/22/20</td>
-                <td id="score_1" class="w3-center">N/A</td>
-                <td class="w3-center"><button class="w3-button w3-tiny w3-white w3-border w3-round" onclick="toggle_rate('1'); document.getElementById('ratingContainer').classList.toggle('hide');">Rate</button></td>
-              </tr>
-
-	    </tbody>
+            <tbody id="data">
+              <!-- ajax_getRateableTrims will populate this area -->
+      	    </tbody>
           </table>
         </div>
         <!--close table three quarter-->
         <div id="ratingContainer" class="w3-third w3-white hide">
           <div class="w3-container" id="ratingBox">
-            <!-- <form class="" action="ajax/postRating/" method="POST"> -->
-            <div id="Rate_0" class="hide">
-              <h6>
-                <b class="w3-third">Speaker</b>
-                <b class="w3-third" style="float: right">Researcher</b>
-              </h6>
-              <br>
-              <h6>
-                <b class="w3-third">Speaker-Name</b>
-                <b class="w3-third" style="float: right">Researcher-Name</b>
-              </h6>
-              <br>
-              <div class="" style="border: solid 1px grey; border-radius: 5px; padding: 2px; margin: 2vh;">
-                <!-- Audio Controls -->
-                <!--Audio Controls will be here-->
-              </div>
-              <p class="w3-third">Not native-like</p>
-              <p class="w3-third">Moderately native-like</p>
-              <p class="w3-third">Native-like</p>
-              <p class="w3-third">1</p>
-              <p class="w3-third">4</p>
-              <p class="w3-third">7</p>
-              <!--close input (play button) div-->
-              <div>
-                <div class="w3-bar">
-                  <hr class="w3-border" style="margin: 2vh;">
-                  <table id="ratings">
-                    <thead>
-                      <tr>
-                        <th><b style="margin-left:2em">1</b></th>
-                        <th><b style="margin-left:2em">2</b></th>
-                        <th><b style="margin-left:2em">3</b></th>
-                        <th><b style="margin-left:2em">4</b></th>
-                        <th><b style="margin-left:2em">5</b></th>
-                        <th><b style="margin-left:2em">6</b></th>
-                        <th><b style="margin-left:2em">7</b></th>
-                      </tr>
-                    </thead>
-                    <tbody class="radioButtons">
-                      <tr>
-                        <td><input id="radio_0_1" type="radio" name="radiorating" value="1"></td>
-                        <td><input id="radio_0_2" type="radio" name="radiorating" value="2"></td>
-                        <td><input id="radio_0_3" type="radio" name="radiorating" value="3"></td>
-                        <td><input id="radio_0_4" type="radio" name="radiorating" value="4"></td>
-                        <td><input id="radio_0_5" type="radio" name="radiorating" value="5"></td>
-                        <td><input id="radio_0_6" type="radio" name="radiorating" value="6"></td>
-                        <td><input id="radio_0_7" type="radio" name="radiorating" value="7"></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div><!-- close radio button bar -->
-              </div>
-              <div>
-                <h3>Comments</h3>
-                <textarea rows="2" cols="30" style="border: solid 1px grey; padding: 3px; width: 90%;"></textarea>
-              </div>
-	      <!-- <form class="" action="/ajax/postRating/" method="post"> -->
-                  <input type="submit" class="w3-btn w3-green" id="uploadButton" value="Save" onclick="toggle_rate('0');document.getElementById('ratingContainer').classList.toggle('hide');add_rating('0');"></input>
-
-	      <!-- </form> -->
-            </div>
-            <!-- TODO: make dynamic Rates -->
-            <div id="Rate_1" class="hide">
-              <h6>
-                <b class="w3-third">Speaker</b>
-                <b class="w3-third" style="float: right">Researcher</b>
-              </h6>
-              <br>
-              <h6>
-                <b class="w3-third">Speaker-Name</b>
-                <b class="w3-third" style="float: right">Researcher-Name</b>
-              </h6>
-              <br>
-              <div class="" style="border: solid 1px grey; border-radius: 5px; padding: 2px; margin: 2vh;">
-                <!-- Audio Controls -->
-                <!--Audio Controls will be here-->
-              </div>
-              <p class="w3-third">Not native-like</p>
-              <p class="w3-third">Moderately native-like</p>
-              <p class="w3-third">Native-like</p>
-              <p class="w3-third">1</p>
-              <p class="w3-third">4</p>
-              <p class="w3-third">7</p>
-              <!--close input (play button) div-->
-              <div>
-                <div class="w3-bar">
-                  <hr class="w3-border" style="margin: 2vh;">
-                  <table id="ratings">
-                    <thead>
-                      <tr>
-                        <th><b style="margin-left:2em">1</b></th>
-                        <th><b style="margin-left:2em">2</b></th>
-                        <th><b style="margin-left:2em">3</b></th>
-                        <th><b style="margin-left:2em">4</b></th>
-                        <th><b style="margin-left:2em">5</b></th>
-                        <th><b style="margin-left:2em">6</b></th>
-                        <th><b style="margin-left:2em">7</b></th>
-                      </tr>
-                    </thead>
-                    <tbody class="radioButtons">
-                      <tr>
-                        <td><input id="radio_0_1" type="radio" name="radiorating" value="1"></td>
-                        <td><input id="radio_0_2" type="radio" name="radiorating" value="2"></td>
-                        <td><input id="radio_0_3" type="radio" name="radiorating" value="3"></td>
-                        <td><input id="radio_0_4" type="radio" name="radiorating" value="4"></td>
-                        <td><input id="radio_0_5" type="radio" name="radiorating" value="5"></td>
-                        <td><input id="radio_0_6" type="radio" name="radiorating" value="6"></td>
-                        <td><input id="radio_0_7" type="radio" name="radiorating" value="7"></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div><!-- close radio button bar -->
-              </div>
-              <div>
-                <h3>Comments</h3>
-                <textarea rows="2" cols="30" style="border: solid 1px grey; padding: 3px; width: 90%;"></textarea>
-              </div>
-              <form class="" action="/ajax/postRating/" method="post">
-                  <input type="submit" class="w3-btn w3-green" id="uploadButton" value="Save" onclick="add_rating('1')"></input>
-              </form>
-            </div>
-            <!--close inline block div-->
-
-            <!-- </form> -->
+            <!-- ajax_getRateableTrims will populate this area -->
           </div>
           <!--close w3-container-center-->
         </div>
@@ -363,7 +226,7 @@ function sortTable(n) {
     </div><!-- close main body container -->
     <!-- display a message -->
 
-    <!-- message currently fake -->
+    <!-- message currently fake as rating is not saved -->
     {% if messages %}
     {% for message in messages %}
     <div id='message' class="hide max-w-50vw w3-bottom w3-left w3-light-blue">
@@ -376,6 +239,9 @@ function sortTable(n) {
     <!--  -->
   </div>
 </body>
+<script type="text/javascript" src="{% static '/js/ajax_getRateableTrims.js' %}"></script>
+<script type="text/javascript" src="{% static '/js/ajax_postRating.js' %}"></script>
+
 {% if messages %}
 <script>
   document.getElementById('message').style.display = 'block';
