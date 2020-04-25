@@ -10,7 +10,7 @@
   {% load static %}
   <!-- localized stylesheets -->
   <link rel="stylesheet" href="{% static '/css/master.css' %}">
-  <script type="text/javascript" src="{% static 'FILE.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/change_fontSize.js' %}"></script>
   <style>
     .h1 {
       font-size: 70px;
@@ -98,11 +98,11 @@
           <form id="accessibility" class="accountForm">
             <label class="accountHeader">Font Size</label>
             <br>
-            <button class="w3-btn w3-white">+</button>
-            <button class="w3-btn w3-white">-</button>
+            <button class="w3-btn w3-white increase">+</button>
+            <button class="w3-btn w3-white decrease">-</button>
             <br>
             <br>
-            <button type="submit" class="w3-btn w3-green">Save Changes</button>
+            <!--<button type="submit" class="w3-btn w3-green">Save Changes</button>-->
           </form>
           <!--Account Settings-->
           <form id="account" class="accountForm">
